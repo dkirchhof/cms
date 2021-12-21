@@ -1,4 +1,5 @@
 import { IDeserializedBlock } from "../../types/block";
+import { renderChildren } from "../../utils/renderChildren";
 import { Container } from "./styles";
 
 interface IProps {
@@ -7,6 +8,6 @@ interface IProps {
 
 export const PagePreview = (props: IProps) => (
     <Container>
-        {props.content.map((block, i) => <block.Component key={i} data={block.data} />)}
+        {renderChildren(props.content)}
     </Container>
 );

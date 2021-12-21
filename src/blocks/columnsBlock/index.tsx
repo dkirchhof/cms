@@ -1,5 +1,7 @@
 import { NumberEditor } from "../../editors/numberEditor";
 import { BlockComponent, GetBlockEditorInputs, GetBlockInitialData, GetBlockLabel, IBlockConfig, IDeserializedBlock } from "../../types/block";
+import { renderChildren } from "../../utils/renderChildren";
+import { ColumnsContainer } from "./styles";
 
 interface IData {
     gap: number;
@@ -18,9 +20,9 @@ const getEditorInputs: GetBlockEditorInputs<IData> = () => ({
 const getLabel: GetBlockLabel<IData> = data => `columns: ${data.children.length}`;
 
 const Component: BlockComponent<IData> = props => (
-    <div style={{ display: "flex", gap: `${props.data.gap}px` }}>
-        {props.data.children.map((block, i) => <block.Component key={i} data={block.data} />)}
-    </div>
+    <ColumnsContainer gap={props.data.gap}>
+        {renderChildren(props.data.children)}
+    </ColumnsContainer>
 );
 
 export const ColumnsBlock: IBlockConfig<IData> = {

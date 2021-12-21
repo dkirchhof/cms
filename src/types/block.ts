@@ -4,7 +4,8 @@ export interface IBlockComponentProps<DATA> {
     data: DATA;
 }
 
-export interface IBlockEditorProps<DATA> extends IBlockComponentProps<DATA> {
+export interface IBlockEditorProps<DATA> {
+    data: DATA;
     onChange: <PROP extends keyof DATA>(prop: PROP, value: DATA[PROP]) => void;
 }
 

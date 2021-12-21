@@ -1,5 +1,5 @@
 import update from "immer";
-import { useState } from "react";
+import { createContext, useState } from "react";
 import { render } from "react-dom";
 import { ColumnsBlock } from "./blocks/columnsBlock";
 import { HeaderBlock } from "./blocks/headerBlock";
@@ -12,6 +12,7 @@ import { Outliner } from "./components/outliner";
 import { PagePreview } from "./components/pagePreview";
 import { GlobalStyles } from "./styles";
 import { IBlockConfig, IDeserializedBlock, ISerializedBlock } from "./types/block";
+import { IPage } from "./types/page";
 import { traversePath } from "./utils/path";
 
 export type BlocksMap = { [s: string]: IBlockConfig<any>; }
@@ -55,12 +56,18 @@ const BLOCKS: BlocksMap = {
     "ColumnsBlock": ColumnsBlock,
 };
 
+const TEST_PAGE: IPage = {
+    slug: "test-page",
+    title: "title",
+    subtitle: "subtitle",
+    createdAt: new Date(), 
+    updatedAt: new Date(),
+};
+
 const TEST_CONTENT: ISerializedBlock[] = [
     {
         blockName: "HeaderBlock",
         data: {
-            headline: "This is a headline",
-            subheadline: "This is a subheadline",
             imgSrc: "https://i.picsum.photos/id/60/1000/300.jpg?hmac=WmF-em1XlDmu1mGUw-jMk9g4Qr2mbIgTXGCVx03vWfE",
             imgAlt: "desk",
         },
@@ -88,7 +95,10 @@ const TEST_CONTENT: ISerializedBlock[] = [
     },
 ];
 
+export const PageContext = createContext(TEST_PAGE);
+
 const App = () => {
+    const [page, setPage] = useState(TEST_PAGE);
     const [content, setContent] = useState(TEST_CONTENT.map(deserializeBlock));
     const [selectionPath, setSelectionPath] = useState("0");
     const [showAddBlockDialog, setShowAddBlockDialog] = useState<{ submit: (blockName: string, blockConfig: IBlockConfig<any>) => void; } | false>(false);
@@ -136,7 +146,7 @@ const App = () => {
     const selectedBlock = traversePath(content, selectionPath);
 
     return (
-        <>
+        <PageContext.Provider value={page}>
             <GlobalStyles />
             
             <PagePreview content={content} />
@@ -144,7 +154,7 @@ const App = () => {
 
             {!showAddBlockDialog && <Inspector block={selectedBlock} onChange={changeDataOfSelectedBlock} />}
             {showAddBlockDialog && <AddBlockDialog availableBlocks={BLOCKS} submit={showAddBlockDialog.submit} close={() => setShowAddBlockDialog(false)} />}
-        </>
+        </PageContext.Provider>
     );
 };
 
