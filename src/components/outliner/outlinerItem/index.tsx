@@ -1,8 +1,8 @@
-import { BLOCKS } from "../../..";
 import { useContext } from "../../../hooks/useContext";
 import { IBlock } from "../../../types/block";
 import { getPathForChild } from "../../../utils/path";
 import { PrimaryButton } from "../../button";
+import { BLOCKS } from "../../pageEditor";
 import { BlockLabel, BlockName, ChildList, Tile } from "./styles";
 
 interface IProps {
@@ -18,9 +18,9 @@ export const OutlinerItem = ({ block, path, ...props }: IProps) => {
     
     return (
         <div>
-            <Tile aria-selected={path === selectionPath} onClick={() => setSelectionPath(path)}>
+            <Tile selected={path === selectionPath} onClick={() => setSelectionPath(path)}>
                 <BlockName>{block.blockName}</BlockName>
-                <BlockLabel>{label}</BlockLabel>
+                {label && <BlockLabel>{label}</BlockLabel>}
             </Tile>
             
             {block.data.children && (

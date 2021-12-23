@@ -1,6 +1,6 @@
-import { BlocksMap } from "../..";
 import { IBlockConfig } from "../../types/block";
 import { PrimaryButton, SecondaryButton } from "../button";
+import { BlocksMap } from "../pageEditor";
 import { Container, List } from "./styles";
 
 interface IProps {

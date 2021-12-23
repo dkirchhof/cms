@@ -4,8 +4,6 @@ export const Container = styled.div`
     display: flex;
     flex-direction: column;
     gap: 16px;
-
-    padding: 16px;
 `;
 
 export const BlockName = styled.div`

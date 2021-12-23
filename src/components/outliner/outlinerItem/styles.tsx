@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { BORDER, PRIMARY } from "../../../theme/colors";
 
-export const Tile = styled.div`
+export const Tile = styled.div<{ selected: boolean; }>`
     padding: 16px;
 
     background: white;
@@ -9,8 +9,8 @@ export const Tile = styled.div`
 
     cursor: pointer;
 
-    color: ${props => props["aria-selected"] ? PRIMARY : "inherit"};
-    border: 1px solid ${props => props["aria-selected"] ? PRIMARY : BORDER};
+    color: ${props => props.selected ? PRIMARY : "inherit"};
+    border: 1px solid ${props => props.selected ? PRIMARY : BORDER};
 `;
 
 export const BlockName = styled.div`

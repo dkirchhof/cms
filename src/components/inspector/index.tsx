@@ -1,5 +1,5 @@
-import { BLOCKS } from "../..";
 import { IBlock } from "../../types/block";
+import { BLOCKS } from "../pageEditor";
 import { BlockName, Container, Label } from "./styles";
 
 interface IProps {
