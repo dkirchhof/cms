@@ -1,9 +1,9 @@
-import { IDeserializedBlock } from "../../types/block";
+import { IBlock } from "../../types/block";
 import { renderChildren } from "../../utils/renderChildren";
 import { Container } from "./styles";
 
 interface IProps {
-    content: IDeserializedBlock[];
+    content: IBlock[];
 }
 
 export const PagePreview = (props: IProps) => (

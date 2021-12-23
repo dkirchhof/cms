@@ -1,5 +1,10 @@
-import { IDeserializedBlock } from "../types/block";
+import { BLOCKS } from "..";
+import { IBlock } from "../types/block";
 
-export const renderChildren = (children: IDeserializedBlock[]) => {
-    return children.map((block, i) => <block.Component key={i} data={block.data} />);
+export const renderChildren = (children: IBlock[]) => {
+    return children.map((block, i) => {
+        const blockConfig = BLOCKS[block.blockName];
+
+        return <blockConfig.Component key={i} data={block.data} />;
+    });
 };

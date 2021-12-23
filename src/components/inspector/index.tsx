@@ -1,8 +1,9 @@
-import { IDeserializedBlock } from "../../types/block";
+import { BLOCKS } from "../..";
+import { IBlock } from "../../types/block";
 import { BlockName, Container, Label } from "./styles";
 
 interface IProps {
-    block: IDeserializedBlock | null;
+    block: IBlock | null;
 
     onChange: (prop: string) => (value: any) => void;
 }
@@ -13,7 +14,8 @@ export const Inspector = (props: IProps) => {
     }
     
     const block = props.block;
-    const inputs = block.getEditorInputs();
+    const blockConfig = BLOCKS[block.blockName];
+    const inputs = blockConfig.getEditorInputs();
 
     return (
         <Container>

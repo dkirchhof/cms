@@ -1,4 +1,4 @@
-import { IDeserializedBlock } from "../types/block";
+import { IBlock } from "../types/block";
 
 export const getPathForChild = (currentPath: string, childIndex: number) => {
     if (currentPath) {
@@ -8,7 +8,7 @@ export const getPathForChild = (currentPath: string, childIndex: number) => {
     return childIndex.toString();
 };
 
-export const traversePath = (blocks: IDeserializedBlock[], path: string) => {
+export const traversePath = (blocks: IBlock[], path: string) => {
     if (!path) {
         return null;
     }
@@ -16,7 +16,7 @@ export const traversePath = (blocks: IDeserializedBlock[], path: string) => {
     return traversePathRec(blocks, path.split(",").map(Number));
 };
 
-const traversePathRec = (blocks: IDeserializedBlock[], path: number[]): IDeserializedBlock => {
+const traversePathRec = (blocks: IBlock[], path: number[]): IBlock => {
     const first = path.shift()!;
 
     if (!path.length) {

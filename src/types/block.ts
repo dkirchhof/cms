@@ -21,12 +21,7 @@ export interface IBlockConfig<DATA> {
     Component: BlockComponent<DATA>;
 }
 
-export interface ISerializedBlock {
+export interface IBlock {
     blockName: string;
-    data: { [s: string]: any; children?: ISerializedBlock[]; };
+    data: { [s: string]: any; children?: IBlock[]; };
 }
-
-export type IDeserializedBlock = { 
-    blockName: string;
-    data: { [s: string]: any; children?: IDeserializedBlock[]; };
-} & IBlockConfig<any>;
