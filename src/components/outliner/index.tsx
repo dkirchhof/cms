@@ -1,22 +1,24 @@
+import { useContext } from "../../hooks/useContext";
 import { IBlock } from "../../types/block";
+import { getPathForChild } from "../../utils/path";
 import { PrimaryButton } from "../button";
 import { OutlinerItem } from "./outlinerItem";
 import { Container } from "./styles";
 
 interface IProps {
     content: IBlock[];
-    currentSelectionPath: string;
-
-    addNewBlock: (path: string) => void;
-    selectBlock: (path: string) => void;
 }
 
-export const Outliner = ({ content, ...props }: IProps) => {
+export const Outliner = (props: IProps) => {
+    const { addBlock } = useContext();
+
+    const path = "";
+
     return (
         <Container>
-            {content.map((block, i) => <OutlinerItem key={i} path={i.toString()} block={block} {...props} />)}
+            {props.content.map((block, i) => <OutlinerItem key={i} path={getPathForChild(path, i)} block={block} />)}
 
-            <PrimaryButton onClick={() => props.addNewBlock("")}>+</PrimaryButton>
+            <PrimaryButton onClick={() => addBlock(path)}>+</PrimaryButton>
         </Container>
     );
 };

@@ -63,7 +63,14 @@ const TEST_PAGE: IPage = {
     ]
 };
 
-export const Context = createContext({ page: TEST_PAGE });
+interface IAdminContext {
+    page: IPage;
+    selectionPath: string;
+    setSelectionPath: (path: string) => void;
+    addBlock: (path: string) => void;
+}
+
+export const Context = createContext<IAdminContext>({ } as any);
 
 const App = () => {
     const [page, setPage] = useState(TEST_PAGE);
@@ -82,7 +89,7 @@ const App = () => {
         setPage(updated);
     };
 
-    const addNewBlock = (path: string) => {
+    const addBlock = (path: string) => {
         setShowAddBlockDialog({
             submit: (blockName, blockConfig) => {
                 const updated = update(page => {
@@ -112,11 +119,11 @@ const App = () => {
     const selectedBlock = traversePath(page.content, selectionPath);
 
     return (
-        <Context.Provider value={{ page }}>
+        <Context.Provider value={{ page, selectionPath, setSelectionPath, addBlock }}>
             <GlobalStyles />
             
             <PagePreview content={page.content} />
-            <Outliner content={page.content} currentSelectionPath={selectionPath} addNewBlock={addNewBlock} selectBlock={setSelectionPath} />
+            <Outliner content={page.content} />
 
             {!showAddBlockDialog && <Inspector block={selectedBlock} onChange={changeDataOfSelectedBlock} />}
             {showAddBlockDialog && <AddBlockDialog availableBlocks={BLOCKS} submit={showAddBlockDialog.submit} close={() => setShowAddBlockDialog(false)} />}
