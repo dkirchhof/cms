@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { BLOCKS } from "..";
-import { IBlock, IBlockConfig } from "../../../types/block";
+import { IBlock } from "../../../types/block";
 import { IPage, isPage } from "../../../types/page";
 import { traversePath } from "../../../utils/path";
-import { AddBlockDialog, SubmitFn as AddBlockDialogSubmitFn } from "../../addBlockDialog";
+import { AddBlockDialog, SubmitFn as AddBlockDialogSubmitFn } from "./addBlockDialog";
 import { BlockEditor } from "./blockEditor";
 import { Outliner } from "./outliner";
 import { PageSettingsEditor } from "./pageSettingsEditor";
