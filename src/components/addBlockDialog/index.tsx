@@ -1,22 +1,20 @@
-import { IBlockConfig } from "../../types/block";
 import { PrimaryButton, SecondaryButton } from "../button";
-import { BlocksMap } from "../pageEditor";
+import { BLOCKS } from "../pageEditor";
 import { Container, List } from "./styles";
 
-interface IProps {
-    availableBlocks: BlocksMap;
+export type SubmitFn = (blockName: string) => void;
 
+interface IProps {
     close: () => void;
-    submit: (blockName: string, blockConfig: IBlockConfig<any>) => void;
+    submit: SubmitFn;
 }
 
 export const AddBlockDialog = (props: IProps) => {
-    
     return (
         <Container>
             <List>
-                {Object.entries(props.availableBlocks).map(([blockName, blockConfig], i) => 
-                    <SecondaryButton key={i} onClick={() => props.submit(blockName, blockConfig)}>{blockName}</SecondaryButton>
+                {Object.keys(BLOCKS).map((blockName, i) => 
+                    <SecondaryButton key={i} onClick={() => props.submit(blockName)}>{blockName}</SecondaryButton>
                 )}
             </List>
 

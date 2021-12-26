@@ -25,3 +25,7 @@ export interface IBlock {
     blockName: string;
     data: { [s: string]: any; children?: IBlock[]; };
 }
+
+export const isBlock = (block: any): block is IBlock => {
+    return block.blockName;
+};

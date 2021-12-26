@@ -8,3 +8,7 @@ export interface IPage {
     updatedAt: Date;
     content: IBlock[];
 }
+
+export const isPage = (page: any): page is IPage => {
+    return page.slug && page.content;
+};

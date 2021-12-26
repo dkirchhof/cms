@@ -1,13 +1,13 @@
-import { IBlock } from "../../types/block";
+import { IPage } from "../../types/page";
 import { renderChildren } from "../../utils/renderChildren";
 import { Container } from "./styles";
 
 interface IProps {
-    content: IBlock[];
+    page: IPage;
 }
 
 export const PagePreview = (props: IProps) => (
     <Container>
-        {renderChildren(props.content)}
+        {renderChildren(props.page.content)}
     </Container>
 );

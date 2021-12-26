@@ -8,6 +8,10 @@ const Button = styled.button`
     border-radius: 4px;
 
     cursor: pointer;
+
+    &[disabled] {
+        opacity: .5;
+    }
 `;
 
 export const PrimaryButton = styled(Button)`

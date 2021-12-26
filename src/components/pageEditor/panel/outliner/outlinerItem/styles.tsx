@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { BORDER, PRIMARY } from "../../../theme/colors";
+import { BORDER, PRIMARY } from "../../../../../theme/colors";
 
 export const Tile = styled.div<{ selected: boolean; }>`
     padding: 16px;

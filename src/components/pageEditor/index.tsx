@@ -6,14 +6,12 @@ import { HeadingBlock } from "../../blocks/headingBlock";
 import { ImageBlock } from "../../blocks/imageBlock";
 import { MaxWidthBlock } from "../../blocks/maxWidthBlock";
 import { TextBlock } from "../../blocks/textBlock";
-import { AddBlockDialog } from "../../components/addBlockDialog";
-import { Inspector } from "../../components/inspector";
-import { Outliner } from "../../components/outliner";
 import { PagePreview } from "../../components/pagePreview";
 import { IBlockConfig, IBlock } from "../../types/block";
-import { IPage } from "../../types/page";
-import { traversePath } from "../../utils/path";
+import { IPage, isPage } from "../../types/page";
+import { getIndex, getPathForParent, traversePath } from "../../utils/path";
 import { Header } from "./header";
+import { Panel } from "./panel";
 import { Container, Main } from "./styles";
 
 export type BlocksMap = { [s: string]: IBlockConfig<any>; }
@@ -76,72 +74,65 @@ const TEST_PAGE: IPage = {
 
 interface IAdminContext {
     page: IPage;
-    selectionPath: string;
-    setSelectionPath: (path: string) => void;
-    addBlock: (path: string) => void;
 }
 
 export const Context = createContext<IAdminContext>({} as any);
 
 export const PageEditor = () => {
     const [page, setPage] = useState(TEST_PAGE);
-    const [tab, setTab] = useState(0);
 
-    const [selectionPath, setSelectionPath] = useState("0");
-    const [showAddBlockDialog, setShowAddBlockDialog] = useState<{ submit: (blockName: string, blockConfig: IBlockConfig<any>) => void; } | false>(false);
+    const changeData = (path: string) => (prop: string) => (value: any) => {
+        setPage(
+            update(page => {
+                const selected = traversePath(page, path);
 
-    const changeDataOfSelectedBlock = (prop: string) => (value: any) => {
-        const updated = update(page => {
-            const selectedBlock = traversePath(page.content, selectionPath);
-
-            if (selectedBlock) {
-                selectedBlock.data[prop] = value;
-            }
-        }, page);
-
-        setPage(updated);
+                if (isPage(selected)) {
+                    selected[prop as keyof IPage] = value;
+                } else {
+                    selected.data[prop] = value;
+                }
+            }, page)
+        );
     };
 
-    const addBlock = (path: string) => {
-        setShowAddBlockDialog({
-            submit: (blockName, blockConfig) => {
-                const updated = update(page => {
-                    const newBlock: IBlock = {
-                        blockName,
-                        data: blockConfig.getInitialData(),
-                    };
+    const addBlock = (path: string) => (block: IBlock) => {
+        setPage(
+            update(page => {
+                const selected = traversePath(page, path);
+                if (isPage(selected)) {
+                    selected.content.push(block);
+                } else {
+                    selected.data.children!.push(block);
 
-                    if (!path) {
-                        page.content.push(newBlock);
-                    } else {
-                        const selectedBlock = traversePath(page.content, path);
-
-                        if (selectedBlock) {
-                            selectedBlock.data.children!.push(newBlock);
-                        }
-                    }
-                }, page)();
-
-                setPage(updated);
-                setSelectionPath(path);
-                setShowAddBlockDialog(false);
-            },
-        });
+                }
+            }, page)
+        );
     };
 
-    const selectedBlock = traversePath(page.content, selectionPath);
+    const removeBlock = (path: string) => {
+        const parentPath = getPathForParent(path);
+        const index = getIndex(path);
+
+        setPage(
+            update(page => {
+                const selected = traversePath(page, parentPath);
+
+                if (isPage(selected)) {
+                    selected.content.splice(index, 1);
+                } else {
+                    selected.data.children!.splice(index, 1);
+                }
+            }, page)
+        );
+    };
 
     return (
-        <Context.Provider value={{ page, selectionPath, setSelectionPath, addBlock }}>
+        <Context.Provider value={{ page }}>
             <Container>
                 <Header />
                 <Main>
-                    <PagePreview content={page.content} />
-
-                    <Outliner content={page.content} />
-
-                    {!showAddBlockDialog && <Inspector block={selectedBlock} onChange={changeDataOfSelectedBlock} />}
-                    {showAddBlockDialog && <AddBlockDialog availableBlocks={BLOCKS} submit={showAddBlockDialog.submit} close={() => setShowAddBlockDialog(false)} />}
+                    <PagePreview page={page} />
+                    <Panel page={page} changeData={changeData} addBlock={addBlock} removeBlock={removeBlock} />
                 </Main>
             </Container>
         </Context.Provider>
