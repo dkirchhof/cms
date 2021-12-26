@@ -1,3 +1,4 @@
+import { PAGE } from "../../../../../messages";
 import { IBlock } from "../../../../../types/block";
 import { IPage } from "../../../../../types/page";
 import { getPathForChild } from "../../../../../utils/path";
@@ -19,7 +20,7 @@ export const RootOutlinerItem = ({ page, path, ...props }: IRootOutlinerItemProp
     return (
         <div>
             <Tile selected={path === props.selectionPath} onClick={() => props.setSelectionPath(path)}>
-                <BlockName>Page</BlockName>
+                <BlockName>{PAGE}</BlockName>
             </Tile>
 
             <ChildList>

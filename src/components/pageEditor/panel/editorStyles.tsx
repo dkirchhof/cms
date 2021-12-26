@@ -6,7 +6,7 @@ export const Container = styled.div`
     gap: 16px;
 `;
 
-export const BlockName = styled.div`
+export const Name = styled.div`
     font-size: 20px;
     font-weight: bold;
 `;
