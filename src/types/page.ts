@@ -4,6 +4,8 @@ export interface IPage {
     slug: string;
     title: string;
     subtitle: string;
+    publishedFrom?: Date;
+    publishedTo?: Date;
     createdAt: Date;
     updatedAt: Date;
     content: IBlock[];

@@ -6,11 +6,11 @@ import { HeadingBlock } from "../../blocks/headingBlock";
 import { ImageBlock } from "../../blocks/imageBlock";
 import { MaxWidthBlock } from "../../blocks/maxWidthBlock";
 import { TextBlock } from "../../blocks/textBlock";
-import { PagePreview } from "../../components/pagePreview";
 import { IBlockConfig, IBlock } from "../../types/block";
 import { IPage, isPage } from "../../types/page";
 import { getIndex, getPathForParent, traversePath } from "../../utils/path";
 import { Header } from "./header";
+import { PagePreview } from "./pagePreview";
 import { Panel } from "./panel";
 import { Container, Main } from "./styles";
 

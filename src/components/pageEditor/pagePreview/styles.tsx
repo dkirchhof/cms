@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { BACKGROUND, BORDER } from "../../theme/colors";
+import { BACKGROUND, BORDER } from "../../../theme/colors";
 
 export const Container = styled.div`
     overflow-y: auto;
