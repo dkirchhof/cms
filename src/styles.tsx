@@ -10,6 +10,9 @@ export const GlobalStyles = createGlobalStyle`
     }
 
     #app {
+        display: grid;
+        grid-template-columns: 256px 1fr;
+
         height: 100vh;
         
         background: ${GRAY_250};
