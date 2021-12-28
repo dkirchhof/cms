@@ -54,10 +54,13 @@ const LoadedTypeEditor = (props: { typeConfig: ICustomTypeConfig<any>; item: any
                     return null;
                 }
 
+                const value = (editedFields[prop] !== undefined) ? editedFields[prop] : props.item[prop];
+                const onChange = changeField(prop);
+
                 return (
                     <Label key={prop}>
                         {prop}
-                        <Input value={editedFields[prop] || props.item[prop]} onChange={changeField(prop)} />
+                        <Input value={value} onChange={onChange} />
                     </Label>
                 );
             })}

@@ -1,3 +1,4 @@
+import { DateEditor } from "../editors/dateEditor";
 import { TextEditor } from "../editors/textEditor";
 import { IBlock } from "../types/block";
 import { ICustomTypeConfig } from "../types/customType";
@@ -7,8 +8,8 @@ export interface IPage {
     slug: string;
     title: string;
     subtitle: string;
-    publishedFrom?: Date;
-    publishedTo?: Date;
+    publishedFrom: string | null;
+    publishedTo: string | null;
     createdAt: Date;
     updatedAt: Date;
     content: IBlock[];
@@ -24,5 +25,7 @@ export const PageType: ICustomTypeConfig<IPage> = {
         slug: TextEditor,
         title: TextEditor,
         subtitle: TextEditor,
+        publishedFrom: DateEditor,
+        publishedTo: DateEditor,
     }),
 };

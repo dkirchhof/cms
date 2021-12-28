@@ -12,6 +12,8 @@ export const MY_PAGES: IPage[] = [
         slug: "test-page",
         title: "my first page",
         subtitle: "this is a subtitle",
+        publishedFrom: null,
+        publishedTo: null,
         createdAt: new Date(),
         updatedAt: new Date(),
         content: [
