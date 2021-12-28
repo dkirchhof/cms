@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { MY_PAGES, MY_TYPES } from "../../myTypes";
+import { getItemOfType } from "../../myDatabaseService";
+import { MY_TYPES } from "../../myTypes";
 import { ICustomTypeConfig } from "../../types/customType";
 
 type State<T extends { id: string; }>
@@ -26,7 +27,7 @@ export const useLoadCustomTypeItem = () => {
             return;
         }
 
-        const item = MY_PAGES.find(page => page.id === id) as any;
+        const item = getItemOfType(typePluralName, id);
 
         if (!item) {
             setState({ state: "ERROR", message: "couldn't find item" });
@@ -38,4 +39,3 @@ export const useLoadCustomTypeItem = () => {
 
     return state;
 };
-

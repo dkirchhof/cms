@@ -3,7 +3,7 @@ import { Navigate } from "react-router";
 import { match } from "ts-pattern";
 import { BUTTON_RESET, BUTTON_SAVE, EDIT_TYPE_HEADER } from "../../messages";
 import { ICustomTypeConfig } from "../../types/customType";
-import { Container, Label, Name } from "./styles";
+import { Container, Heading, Label } from "./styles";
 import { useLoadCustomTypeItem } from "./useLoadCustomTypeItem";
 
 export const TypeEditor = () => {
@@ -44,7 +44,7 @@ const LoadedTypeEditor = (props: { typeConfig: ICustomTypeConfig<any>; item: any
 
     return (
         <Container>
-            <Name>{EDIT_TYPE_HEADER(props.typeConfig.singularName)}</Name>
+            <Heading>{EDIT_TYPE_HEADER(props.typeConfig.singularName)}</Heading>
 
             <button onClick={reset}>{BUTTON_RESET}</button>
             <button onClick={save}>{BUTTON_SAVE}</button>

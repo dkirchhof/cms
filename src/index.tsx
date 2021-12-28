@@ -19,8 +19,6 @@ const App = () => {
                     <Route path="/:typePluralName" element={<TypeList />} />
                     <Route path="/:typePluralName/:id" element={<TypeEditor />} />
 
-                    {/* {MY_TYPES.map(createTypeRoute)} */}
-
                     <Route path="/404" element={<div>404</div>} />
                     <Route path="*" element={<div>404</div>} />
                 </Routes>
@@ -29,15 +27,5 @@ const App = () => {
         </>
     );
 };
-
-// const createTypeRoute = (type: ICustomTypeConfig<any>) => {
-//     const overviewPath = `/${type.pluralName}`;
-//     const overviewElement = <TypesList typeConfig={type} />;
-
-//     const detailPath = `${overviewPath}/:id`;
-//     const detailElement = <TypeEditor typeConfig={type} />;
-
-//     return <Route path={path} element={element} />;
-// };
 
 render(<App />, document.getElementById("app"));

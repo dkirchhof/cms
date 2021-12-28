@@ -1,28 +1,41 @@
-import { Link, Navigate, useParams } from "react-router-dom";
-import { MY_PAGES, MY_TYPES } from "../../myTypes";
+import { Link, Navigate } from "react-router-dom";
+import { match } from "ts-pattern";
 import { ICustomTypeConfig } from "../../types/customType";
+import { Container, Heading } from "./styles";
+import { useLoadCustomTypeItems } from "./useLoadCustomTypeItems";
 
-export const TypeList = <T extends { id: string; }>() => {
-    const { typePluralName } = useParams();
+export const TypeList = () => {
+    const state = useLoadCustomTypeItems();
 
-    const typeConfig: ICustomTypeConfig<T> | undefined = MY_TYPES.find(type => type.pluralName === typePluralName);
+    return match(state)
+        .with({ state: "LOADING" }, () => <LoadingTypeList />)
+        .with({ state: "LOADED" }, ({ typeConfig, items }) => <LoadedTypeList typeConfig={typeConfig} items={items} />)
+        .with({ state: "ERROR" }, ({ message }) => <ErrorTypeList message={message} />)
+        .exhaustive();
+};
 
-    if (!typeConfig) {
-        return <Navigate to="/404" />;
-    }
-
-    // todo: fetch items for this type
-    const items = MY_PAGES as any as T[];
-
+const LoadingTypeList = () => {
     return (
-        <div>
-            <div>{typeConfig.pluralName}</div>
+        <Container>Loading...</Container>
+    );
+};
 
-            <div>{items.map(item => {
-                const link = `/${typeConfig.pluralName}/${item.id}`;
+const LoadedTypeList = (props: { typeConfig: ICustomTypeConfig<any>; items: any[]; }) => {
+    return (
+        <Container>
+            <Heading>{props.typeConfig.pluralName}</Heading>
 
-                return <Link key={item.id} to={link}>{typeConfig.getLabel(item)}</Link>
+            <div>{props.items.map(item => {
+                const link = `/${props.typeConfig.pluralName}/${item.id}`;
+
+                return <Link key={item.id} to={link}>{props.typeConfig.getLabel(item)}</Link>
             })}</div>
-        </div>
+        </Container>
+    );
+};
+
+const ErrorTypeList = (props: { message: string; }) => {
+    return (
+        <Navigate to="/404" replace />
     );
 };
