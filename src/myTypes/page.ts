@@ -22,5 +22,7 @@ export const PageType: ICustomTypeConfig<IPage> = {
 
     getEditorInputs: () => ({
         slug: TextEditor,
+        title: TextEditor,
+        subtitle: TextEditor,
     }),
 };
