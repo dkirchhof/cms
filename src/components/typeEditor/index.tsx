@@ -60,7 +60,7 @@ const LoadedTypeEditor = (props: { typeConfig: ICustomTypeConfig<any>; item: any
                 return (
                     <Label key={prop}>
                         {prop}
-                        <Input value={value} onChange={onChange} />
+                        <Input prop={prop} value={value} onChange={onChange} />
                     </Label>
                 );
             })}

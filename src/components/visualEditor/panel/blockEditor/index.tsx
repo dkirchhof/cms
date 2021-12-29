@@ -1,11 +1,12 @@
 import { ADD_BLOCK, REMOVE_BLOCK } from "../../../../messages";
 import { IBlock } from "../../../../types/block";
 import { PrimaryButton, SecondaryButton } from "../../../button";
-import { BLOCKS } from "../../../pageEditor";
+import { BLOCKS } from "../../../visualEditor";
 import { Name, Container, Label } from "../editorStyles";
 
 interface IProps {
     block: IBlock;
+    isRoot: boolean;
 
     onChange: (prop: string) => (value: any) => void;
     addBlock: () => void;
@@ -23,12 +24,12 @@ export const BlockEditor = (props: IProps) => {
             {Object.entries(inputs).map(([prop, Input]) => (
                 <Label key={prop}>
                     {prop}
-                    <Input value={props.block.data[prop]} onChange={props.onChange(prop)} />
+                    <Input prop={prop} value={props.block.data[prop]} onChange={props.onChange(prop)} />
                 </Label>
             ))}
 
             {props.block.data.children && <PrimaryButton onClick={props.addBlock}>{ADD_BLOCK}</PrimaryButton>}
-            <SecondaryButton onClick={props.removeBlock}>{REMOVE_BLOCK}</SecondaryButton>
+            {!props.isRoot && <SecondaryButton onClick={props.removeBlock}>{REMOVE_BLOCK}</SecondaryButton>}
         </Container>
     );
 };

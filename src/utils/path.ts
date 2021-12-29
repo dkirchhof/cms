@@ -1,5 +1,4 @@
 import { IBlock } from "../types/block";
-import { IPage } from "../types/page";
 
 export const getPathForChild = (currentPath: string, childIndex: number) => {
     if (currentPath) {
@@ -17,9 +16,9 @@ export const getIndex = (path: string) => {
     return Number(path.split(",").pop());
 };
 
-export const traversePath = (page: IPage, path: string) => {
+export const traversePath = (block: IBlock, path: string) => {
     if (!path) {
-        return page;
+        return block;
     }
 
     const traversePathRec = (blocks: IBlock[], path: number[]): IBlock => {
@@ -32,5 +31,5 @@ export const traversePath = (page: IPage, path: string) => {
         return traversePathRec(blocks[first].data.children!, path);
     };
 
-    return traversePathRec(page.content, path.split(",").map(Number));
+    return traversePathRec(block.data.children!, path.split(",").map(Number));
 };

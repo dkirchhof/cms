@@ -16,7 +16,7 @@ export const Label = styled.label`
 
     font-weight: bold;
 
-    > * {
+    > input, textarea {
         display: block;
 
         width: 100%;

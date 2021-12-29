@@ -1,4 +1,4 @@
-import { BLOCKS } from "../components/pageEditor";
+import { BLOCKS } from "../components/visualEditor";
 import { IBlock } from "../types/block";
 
 export const renderChildren = (children: IBlock[]) => {

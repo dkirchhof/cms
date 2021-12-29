@@ -1,4 +1,5 @@
 export interface IPropEditorProps<VALUE> {
+    prop: string;
     value: VALUE;
 
     onChange: (value: VALUE) => void;

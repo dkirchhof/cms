@@ -1,5 +1,5 @@
 import { PrimaryButton, SecondaryButton } from "../../../button";
-import { BLOCKS } from "../../../pageEditor";
+import { BLOCKS } from "../../../visualEditor";
 import { Container, List } from "./styles";
 
 export type SubmitFn = (blockName: string) => void;
