@@ -1,6 +1,7 @@
-import { Link, Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { match } from "ts-pattern";
 import { Breadcrumb } from "../../components/breadcrumb";
+import { ErrorDisplay } from "../../components/errorDisplay";
 import { ICustomTypeConfig } from "../../types/customType";
 import { Header } from "../pageStyles";
 import { Container } from "./styles";
@@ -40,8 +41,8 @@ const LoadedTypeList = (props: { typeConfig: ICustomTypeConfig<any>; items: any[
     );
 };
 
-const ErrorTypeList = (props: { message: string; }) => {
-    return (
-        <Navigate to="/404" replace />
-    );
-};
+const ErrorTypeList = (props: { message: string; }) => (
+    <Container>
+        <ErrorDisplay message={props.message} />
+    </Container>
+);

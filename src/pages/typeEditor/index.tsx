@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Navigate } from "react-router";
 import { match } from "ts-pattern";
 import { Breadcrumb } from "../../components/breadcrumb";
 import { PrimaryButton, SecondaryButton } from "../../components/button";
+import { ErrorDisplay } from "../../components/errorDisplay";
 import { BUTTON_RESET, BUTTON_SAVE } from "../../messages";
 import { ICustomTypeConfig } from "../../types/customType";
 import { Header } from "../pageStyles";
@@ -77,8 +77,8 @@ const LoadedTypeEditor = (props: { typeConfig: ICustomTypeConfig<any>; item: any
     );
 };
 
-const ErrorTypeEditor = (props: { message: string; }) => {
-    return (
-        <Navigate to="/404" replace />
-    );
-};
+const ErrorTypeEditor = (props: { message: string; }) => (
+    <Container>
+        <ErrorDisplay message={props.message} />
+    </Container>
+);

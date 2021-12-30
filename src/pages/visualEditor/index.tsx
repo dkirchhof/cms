@@ -1,6 +1,5 @@
 import update from "immer";
 import { createContext, useState } from "react";
-import { Navigate } from "react-router-dom";
 import { match } from "ts-pattern";
 import { ColumnsBlock } from "../../blocks/columnsBlock";
 import { HeaderBlock } from "../../blocks/headerBlock";
@@ -11,6 +10,7 @@ import { RootBlock } from "../../blocks/rootBlock";
 import { TextBlock } from "../../blocks/textBlock";
 import { Breadcrumb } from "../../components/breadcrumb";
 import { PrimaryButton, SecondaryButton } from "../../components/button";
+import { ErrorDisplay } from "../../components/errorDisplay";
 import { BUTTON_RESET, BUTTON_SAVE } from "../../messages";
 import { IBlockConfig, IBlock } from "../../types/block";
 import { ICustomTypeConfig } from "../../types/customType";
@@ -115,8 +115,8 @@ const LoadedVisualEditor = <T extends { id: string; }>(props: { typeConfig: ICus
     );
 };
 
-const ErrorVisualEditor = (props: { message: string; }) => {
-    return (
-        <Navigate to="/404" replace />
-    );
-};
+const ErrorVisualEditor = (props: { message: string; }) => (
+    <Container>
+        <ErrorDisplay message={props.message} />
+    </Container>
+);
