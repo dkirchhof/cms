@@ -1,10 +1,10 @@
 import { render } from "react-dom";
 import { HashRouter, Route, Routes } from "react-router-dom";
 import { Header } from "./components/header";
-import { TypeEditor } from "./pages/typeEditor";
-import { TypeList } from "./pages/typeList";
+import { ItemsOfTypeList } from "./pages/itemsOfTypeList";
+import { ItemEditor } from "./pages/itemEditor";
 import { TypesList } from "./pages/typesList";
-import { VisualEditor } from "./pages/visualEditor";
+import { VisualBlockEditor } from "./pages/visualBlockEditor";
 import { GlobalStyles } from "./styles";
 
 const App = () => {
@@ -19,9 +19,9 @@ const App = () => {
                     <Route path="/" element={<div>Home</div>} />
                     
                     <Route path="/content" element={<TypesList />} />
-                    <Route path="/content/:typePluralName" element={<TypeList />} />
-                    <Route path="/content/:typePluralName/:id" element={<TypeEditor />} />
-                    <Route path="/content/:typePluralName/:id/:prop" element={<VisualEditor />} />
+                    <Route path="/content/:typePluralName" element={<ItemsOfTypeList />} />
+                    <Route path="/content/:typePluralName/:id" element={<ItemEditor />} />
+                    <Route path="/content/:typePluralName/:id/:prop" element={<VisualBlockEditor />} />
 
                     <Route path="/404" element={<div>404</div>} />
                     <Route path="*" element={<div>404</div>} />

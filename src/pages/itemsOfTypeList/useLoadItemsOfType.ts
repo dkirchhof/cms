@@ -9,7 +9,7 @@ type State<T extends { id: string; }>
     | { state: "LOADED"; typeConfig: ICustomTypeConfig<T>; items: T[]; }
     | { state: "ERROR"; message: string; }
 
-export const useLoadCustomTypeItems = () => {
+export const useLoadItemsOfType = () => {
     const { typePluralName } = useParams();
 
     const [state, setState] = useState<State<any>>({ state: "LOADING" });

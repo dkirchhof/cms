@@ -1,5 +1,7 @@
 import { PropEditor } from "./propEditor";
 
+export type BlocksMap = { [s: string]: IBlockConfig<any>; }
+
 export interface IBlockComponentProps<DATA> {
     data: DATA;
 }

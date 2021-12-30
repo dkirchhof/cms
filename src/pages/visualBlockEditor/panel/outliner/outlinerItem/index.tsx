@@ -1,6 +1,6 @@
+import { BLOCKS } from "../../../../../blocks";
 import { IBlock } from "../../../../../types/block";
 import { getPathForChild } from "../../../../../utils/path";
-import { BLOCKS } from "../../../../visualEditor";
 import { BlockLabel, BlockName, ChildList, Tile } from "./styles";
 
 interface IProps {

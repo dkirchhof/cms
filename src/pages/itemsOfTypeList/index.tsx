@@ -7,25 +7,25 @@ import { CREATE_NEW_ITEM } from "../../messages";
 import { ICustomTypeConfig } from "../../types/customType";
 import { Header } from "../pageStyles";
 import { Container, List, Main } from "./styles";
-import { useLoadCustomTypeItems } from "./useLoadCustomTypeItems";
+import { useLoadItemsOfType } from "./useLoadItemsOfType";
 
-export const TypeList = () => {
-    const state = useLoadCustomTypeItems();
+export const ItemsOfTypeList = () => {
+    const state = useLoadItemsOfType();
 
     return match(state)
-        .with({ state: "LOADING" }, () => <LoadingTypeList />)
-        .with({ state: "LOADED" }, ({ typeConfig, items }) => <LoadedTypeList typeConfig={typeConfig} items={items} />)
-        .with({ state: "ERROR" }, ({ message }) => <ErrorTypeList message={message} />)
+        .with({ state: "LOADING" }, () => <Loading />)
+        .with({ state: "LOADED" }, ({ typeConfig, items }) => <Loaded typeConfig={typeConfig} items={items} />)
+        .with({ state: "ERROR" }, ({ message }) => <Error message={message} />)
         .exhaustive();
 };
 
-const LoadingTypeList = () => {
+const Loading = () => {
     return (
         <Container>Loading...</Container>
     );
 };
 
-const LoadedTypeList = (props: { typeConfig: ICustomTypeConfig<any>; items: any[]; }) => {
+const Loaded = (props: { typeConfig: ICustomTypeConfig<any>; items: any[]; }) => {
     return (
         <Container>
             <Header>
@@ -45,7 +45,7 @@ const LoadedTypeList = (props: { typeConfig: ICustomTypeConfig<any>; items: any[
     );
 };
 
-const ErrorTypeList = (props: { message: string; }) => (
+const Error = (props: { message: string; }) => (
     <Container>
         <ErrorDisplay message={props.message} />
     </Container>

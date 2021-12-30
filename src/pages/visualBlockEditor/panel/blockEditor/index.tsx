@@ -1,7 +1,7 @@
+import { BLOCKS } from "../../../../blocks";
 import { PrimaryButton, SecondaryButton } from "../../../../components/button";
 import { ADD_BLOCK, REMOVE_BLOCK } from "../../../../messages";
 import { IBlock } from "../../../../types/block";
-import { BLOCKS } from "../../../visualEditor";
 import { Name, Container, Label } from "../editorStyles";
 
 interface IProps {

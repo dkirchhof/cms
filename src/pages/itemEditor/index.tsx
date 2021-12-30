@@ -7,25 +7,25 @@ import { BUTTON_RESET, BUTTON_SAVE } from "../../messages";
 import { ICustomTypeConfig } from "../../types/customType";
 import { Header } from "../pageStyles";
 import { Container, Fields, Label, Main } from "./styles";
-import { useLoadCustomTypeItem } from "./useLoadCustomTypeItem";
+import { useLoadItem } from "./useLoadItem";
 
-export const TypeEditor = () => {
-    const state = useLoadCustomTypeItem();
+export const ItemEditor = () => {
+    const state = useLoadItem();
 
     return match(state)
-        .with({ state: "LOADING" }, () => <LoadingTypeEditor />)
-        .with({ state: "LOADED" }, ({ typeConfig, item }) => <LoadedTypeEditor typeConfig={typeConfig} item={item} />)
-        .with({ state: "ERROR" }, ({ message }) => <ErrorTypeEditor message={message} />)
+        .with({ state: "LOADING" }, () => <Loading />)
+        .with({ state: "LOADED" }, ({ typeConfig, item }) => <Loaded typeConfig={typeConfig} item={item} />)
+        .with({ state: "ERROR" }, ({ message }) => <Error message={message} />)
         .exhaustive();
 };
 
-const LoadingTypeEditor = () => {
+const Loading = () => {
     return (
         <Container>Loading...</Container>
     );
 };
 
-const LoadedTypeEditor = (props: { typeConfig: ICustomTypeConfig<any>; item: any; }) => {
+const Loaded = (props: { typeConfig: ICustomTypeConfig<any>; item: any; }) => {
     const [editedFields, setEditedFields] = useState<any>({});
 
     const reset = () => {
@@ -81,7 +81,7 @@ const LoadedTypeEditor = (props: { typeConfig: ICustomTypeConfig<any>; item: any
     );
 };
 
-const ErrorTypeEditor = (props: { message: string; }) => (
+const Error = (props: { message: string; }) => (
     <Container>
         <ErrorDisplay message={props.message} />
     </Container>

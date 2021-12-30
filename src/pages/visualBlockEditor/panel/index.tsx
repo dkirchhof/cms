@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { BLOCKS } from "..";
+import { BLOCKS } from "../../../blocks";
 import { IBlock } from "../../../types/block";
 import { getIndex, getPathForChild, getPathForParent, traversePath } from "../../../utils/path";
 import { AddBlockDialog, SubmitFn as AddBlockDialogSubmitFn } from "./addBlockDialog";

@@ -1,6 +1,6 @@
 import { TextEditor } from "../../editors/textEditor";
 import { IPage } from "../../myTypes/page";
-import { useItem } from "../../pages/visualEditor";
+import { useItem } from "../../pages/visualBlockEditor";
 import { IBlockConfig } from "../../types/block";
 import { HeaderContainer } from "./styles";
 
