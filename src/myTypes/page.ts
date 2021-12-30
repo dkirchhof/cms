@@ -17,7 +17,6 @@ export interface IPage {
 }
 
 export const PageType: ICustomTypeConfig<IPage> = {
-    singularName: "page",
     pluralName: "pages",
 
     getLabel: type => type.title,

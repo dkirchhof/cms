@@ -8,7 +8,7 @@ export const Sidebar = () => (
         <Nav>
             <NavLink to="/">{HOME}</NavLink>
 
-            {MY_TYPES.map(type => <NavLink key={type.singularName} to={`/${type.pluralName}`}>{type.pluralName}</NavLink>)}
+            {MY_TYPES.map(type => <NavLink key={type.pluralName} to={`/${type.pluralName}`}>{type.pluralName}</NavLink>)}
         </Nav>
     </Container>
 );
