@@ -1,5 +1,6 @@
 import { TextEditor } from "../../editors/textEditor";
-import { useContext } from "../../hooks/useContext";
+import { IPage } from "../../myTypes/page";
+import { useItem } from "../../pages/visualEditor";
 import { IBlockConfig } from "../../types/block";
 import { HeaderContainer } from "./styles";
 
@@ -22,7 +23,7 @@ export const HeaderBlock: IBlockConfig<IData> = {
     getLabel: _data => "",
 
     Component: props => {
-        const { page } = useContext();
+        const page = useItem<IPage>();
 
         return (
             <HeaderContainer>

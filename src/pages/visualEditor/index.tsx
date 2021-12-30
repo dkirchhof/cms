@@ -1,5 +1,5 @@
 import update from "immer";
-import { createContext, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import { match } from "ts-pattern";
 import { ColumnsBlock } from "../../blocks/columnsBlock";
 import { HeaderBlock } from "../../blocks/headerBlock";
@@ -14,7 +14,6 @@ import { ErrorDisplay } from "../../components/errorDisplay";
 import { BUTTON_RESET, BUTTON_SAVE } from "../../messages";
 import { IBlockConfig, IBlock } from "../../types/block";
 import { ICustomTypeConfig } from "../../types/customType";
-import { IPage } from "../../types/page";
 import { traversePath } from "../../utils/path";
 import { Header } from "../pageStyles";
 import { Panel } from "./panel";
@@ -34,20 +33,8 @@ export const BLOCKS: BlocksMap = {
     "ColumnsBlock": ColumnsBlock,
 };
 
-const TEST_PAGE: IPage = {
-    slug: "test-page",
-    title: "title",
-    subtitle: "subtitle",
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    content: [],
-};
-
-interface IAdminContext {
-    page: IPage;
-}
-
-export const Context = createContext<IAdminContext>({} as any);
+export const ItemContext = createContext<any>(null);
+export const useItem = <T extends { id: string; }>() => useContext<T>(ItemContext);
 
 export const VisualEditor = () => {
     const state = useLoadPropOfCustomTypeItem();
@@ -93,7 +80,7 @@ const LoadedVisualEditor = <T extends { id: string; }>(props: { typeConfig: ICus
     };
 
     return (
-        <Context.Provider value={{ page: TEST_PAGE }}>
+        <ItemContext.Provider value={props.item}>
             <Container>
                 <Header>
                     <Breadcrumb crumbs={[
@@ -111,7 +98,7 @@ const LoadedVisualEditor = <T extends { id: string; }>(props: { typeConfig: ICus
                     <Panel root={value} changeData={changeData} addBlock={addBlock} removeBlock={removeBlock} />
                 </Main>
             </Container>
-        </Context.Provider>
+        </ItemContext.Provider>
     );
 };
 
