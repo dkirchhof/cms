@@ -4,7 +4,7 @@ import { Breadcrumb } from "../../components/breadcrumb";
 import { ErrorDisplay } from "../../components/errorDisplay";
 import { ICustomTypeConfig } from "../../types/customType";
 import { Header } from "../pageStyles";
-import { Container } from "./styles";
+import { Container, List, Main } from "./styles";
 import { useLoadCustomTypeItems } from "./useLoadCustomTypeItems";
 
 export const TypeList = () => {
@@ -32,11 +32,15 @@ const LoadedTypeList = (props: { typeConfig: ICustomTypeConfig<any>; items: any[
                 ]}/>
             </Header>
 
-            <div>{props.items.map(item => {
-                const link = `/${props.typeConfig.pluralName}/${item.id}`;
+            <Main>
+                <List>
+                    {props.items.map(item => {
+                        const link = `/${props.typeConfig.pluralName}/${item.id}`;
 
-                return <Link key={item.id} to={link}>{props.typeConfig.getLabel(item)}</Link>
-            })}</div>
+                        return <Link key={item.id} to={link}>{props.typeConfig.getLabel(item)}</Link>
+                    })}
+                </List>
+            </Main>
         </Container>
     );
 };

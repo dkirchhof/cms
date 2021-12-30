@@ -1,6 +1,6 @@
 import { render } from "react-dom";
 import { HashRouter, Route, Routes } from "react-router-dom";
-import { Sidebar } from "./components/sidebar";
+import { Header } from "./components/header";
 import { TypeEditor } from "./pages/typeEditor";
 import { TypeList } from "./pages/typeList";
 import { VisualEditor } from "./pages/visualEditor";
@@ -12,7 +12,7 @@ const App = () => {
             <GlobalStyles />
 
             <HashRouter>
-                <Sidebar />
+                <Header />
 
                 <Routes>
                     <Route path="/" element={<div>Home</div>} />

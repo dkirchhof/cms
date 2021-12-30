@@ -6,14 +6,17 @@ const fadeIn = keyframes`
 `;
 
 export const PageContainer = styled.div`
-    padding: 32px;
-
     animation: ${fadeIn} 1s both;
 `;
 
 export const Header = styled.header`
     display: grid;
-    grid-template-columns: 1fr auto auto;
+    grid-template-columns: 1fr 128px 128px;
     grid-gap: 16px;
     align-items: center;
+
+    padding: 16px 32px;
+
+    background: white;
+    box-shadow: 0px 5px 10px rgb(0 0 0 / 10%);
 `;

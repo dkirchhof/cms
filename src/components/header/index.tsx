@@ -3,7 +3,7 @@ import { HOME } from "../../messages";
 import { MY_TYPES } from "../../myTypes";
 import { Container, Nav } from "./styles";
 
-export const Sidebar = () => (
+export const Header = () => (
     <Container>
         <Nav>
             <NavLink to="/">{HOME}</NavLink>

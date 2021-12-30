@@ -6,7 +6,7 @@ import { ErrorDisplay } from "../../components/errorDisplay";
 import { BUTTON_RESET, BUTTON_SAVE } from "../../messages";
 import { ICustomTypeConfig } from "../../types/customType";
 import { Header } from "../pageStyles";
-import { Container, Label } from "./styles";
+import { Container, Fields, Label, Main } from "./styles";
 import { useLoadCustomTypeItem } from "./useLoadCustomTypeItem";
 
 export const TypeEditor = () => {
@@ -57,22 +57,26 @@ const LoadedTypeEditor = (props: { typeConfig: ICustomTypeConfig<any>; item: any
                 <SecondaryButton onClick={reset}>{BUTTON_RESET}</SecondaryButton>
                 <PrimaryButton onClick={save}>{BUTTON_SAVE}</PrimaryButton>
             </Header>
+            
+            <Main>
+                <Fields>
+                    {Object.entries(inputs).map(([prop, Input]) => {
+                        if (!Input) {
+                            return null;
+                        }
 
-            {Object.entries(inputs).map(([prop, Input]) => {
-                if (!Input) {
-                    return null;
-                }
+                        const value = (editedFields[prop] !== undefined) ? editedFields[prop] : props.item[prop];
+                        const onChange = changeField(prop);
 
-                const value = (editedFields[prop] !== undefined) ? editedFields[prop] : props.item[prop];
-                const onChange = changeField(prop);
-
-                return (
-                    <Label key={prop}>
-                        {prop}
-                        <Input prop={prop} value={value} onChange={onChange} />
-                    </Label>
-                );
-            })}
+                        return (
+                            <Label key={prop}>
+                                {prop}
+                                <Input prop={prop} value={value} onChange={onChange} />
+                            </Label>
+                        );
+                    })}
+                </Fields>
+            </Main>
         </Container>
     );
 };
