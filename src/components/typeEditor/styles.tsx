@@ -10,6 +10,10 @@ export const Container = styled.div`
 `;
 
 export const Header = styled.header`
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    grid-gap: 16px;
+    align-items: center;
 `;
 
 export const Label = styled.label`

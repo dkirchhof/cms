@@ -9,11 +9,13 @@ import { ImageBlock } from "../../blocks/imageBlock";
 import { MaxWidthBlock } from "../../blocks/maxWidthBlock";
 import { RootBlock } from "../../blocks/rootBlock";
 import { TextBlock } from "../../blocks/textBlock";
+import { BUTTON_RESET, BUTTON_SAVE } from "../../messages";
 import { IBlockConfig, IBlock } from "../../types/block";
 import { ICustomTypeConfig } from "../../types/customType";
 import { IPage } from "../../types/page";
 import { traversePath } from "../../utils/path";
 import { Breadcrumb } from "../breadcrumb";
+import { PrimaryButton, SecondaryButton } from "../button";
 import { Panel } from "./panel";
 import { Preview } from "./preview";
 import { Container, Header, Main } from "./styles";
@@ -98,10 +100,10 @@ const LoadedVisualEditor = <T extends { id: string; }>(props: { typeConfig: ICus
                         { urlSegment: props.item.id, label: props.typeConfig.getLabel(props.item) },
                         { label: props.prop.toString() },
                     ]}/>
-                </Header>
 
-                {/* <button onClick={reset}>{BUTTON_RESET}</button> */}
-                {/* <button onClick={save}>{BUTTON_SAVE}</button> */}
+                    <SecondaryButton>{BUTTON_RESET}</SecondaryButton>
+                    <PrimaryButton>{BUTTON_SAVE}</PrimaryButton>
+                </Header>
 
                 <Main>
                     <Preview root={value} />

@@ -4,6 +4,7 @@ import { match } from "ts-pattern";
 import { BUTTON_RESET, BUTTON_SAVE } from "../../messages";
 import { ICustomTypeConfig } from "../../types/customType";
 import { Breadcrumb } from "../breadcrumb";
+import { PrimaryButton, SecondaryButton } from "../button";
 import { Container, Header, Label } from "./styles";
 import { useLoadCustomTypeItem } from "./useLoadCustomTypeItem";
 
@@ -51,10 +52,10 @@ const LoadedTypeEditor = (props: { typeConfig: ICustomTypeConfig<any>; item: any
                     { urlSegment: props.typeConfig.pluralName, label: props.typeConfig.pluralName },
                     { label: label  },
                 ]}/>
-            </Header>
 
-            <button onClick={reset}>{BUTTON_RESET}</button>
-            <button onClick={save}>{BUTTON_SAVE}</button>
+                <SecondaryButton onClick={reset}>{BUTTON_RESET}</SecondaryButton>
+                <PrimaryButton onClick={save}>{BUTTON_SAVE}</PrimaryButton>
+            </Header>
 
             {Object.entries(inputs).map(([prop, Input]) => {
                 if (!Input) {
