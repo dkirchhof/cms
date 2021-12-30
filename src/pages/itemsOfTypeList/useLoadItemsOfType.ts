@@ -6,33 +6,33 @@ import { ICustomTypeConfig } from "../../types/customType";
 
 type State<T extends { id: string; }>
     = { state: "LOADING" } 
-    | { state: "LOADED"; typeConfig: ICustomTypeConfig<T>; items: T[]; }
+    | { state: "LOADED"; typeName: string; typeConfig: ICustomTypeConfig<T>; items: T[]; }
     | { state: "ERROR"; message: string; }
 
 export const useLoadItemsOfType = () => {
-    const { typePluralName } = useParams();
+    const { typeName } = useParams();
 
     const [state, setState] = useState<State<any>>({ state: "LOADING" });
 
     useEffect(() => {
         try {
-            if (!typePluralName) {
+            if (!typeName) {
                 throw new Error("typeConfig param is missing");
             }
 
-            const typeConfig = MY_TYPES.find(type => type.pluralName === typePluralName);
+            const typeConfig = MY_TYPES[typeName];
 
             if (!typeConfig) {
                 throw new Error("couldn't find typeConfig");
             }
 
-            const items = getItemsOfType(typePluralName);
+            const items = getItemsOfType(typeName);
 
-            setState({ state: "LOADED", typeConfig, items });
+            setState({ state: "LOADED", typeName, typeConfig, items });
         } catch (e: any) {
             setState({ state: "ERROR", message: e.message });
         }
-    }, [typePluralName]);
+    }, [typeName]);
 
     return state;
 };

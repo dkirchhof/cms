@@ -6,7 +6,7 @@ export const TypesList = () => {
     return (
         <Container>
             <List>
-                {MY_TYPES.map(type => <Link key={type.pluralName} to={type.pluralName}>{type.pluralName}</Link>)}
+                {Object.keys(MY_TYPES).map(typeName => <Link key={typeName} to={typeName}>{typeName}</Link>)}
             </List>
         </Container>
     );

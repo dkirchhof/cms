@@ -16,36 +16,36 @@ const MY_PAGES: IPage[] = [
             data: {
                 children: [
                     {
-                        blockName: "HeaderBlock",
+                        blockName: "Header",
                         data: {
                             imgSrc: "https://i.picsum.photos/id/60/1000/300.jpg?hmac=WmF-em1XlDmu1mGUw-jMk9g4Qr2mbIgTXGCVx03vWfE",
                             imgAlt: "desk",
                         },
                     },
                     {
-                        blockName: "MaxWidthBlock",
+                        blockName: "MaxWidth",
                         data: {
                             maxWidth: 800,
                             children: [
                                 {
-                                    blockName: "TextBlock",
+                                    blockName: "Paragraph",
                                     data: { text: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet." },
                                 },
                                 {
-                                    blockName: "TextBlock",
+                                    blockName: "Paragraph",
                                     data: { text: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet." }
                                 },
                                 {
-                                    blockName: "ImageBlock",
+                                    blockName: "Image",
                                     data: { src: "https://i.picsum.photos/id/101/200/200.jpg?hmac=8aiHS9K78DvBexQ7ZROLuLizDR22o8CcjRMUhHbZU6g", alt: "test bild" },
                                 },
                                 {
-                                    blockName: "ColumnsBlock",
+                                    blockName: "Columns",
                                     data: {
                                         gap: 10,
                                         children: [
-                                            { blockName: "TextBlock", data: { text: "column 1" } },
-                                            { blockName: "TextBlock", data: { text: "column 2" } },
+                                            { blockName: "Paragraph", data: { text: "column 1" } },
+                                            { blockName: "Paragraph", data: { text: "column 2" } },
                                         ],
                                     },
                                 },
@@ -58,16 +58,16 @@ const MY_PAGES: IPage[] = [
     },
 ];
 
-export const getItemsOfType = (typePluralName: string) => {
-    if (typePluralName === "pages") {
+export const getItemsOfType = (typeName: string) => {
+    if (typeName === "pages") {
         return MY_PAGES;
     }
 
     throw new Error("couldn't find type");
 };
 
-export const getItemOfType = (typePluralName: string, id: string) => {
-    if (typePluralName === "pages") {
+export const getItemOfType = (typeName: string, id: string) => {
+    if (typeName === "pages") {
         const item = MY_PAGES.find(page => page.id === id);
 
         if (!item) {

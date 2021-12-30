@@ -19,9 +19,9 @@ const App = () => {
                     <Route path="/" element={<div>Home</div>} />
                     
                     <Route path="/content" element={<TypesList />} />
-                    <Route path="/content/:typePluralName" element={<ItemsOfTypeList />} />
-                    <Route path="/content/:typePluralName/:id" element={<ItemEditor />} />
-                    <Route path="/content/:typePluralName/:id/:prop" element={<VisualBlockEditor />} />
+                    <Route path="/content/:typeName" element={<ItemsOfTypeList />} />
+                    <Route path="/content/:typeName/:id" element={<ItemEditor />} />
+                    <Route path="/content/:typeName/:id/:prop" element={<VisualBlockEditor />} />
 
                     <Route path="/404" element={<div>404</div>} />
                     <Route path="*" element={<div>404</div>} />

@@ -14,7 +14,7 @@ export const ItemsOfTypeList = () => {
 
     return match(state)
         .with({ state: "LOADING" }, () => <Loading />)
-        .with({ state: "LOADED" }, ({ typeConfig, items }) => <Loaded typeConfig={typeConfig} items={items} />)
+        .with({ state: "LOADED" }, ({ typeName, typeConfig, items }) => <Loaded typeName={typeName} typeConfig={typeConfig} items={items} />)
         .with({ state: "ERROR" }, ({ message }) => <Error message={message} />)
         .exhaustive();
 };
@@ -25,12 +25,12 @@ const Loading = () => {
     );
 };
 
-const Loaded = (props: { typeConfig: ICustomTypeConfig<any>; items: any[]; }) => {
+const Loaded = (props: { typeName: string; typeConfig: ICustomTypeConfig<any>; items: any[]; }) => {
     return (
         <Container>
             <Header>
                 <Breadcrumb crumbs={[
-                    { label: props.typeConfig.pluralName },
+                    { label: props.typeName },
                 ]}/>
 
                 <PrimaryButton>{CREATE_NEW_ITEM}</PrimaryButton>

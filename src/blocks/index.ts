@@ -9,10 +9,10 @@ import { TextBlock } from "./textBlock";
 
 export const BLOCKS: BlocksMap = {
     "Root": RootBlock,
-    "HeaderBlock": HeaderBlock,
-    "HeadingBlock": HeadingBlock,
-    "TextBlock": TextBlock,
-    "ImageBlock": ImageBlock,
-    "MaxWidthBlock": MaxWidthBlock,
-    "ColumnsBlock": ColumnsBlock,
+    "Header": HeaderBlock,
+    "Heading": HeadingBlock,
+    "Paragraph": TextBlock,
+    "Image": ImageBlock,
+    "MaxWidth": MaxWidthBlock,
+    "Columns": ColumnsBlock,
 };

@@ -14,7 +14,7 @@ export const ItemEditor = () => {
 
     return match(state)
         .with({ state: "LOADING" }, () => <Loading />)
-        .with({ state: "LOADED" }, ({ typeConfig, item }) => <Loaded typeConfig={typeConfig} item={item} />)
+        .with({ state: "LOADED" }, ({ typeName, typeConfig, item }) => <Loaded typeName={typeName} typeConfig={typeConfig} item={item} />)
         .with({ state: "ERROR" }, ({ message }) => <Error message={message} />)
         .exhaustive();
 };
@@ -25,7 +25,7 @@ const Loading = () => {
     );
 };
 
-const Loaded = (props: { typeConfig: ICustomTypeConfig<any>; item: any; }) => {
+const Loaded = (props: { typeName: string; typeConfig: ICustomTypeConfig<any>; item: any; }) => {
     const [editedFields, setEditedFields] = useState<any>({});
 
     const reset = () => {
@@ -50,7 +50,7 @@ const Loaded = (props: { typeConfig: ICustomTypeConfig<any>; item: any; }) => {
         <Container>
             <Header>
                 <Breadcrumb crumbs={[
-                    { urlSegment: `content/${props.typeConfig.pluralName}`, label: props.typeConfig.pluralName },
+                    { urlSegment: `content/${props.typeName}`, label: props.typeName },
                     { label: label  },
                 ]}/>
 

@@ -23,7 +23,7 @@ export const VisualBlockEditor = () => {
 
     return match(state)
         .with({ state: "LOADING" }, () => <LoadingVisualEditor />)
-        .with({ state: "LOADED" }, ({ typeConfig, item, prop }) => <LoadedVisualEditor typeConfig={typeConfig} item={item} prop={prop} />)
+        .with({ state: "LOADED" }, ({ typeName, typeConfig, item, prop }) => <LoadedVisualEditor typeName={typeName} typeConfig={typeConfig} item={item} prop={prop} />)
         .with({ state: "ERROR" }, ({ message }) => <ErrorVisualEditor message={message} />)
         .exhaustive();
 };
@@ -34,7 +34,7 @@ const LoadingVisualEditor = () => {
     );
 };
 
-const LoadedVisualEditor = (props: { typeConfig: ICustomTypeConfig<any>; item: any; prop: string }) => {
+const LoadedVisualEditor = (props: { typeName: string; typeConfig: ICustomTypeConfig<any>; item: any; prop: string }) => {
     const [value, setValue] = useState<IBlock>(deepCopy(props.item[props.prop]));
 
     const changeData = (path: string) => (prop: string) => (dataValue: any) => {
@@ -74,7 +74,7 @@ const LoadedVisualEditor = (props: { typeConfig: ICustomTypeConfig<any>; item: a
             <Container>
                 <Header>
                     <Breadcrumb crumbs={[
-                        { urlSegment: `content/${props.typeConfig.pluralName}`, label: props.typeConfig.pluralName },
+                        { urlSegment: `content/${props.typeName}`, label: props.typeName },
                         { urlSegment: props.item.id, label: props.typeConfig.getLabel(props.item) },
                         { label: props.prop.toString() },
                     ]}/>
