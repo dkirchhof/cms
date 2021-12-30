@@ -1,19 +1,10 @@
 import styled from "styled-components";
+import { PageContainer } from "../pageStyles";
 
-export const Container = styled.div`
+export const Container = styled(PageContainer)`
     display: flex;
     flex-direction: column;
     gap: 16px;
-    
-    position: relative;
-    padding: 32px;
-`;
-
-export const Header = styled.header`
-    display: grid;
-    grid-template-columns: 1fr auto auto;
-    grid-gap: 16px;
-    align-items: center;
 `;
 
 export const Label = styled.label`

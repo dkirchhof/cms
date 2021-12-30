@@ -16,9 +16,10 @@ import { IBlockConfig, IBlock } from "../../types/block";
 import { ICustomTypeConfig } from "../../types/customType";
 import { IPage } from "../../types/page";
 import { traversePath } from "../../utils/path";
+import { Header } from "../pageStyles";
 import { Panel } from "./panel";
 import { Preview } from "./preview";
-import { Container, Header, Main } from "./styles";
+import { Container, Main } from "./styles";
 import { useLoadPropOfCustomTypeItem } from "./useLoadPropOfCustomTypeItem";
 
 export type BlocksMap = { [s: string]: IBlockConfig<any>; }

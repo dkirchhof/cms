@@ -5,7 +5,8 @@ import { Breadcrumb } from "../../components/breadcrumb";
 import { PrimaryButton, SecondaryButton } from "../../components/button";
 import { BUTTON_RESET, BUTTON_SAVE } from "../../messages";
 import { ICustomTypeConfig } from "../../types/customType";
-import { Container, Header, Label } from "./styles";
+import { Header } from "../pageStyles";
+import { Container, Label } from "./styles";
 import { useLoadCustomTypeItem } from "./useLoadCustomTypeItem";
 
 export const TypeEditor = () => {

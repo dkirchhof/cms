@@ -1,5 +1,3 @@
-import styled from "styled-components";
+import { PageContainer } from "../pageStyles";
 
-export const Container = styled.div`
-    padding: 32px;
-`;
+export const Container = PageContainer;
