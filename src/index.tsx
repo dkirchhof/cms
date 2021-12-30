@@ -1,9 +1,9 @@
 import { render } from "react-dom";
 import { HashRouter, Route, Routes } from "react-router-dom";
 import { Sidebar } from "./components/sidebar";
-import { TypeEditor } from "./components/typeEditor";
-import { TypeList } from "./components/typeList";
-import { VisualEditor } from "./components/visualEditor";
+import { TypeEditor } from "./pages/typeEditor";
+import { TypeList } from "./pages/typeList";
+import { VisualEditor } from "./pages/visualEditor";
 import { GlobalStyles } from "./styles";
 
 const App = () => {

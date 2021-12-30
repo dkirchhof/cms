@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Navigate } from "react-router";
 import { match } from "ts-pattern";
+import { Breadcrumb } from "../../components/breadcrumb";
+import { PrimaryButton, SecondaryButton } from "../../components/button";
 import { BUTTON_RESET, BUTTON_SAVE } from "../../messages";
 import { ICustomTypeConfig } from "../../types/customType";
-import { Breadcrumb } from "../breadcrumb";
-import { PrimaryButton, SecondaryButton } from "../button";
 import { Container, Header, Label } from "./styles";
 import { useLoadCustomTypeItem } from "./useLoadCustomTypeItem";
 

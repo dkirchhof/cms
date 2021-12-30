@@ -1,4 +1,4 @@
-import { PrimaryButton, SecondaryButton } from "../../../button";
+import { PrimaryButton, SecondaryButton } from "../../../../components/button";
 import { BLOCKS } from "../../../visualEditor";
 import { Container, List } from "./styles";
 

@@ -1,4 +1,4 @@
 import { useContext as nativeUseContext } from "react";
-import { Context } from "../components/visualEditor";
+import { Context } from "../pages/visualEditor";
 
 export const useContext = () => nativeUseContext(Context);

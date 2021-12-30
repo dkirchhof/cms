@@ -1,7 +1,7 @@
 import { Link, Navigate } from "react-router-dom";
 import { match } from "ts-pattern";
+import { Breadcrumb } from "../../components/breadcrumb";
 import { ICustomTypeConfig } from "../../types/customType";
-import { Breadcrumb } from "../breadcrumb";
 import { Container } from "./styles";
 import { useLoadCustomTypeItems } from "./useLoadCustomTypeItems";
 
