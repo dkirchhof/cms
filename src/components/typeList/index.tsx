@@ -1,7 +1,8 @@
 import { Link, Navigate } from "react-router-dom";
 import { match } from "ts-pattern";
 import { ICustomTypeConfig } from "../../types/customType";
-import { Container, Heading } from "./styles";
+import { Breadcrumb } from "../breadcrumb";
+import { Container } from "./styles";
 import { useLoadCustomTypeItems } from "./useLoadCustomTypeItems";
 
 export const TypeList = () => {
@@ -23,7 +24,11 @@ const LoadingTypeList = () => {
 const LoadedTypeList = (props: { typeConfig: ICustomTypeConfig<any>; items: any[]; }) => {
     return (
         <Container>
-            <Heading>{props.typeConfig.pluralName}</Heading>
+            <header>
+                <Breadcrumb crumbs={[
+                    { label: props.typeConfig.pluralName },
+                ]}/>
+            </header>
 
             <div>{props.items.map(item => {
                 const link = `/${props.typeConfig.pluralName}/${item.id}`;

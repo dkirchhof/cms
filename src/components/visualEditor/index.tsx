@@ -9,14 +9,14 @@ import { ImageBlock } from "../../blocks/imageBlock";
 import { MaxWidthBlock } from "../../blocks/maxWidthBlock";
 import { RootBlock } from "../../blocks/rootBlock";
 import { TextBlock } from "../../blocks/textBlock";
-import { EDIT_TYPE_PROP_HEADER } from "../../messages";
 import { IBlockConfig, IBlock } from "../../types/block";
 import { ICustomTypeConfig } from "../../types/customType";
 import { IPage } from "../../types/page";
 import { traversePath } from "../../utils/path";
+import { Breadcrumb } from "../breadcrumb";
 import { Panel } from "./panel";
 import { Preview } from "./preview";
-import { Container, Heading, Main } from "./styles";
+import { Container, Header, Main } from "./styles";
 import { useLoadPropOfCustomTypeItem } from "./useLoadPropOfCustomTypeItem";
 
 export type BlocksMap = { [s: string]: IBlockConfig<any>; }
@@ -92,7 +92,13 @@ const LoadedVisualEditor = <T extends { id: string; }>(props: { typeConfig: ICus
     return (
         <Context.Provider value={{ page: TEST_PAGE }}>
             <Container>
-                <Heading>{EDIT_TYPE_PROP_HEADER(props.typeConfig.singularName, props.prop.toString())}</Heading>
+                <Header>
+                    <Breadcrumb crumbs={[
+                        { urlSegment: props.typeConfig.pluralName, label: props.typeConfig.pluralName },
+                        { urlSegment: props.item.id, label: props.typeConfig.getLabel(props.item) },
+                        { label: props.prop.toString() },
+                    ]}/>
+                </Header>
 
                 {/* <button onClick={reset}>{BUTTON_RESET}</button> */}
                 {/* <button onClick={save}>{BUTTON_SAVE}</button> */}

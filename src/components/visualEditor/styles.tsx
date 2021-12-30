@@ -11,10 +11,7 @@ export const Container = styled.div`
     box-sizing: border-box;
 `;
 
-export const Heading = styled.h2`
-    margin-top: 0;
-
-    text-transform: capitalize;
+export const Header = styled.header`
 `;
 
 export const Main = styled.main`

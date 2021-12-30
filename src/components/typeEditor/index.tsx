@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Navigate } from "react-router";
 import { match } from "ts-pattern";
-import { BUTTON_RESET, BUTTON_SAVE, EDIT_TYPE_HEADER } from "../../messages";
+import { BUTTON_RESET, BUTTON_SAVE } from "../../messages";
 import { ICustomTypeConfig } from "../../types/customType";
-import { Container, Heading, Label } from "./styles";
+import { Breadcrumb } from "../breadcrumb";
+import { Container, Header, Label } from "./styles";
 import { useLoadCustomTypeItem } from "./useLoadCustomTypeItem";
 
 export const TypeEditor = () => {
@@ -40,11 +41,17 @@ const LoadedTypeEditor = (props: { typeConfig: ICustomTypeConfig<any>; item: any
         });
     };
 
+    const label = props.typeConfig.getLabel(props.item);
     const inputs = props.typeConfig.getEditorInputs();
 
     return (
         <Container>
-            <Heading>{EDIT_TYPE_HEADER(props.typeConfig.singularName)}</Heading>
+            <Header>
+                <Breadcrumb crumbs={[
+                    { urlSegment: props.typeConfig.pluralName, label: props.typeConfig.pluralName },
+                    { label: label  },
+                ]}/>
+            </Header>
 
             <button onClick={reset}>{BUTTON_RESET}</button>
             <button onClick={save}>{BUTTON_SAVE}</button>

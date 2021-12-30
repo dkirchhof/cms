@@ -1,8 +1,5 @@
 export const HOME = "Home";
 
-export const EDIT_TYPE_HEADER = (typeSingularName: string) => `Edit ${typeSingularName}`;
-export const EDIT_TYPE_PROP_HEADER = (typeSingularName: string, prop: string) => `Edit ${typeSingularName} ${prop}`;
-
 export const BUTTON_SAVE = "Save";
 export const BUTTON_CANCEL = "Cancel";
 export const BUTTON_RESET = "Reset";

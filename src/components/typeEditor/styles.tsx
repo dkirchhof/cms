@@ -9,10 +9,7 @@ export const Container = styled.div`
     padding: 32px;
 `;
 
-export const Heading = styled.h2`
-    margin-top: 0;
-
-    text-transform: capitalize;
+export const Header = styled.header`
 `;
 
 export const Label = styled.label`
