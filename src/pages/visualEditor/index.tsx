@@ -84,7 +84,7 @@ const LoadedVisualEditor = <T extends { id: string; }>(props: { typeConfig: ICus
             <Container>
                 <Header>
                     <Breadcrumb crumbs={[
-                        { urlSegment: props.typeConfig.pluralName, label: props.typeConfig.pluralName },
+                        { urlSegment: `content/${props.typeConfig.pluralName}`, label: props.typeConfig.pluralName },
                         { urlSegment: props.item.id, label: props.typeConfig.getLabel(props.item) },
                         { label: props.prop.toString() },
                     ]}/>

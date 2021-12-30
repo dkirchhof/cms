@@ -56,16 +56,6 @@ const MY_PAGES: IPage[] = [
             },
         },
     },
-    { id: "", slug: "aaa", title: "aaa", subtitle: "", publishedFrom: null, publishedTo: null, createdAt: new Date(), updatedAt: new Date(), content: { blockName: "Root", data: { }} },
-    { id: "", slug: "aaa", title: "aaa", subtitle: "", publishedFrom: null, publishedTo: null, createdAt: new Date(), updatedAt: new Date(), content: { blockName: "Root", data: { }} },
-    { id: "", slug: "aaa", title: "aaa", subtitle: "", publishedFrom: null, publishedTo: null, createdAt: new Date(), updatedAt: new Date(), content: { blockName: "Root", data: { }} },
-    { id: "", slug: "aaa", title: "aaa", subtitle: "", publishedFrom: null, publishedTo: null, createdAt: new Date(), updatedAt: new Date(), content: { blockName: "Root", data: { }} },
-    { id: "", slug: "aaa", title: "aaa", subtitle: "", publishedFrom: null, publishedTo: null, createdAt: new Date(), updatedAt: new Date(), content: { blockName: "Root", data: { }} },
-    { id: "", slug: "aaa", title: "aaa", subtitle: "", publishedFrom: null, publishedTo: null, createdAt: new Date(), updatedAt: new Date(), content: { blockName: "Root", data: { }} },
-    { id: "", slug: "aaa", title: "aaa", subtitle: "", publishedFrom: null, publishedTo: null, createdAt: new Date(), updatedAt: new Date(), content: { blockName: "Root", data: { }} },
-    { id: "", slug: "aaa", title: "aaa", subtitle: "", publishedFrom: null, publishedTo: null, createdAt: new Date(), updatedAt: new Date(), content: { blockName: "Root", data: { }} },
-    { id: "", slug: "aaa", title: "aaa", subtitle: "", publishedFrom: null, publishedTo: null, createdAt: new Date(), updatedAt: new Date(), content: { blockName: "Root", data: { }} },
-    { id: "", slug: "aaa", title: "aaa", subtitle: "", publishedFrom: null, publishedTo: null, createdAt: new Date(), updatedAt: new Date(), content: { blockName: "Root", data: { }} },
 ];
 
 export const getItemsOfType = (typePluralName: string) => {

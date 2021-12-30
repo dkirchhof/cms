@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom";
 import { match } from "ts-pattern";
 import { Breadcrumb } from "../../components/breadcrumb";
+import { PrimaryButton } from "../../components/button";
 import { ErrorDisplay } from "../../components/errorDisplay";
+import { CREATE_NEW_ITEM } from "../../messages";
 import { ICustomTypeConfig } from "../../types/customType";
 import { Header } from "../pageStyles";
 import { Container, List, Main } from "./styles";
@@ -30,15 +32,13 @@ const LoadedTypeList = (props: { typeConfig: ICustomTypeConfig<any>; items: any[
                 <Breadcrumb crumbs={[
                     { label: props.typeConfig.pluralName },
                 ]}/>
+
+                <PrimaryButton>{CREATE_NEW_ITEM}</PrimaryButton>
             </Header>
 
             <Main>
                 <List>
-                    {props.items.map(item => {
-                        const link = `/${props.typeConfig.pluralName}/${item.id}`;
-
-                        return <Link key={item.id} to={link}>{props.typeConfig.getLabel(item)}</Link>
-                    })}
+                    {props.items.map(item => <Link key={item.id} to={item.id}>{props.typeConfig.getLabel(item)}</Link>)}
                 </List>
             </Main>
         </Container>

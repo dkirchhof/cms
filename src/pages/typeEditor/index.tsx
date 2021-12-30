@@ -50,7 +50,7 @@ const LoadedTypeEditor = (props: { typeConfig: ICustomTypeConfig<any>; item: any
         <Container>
             <Header>
                 <Breadcrumb crumbs={[
-                    { urlSegment: props.typeConfig.pluralName, label: props.typeConfig.pluralName },
+                    { urlSegment: `content/${props.typeConfig.pluralName}`, label: props.typeConfig.pluralName },
                     { label: label  },
                 ]}/>
 

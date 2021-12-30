@@ -11,9 +11,9 @@ export const Breadcrumb = (props: IProps) => (
             if (crumb.urlSegment) {
                 const link = `/${props.crumbs.slice(0, i + 1).map(c => c.urlSegment).join("/")}`;
 
-                return <Link to={link}>{crumb.label}</Link>;
+                return <Link key={i} to={link}>{crumb.label}</Link>;
             } else {
-                return <span>{crumb.label}</span>;
+                return <span key={i}>{crumb.label}</span>;
             }
         })}
     </Nav>
