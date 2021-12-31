@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getItemsOfType } from "../../myDatabaseService";
+import { getItems } from "../../api";
 import { MY_TYPES } from "../../myTypes";
 import { ICustomType, ICustomTypeConfig } from "../../types/customType";
 
@@ -14,7 +14,7 @@ export const useLoadItemsOfType = <T>() => {
 
     const [state, setState] = useState<State<T>>({ state: "LOADING" });
 
-    useEffect(() => {
+    const fetch = async() => {
         try {
             if (!typeName) {
                 throw new Error("typeConfig param is missing");
@@ -26,12 +26,16 @@ export const useLoadItemsOfType = <T>() => {
                 throw new Error("couldn't find typeConfig");
             }
 
-            const items = getItemsOfType(typeName) as any;
+            const items = await getItems<T>(typeName);
 
             setState({ state: "LOADED", typeName, typeConfig, items });
         } catch (e: any) {
             setState({ state: "ERROR", message: e.message });
         }
+    };
+
+    useEffect(() => {
+        fetch();
     }, [typeName]);
 
     return state;

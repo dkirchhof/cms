@@ -1,9 +1,9 @@
-import { IPage } from "../myTypes/page";
 import { ICustomType } from "../types/customType";
 
 // mock data
-const MY_PAGES: ICustomType<IPage>[] = [
+const ITEMS: ICustomType<any>[] = [
     {
+        typeName: "Page",
         id: "f3405fglsdfshlk4",
         createdAt: "",
         updatedAt: "",
@@ -62,23 +62,15 @@ const MY_PAGES: ICustomType<IPage>[] = [
 ];
 
 export const getItemsOfType = (typeName: string) => {
-    if (typeName === "pages") {
-        return MY_PAGES;
-    }
-
-    throw new Error("couldn't find type");
+    return ITEMS.filter(item => item.typeName === typeName);
 };
 
 export const getItemOfType = (typeName: string, id: string) => {
-    if (typeName === "pages") {
-        const item = MY_PAGES.find(page => page.id === id);
+    const item = ITEMS.find(item => item.typeName === typeName && item.id === id);
 
-        if (!item) {
-            throw new Error("couldn't find item");
-        }
-
-        return item;
+    if (!item) {
+        throw new Error("couldn't find item");
     }
 
-    throw new Error("couldn't find type");
+    return item;
 };

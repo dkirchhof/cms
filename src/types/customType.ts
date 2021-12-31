@@ -6,6 +6,7 @@ export type GetLabel<T> = (type: T) => string;
 export type GetTypeEditorInputs<T> = () => { [prop in keyof T]: PropEditor<T[prop]> };
 
 export interface ICustomType<DATA> {
+    typeName: string;
     id: string;
     createdAt: string;
     updatedAt: string;
