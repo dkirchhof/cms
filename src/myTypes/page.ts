@@ -5,14 +5,11 @@ import { IBlock } from "../types/block";
 import { ICustomTypeConfig } from "../types/customType";
 
 export interface IPage {
-    id: string;
     slug: string;
     title: string;
     subtitle: string;
     publishedFrom: string | null;
     publishedTo: string | null;
-    createdAt: Date;
-    updatedAt: Date;
     content: IBlock;
 }
 

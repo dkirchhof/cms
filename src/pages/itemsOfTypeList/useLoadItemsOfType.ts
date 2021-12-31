@@ -2,17 +2,17 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getItemsOfType } from "../../myDatabaseService";
 import { MY_TYPES } from "../../myTypes";
-import { ICustomTypeConfig } from "../../types/customType";
+import { ICustomType, ICustomTypeConfig } from "../../types/customType";
 
-type State<T extends { id: string; }>
+type State<T>
     = { state: "LOADING" } 
-    | { state: "LOADED"; typeName: string; typeConfig: ICustomTypeConfig<T>; items: T[]; }
+    | { state: "LOADED"; typeName: string; typeConfig: ICustomTypeConfig<T>; items: ICustomType<T>[]; }
     | { state: "ERROR"; message: string; }
 
-export const useLoadItemsOfType = () => {
+export const useLoadItemsOfType = <T>() => {
     const { typeName } = useParams();
 
-    const [state, setState] = useState<State<any>>({ state: "LOADING" });
+    const [state, setState] = useState<State<T>>({ state: "LOADING" });
 
     useEffect(() => {
         try {
@@ -26,7 +26,7 @@ export const useLoadItemsOfType = () => {
                 throw new Error("couldn't find typeConfig");
             }
 
-            const items = getItemsOfType(typeName);
+            const items = getItemsOfType(typeName) as any;
 
             setState({ state: "LOADED", typeName, typeConfig, items });
         } catch (e: any) {

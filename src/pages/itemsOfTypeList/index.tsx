@@ -4,13 +4,13 @@ import { Breadcrumb } from "../../components/breadcrumb";
 import { PrimaryButton } from "../../components/button";
 import { ErrorDisplay } from "../../components/errorDisplay";
 import { CREATE_NEW_ITEM } from "../../messages";
-import { ICustomTypeConfig } from "../../types/customType";
+import { ICustomType, ICustomTypeConfig } from "../../types/customType";
 import { Header } from "../pageStyles";
 import { Container, List, Main } from "./styles";
 import { useLoadItemsOfType } from "./useLoadItemsOfType";
 
-export const ItemsOfTypeList = () => {
-    const state = useLoadItemsOfType();
+export const ItemsOfTypeList = <T extends any>() => {
+    const state = useLoadItemsOfType<T>();
 
     return match(state)
         .with({ state: "LOADING" }, () => <Loading />)
@@ -25,7 +25,7 @@ const Loading = () => {
     );
 };
 
-const Loaded = (props: { typeName: string; typeConfig: ICustomTypeConfig<any>; items: any[]; }) => {
+const Loaded = <T extends any>(props: { typeName: string; typeConfig: ICustomTypeConfig<T>; items: ICustomType<T>[]; }) => {
     return (
         <Container>
             <Header>
@@ -38,7 +38,7 @@ const Loaded = (props: { typeName: string; typeConfig: ICustomTypeConfig<any>; i
 
             <Main>
                 <List>
-                    {props.items.map(item => <Link key={item.id} to={item.id}>{props.typeConfig.getLabel(item)}</Link>)}
+                    {props.items.map(item => <Link key={item.id} to={item.id}>{props.typeConfig.getLabel(item.data)}</Link>)}
                 </List>
             </Main>
         </Container>

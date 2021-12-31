@@ -3,18 +3,18 @@ import { useParams } from "react-router-dom";
 import { getItemOfType } from "../../myDatabaseService";
 import { MY_TYPES } from "../../myTypes";
 import { IBlock } from "../../types/block";
-import { ICustomTypeConfig } from "../../types/customType";
+import { ICustomType, ICustomTypeConfig } from "../../types/customType";
 import { KeyOfWithType } from "../../types/keyOfWithType";
 
-type State<T extends { id: string; }>
+type State<T>
     = { state: "LOADING" } 
-    | { state: "LOADED"; typeName: string; typeConfig: ICustomTypeConfig<T>; item: T; prop: KeyOfWithType<T, IBlock>; }
+    | { state: "LOADED"; typeName: string; typeConfig: ICustomTypeConfig<T>; item: ICustomType<T>; prop: KeyOfWithType<T, IBlock>; }
     | { state: "ERROR"; message: string; }
 
-export const useLoadPropOfCustomTypeItem = () => {
+export const useLoadPropOfCustomTypeItem = <T>() => {
     const { typeName, id, prop } = useParams();
 
-    const [state, setState] = useState<State<any>>({ state: "LOADING" });
+    const [state, setState] = useState<State<T>>({ state: "LOADING" });
 
     useEffect(() => {
         try {
@@ -34,11 +34,11 @@ export const useLoadPropOfCustomTypeItem = () => {
                 throw new Error("couldn't find item");
             }
 
-            if (item[prop] === undefined) {
+            if (item.data[prop] === undefined) {
                 throw new Error("prop doesn't exist in type");
             }
 
-            setState({ state: "LOADED", typeName, typeConfig, item, prop });
+            setState({ state: "LOADED", typeName, typeConfig, item, prop: prop as KeyOfWithType<T, IBlock> });
         } catch (e: any) {
             setState({ state: "ERROR", message: e.message });
         }

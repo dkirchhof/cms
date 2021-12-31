@@ -6,7 +6,8 @@ import { PrimaryButton, SecondaryButton } from "../../components/button";
 import { ErrorDisplay } from "../../components/errorDisplay";
 import { BUTTON_RESET, BUTTON_SAVE } from "../../messages";
 import { IBlock } from "../../types/block";
-import { ICustomTypeConfig } from "../../types/customType";
+import { ICustomType, ICustomTypeConfig } from "../../types/customType";
+import { KeyOfWithType } from "../../types/keyOfWithType";
 import { deepCopy } from "../../utils/deepCopy";
 import { traversePath } from "../../utils/path";
 import { Header } from "../pageStyles";
@@ -16,10 +17,10 @@ import { Container, Main } from "./styles";
 import { useLoadPropOfCustomTypeItem } from "./useLoadPropOfCustomTypeItem";
 
 export const ItemContext = createContext<any>(null);
-export const useItem = <T extends { id: string; }>() => useContext<T>(ItemContext);
+export const useItem = <T extends any>() => useContext<T>(ItemContext);
 
-export const VisualBlockEditor = () => {
-    const state = useLoadPropOfCustomTypeItem();
+export const VisualBlockEditor = <T extends any>() => {
+    const state = useLoadPropOfCustomTypeItem<T>();
 
     return match(state)
         .with({ state: "LOADING" }, () => <LoadingVisualEditor />)
@@ -34,8 +35,8 @@ const LoadingVisualEditor = () => {
     );
 };
 
-const LoadedVisualEditor = (props: { typeName: string; typeConfig: ICustomTypeConfig<any>; item: any; prop: string }) => {
-    const [value, setValue] = useState<IBlock>(deepCopy(props.item[props.prop]));
+const LoadedVisualEditor = <T extends any>(props: { typeName: string; typeConfig: ICustomTypeConfig<T>; item: ICustomType<T>; prop: KeyOfWithType<T, IBlock> }) => {
+    const [value, setValue] = useState<IBlock>(deepCopy(props.item.data[props.prop] as any));
 
     const changeData = (path: string) => (prop: string) => (dataValue: any) => {
         setValue(
@@ -62,7 +63,7 @@ const LoadedVisualEditor = (props: { typeName: string; typeConfig: ICustomTypeCo
     };
 
     const reset = () => {
-        setValue(deepCopy(props.item[props.prop]));
+        setValue(deepCopy(props.item.data[props.prop] as any));
     };
 
     const save = () => {
@@ -75,7 +76,7 @@ const LoadedVisualEditor = (props: { typeName: string; typeConfig: ICustomTypeCo
                 <Header>
                     <Breadcrumb crumbs={[
                         { urlSegment: `content/${props.typeName}`, label: props.typeName },
-                        { urlSegment: props.item.id, label: props.typeConfig.getLabel(props.item) },
+                        { urlSegment: props.item.id, label: props.typeConfig.getLabel(props.item.data) },
                         { label: props.prop.toString() },
                     ]}/>
 

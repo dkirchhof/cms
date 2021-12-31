@@ -4,13 +4,15 @@ import { Breadcrumb } from "../../components/breadcrumb";
 import { PrimaryButton, SecondaryButton } from "../../components/button";
 import { ErrorDisplay } from "../../components/errorDisplay";
 import { BUTTON_RESET, BUTTON_SAVE } from "../../messages";
-import { ICustomTypeConfig } from "../../types/customType";
+import { ICustomType, ICustomTypeConfig } from "../../types/customType";
+import { PropEditor } from "../../types/propEditor";
+import { mapObject } from "../../utils/mapObject";
 import { Header } from "../pageStyles";
 import { Container, Fields, Label, Main } from "./styles";
 import { useLoadItem } from "./useLoadItem";
 
-export const ItemEditor = () => {
-    const state = useLoadItem();
+export const ItemEditor = <T extends any>() => {
+    const state = useLoadItem<T>();
 
     return match(state)
         .with({ state: "LOADING" }, () => <Loading />)
@@ -25,8 +27,8 @@ const Loading = () => {
     );
 };
 
-const Loaded = (props: { typeName: string; typeConfig: ICustomTypeConfig<any>; item: any; }) => {
-    const [editedFields, setEditedFields] = useState<any>({});
+const Loaded = <T extends any>(props: { typeName: string; typeConfig: ICustomTypeConfig<T>; item: ICustomType<T>; }) => {
+    const [editedFields, setEditedFields] = useState<Partial<T>>({});
 
     const reset = () => {
         setEditedFields({});
@@ -36,14 +38,14 @@ const Loaded = (props: { typeName: string; typeConfig: ICustomTypeConfig<any>; i
         console.log(editedFields);
     };
 
-    const changeField = (prop: string) => (value: any) => {
+    const changeField = <P extends keyof T>(prop: P) => (value: T[P]) => {
         setEditedFields({
             ...editedFields,
             [prop]: value,
         });
     };
 
-    const label = props.typeConfig.getLabel(props.item);
+    const label = props.typeConfig.getLabel(props.item.data);
     const inputs = props.typeConfig.getEditorInputs();
 
     return (
@@ -60,18 +62,18 @@ const Loaded = (props: { typeName: string; typeConfig: ICustomTypeConfig<any>; i
             
             <Main>
                 <Fields>
-                    {Object.entries(inputs).map(([prop, Input]) => {
+                    {mapObject<keyof T, PropEditor<any>>(inputs, ([prop, Input]) => {
                         if (!Input) {
                             return null;
                         }
 
-                        const value = (editedFields[prop] !== undefined) ? editedFields[prop] : props.item[prop];
+                        const value = (editedFields[prop] !== undefined) ? editedFields[prop] : props.item.data[prop];
                         const onChange = changeField(prop);
 
                         return (
-                            <Label key={prop}>
+                            <Label key={prop.toString()}>
                                 {prop}
-                                <Input prop={prop} value={value} onChange={onChange} />
+                                <Input prop={prop.toString()} value={value} onChange={onChange} />
                             </Label>
                         );
                     })}
