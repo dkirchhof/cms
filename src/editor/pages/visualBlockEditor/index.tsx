@@ -1,7 +1,7 @@
 import update from "immer";
 import { createContext, useContext, useState } from "react";
 import { match } from "ts-pattern";
-import { FullType, IItemTypeConfig, ItemTypeConfigs } from "../../../shared/types/itemTypeConfig";
+import { GetItemType, IItemTypeConfig, ItemTypeConfigs } from "../../../shared/types/itemTypeConfig";
 import { Breadcrumb } from "../../components/breadcrumb";
 import { PrimaryButton, SecondaryButton } from "../../components/button";
 import { ErrorDisplay } from "../../components/errorDisplay";
@@ -41,7 +41,7 @@ const loadedVisualEditorFactory = (blockConfigs: BlockConfigs) => {
     const Preview = previewFactory(blockConfigs);
     const Panel = panelFactory(blockConfigs);
 
-    return <T extends IItemTypeConfig>(props: { itemTypeConfig: T; item: FullType<T>; prop: KeyOfWithType<FullType<T>, IBlock> }) => {
+    return <T extends IItemTypeConfig>(props: { itemTypeConfig: T; item: GetItemType<T>; prop: KeyOfWithType<GetItemType<T>, IBlock> }) => {
         const [value, setValue] = useState<IBlock>(deepCopy(props.item[props.prop] as any));
 
         const changeData = (path: string) => (prop: string) => (dataValue: any) => {

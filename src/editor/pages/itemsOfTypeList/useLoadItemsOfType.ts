@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { IItemTypeConfig, ItemTypeConfigs, MinimalType } from "../../../shared/types/itemTypeConfig";
+import { GetItemType, IItemTypeConfig, ItemTypeConfigs } from "../../../shared/types/itemTypeConfig";
 import { findItemConfigByName } from "../../../shared/utils/findItemTypeConfig";
 import { getItems } from "../../api";
 
 type State<T extends IItemTypeConfig>
     = { state: "LOADING" } 
-    | { state: "LOADED"; itemTypeConfig: T; items: MinimalType<T>[]; }
+    | { state: "LOADED"; itemTypeConfig: T; items: GetItemType<T>[]; }
     | { state: "ERROR"; message: string; }
 
 export const useLoadItemsOfType = <T extends IItemTypeConfig>(itemTypeConfigs: ItemTypeConfigs) => {

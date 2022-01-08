@@ -1,4 +1,4 @@
-import { FullType, IItemTypeConfig, MinimalType } from "../../shared/types/itemTypeConfig";
+import { IItemTypeConfig, GetItemType } from "../../shared/types/itemTypeConfig";
 import { CreateItemBody, DeleteItemBody, GetItemBody, GetItemsBody, RequestBody, UpdateItemBody } from "../../shared/types/requestData";
 
 const request = async <T>(body: RequestBody) => {
@@ -19,36 +19,36 @@ const request = async <T>(body: RequestBody) => {
     }
 };
 
-export const getItem = async <T extends IItemTypeConfig<any, any>>(itemTypeConfig: T, id: string) => {
+export const getItem = async <T extends IItemTypeConfig>(itemTypeConfig: T, id: string) => {
     const body: GetItemBody = {
         method: "getItem",
         typeName: itemTypeConfig.name[0],
         id,
     };
 
-    return request<FullType<T>>(body);
+    return request<GetItemType<T>>(body);
 };
 
-export const getItems = async <T extends IItemTypeConfig<any, any>>(itemTypeConfig: T) => {
+export const getItems = async <T extends IItemTypeConfig>(itemTypeConfig: T) => {
     const body: GetItemsBody = {
         method: "getItems",
         typeName: itemTypeConfig.name[0],
     };
 
-    return request<MinimalType<T>[]>(body);
+    return request<GetItemType<T>[]>(body);
 };
 
-export const createItem = async <T extends IItemTypeConfig<any, any>>(itemTypeConfig: T, data: FullType<T>) => {
+export const createItem = async <T extends IItemTypeConfig>(itemTypeConfig: T, data: GetItemType<T>) => {
     const body: CreateItemBody = {
         method: "createItem",
         typeName: itemTypeConfig.name[0],
         newItemData: data,
     };
 
-    return request<FullType<T>>(body);
+    return request<GetItemType<T>>(body);
 };
 
-export const updateItem = async <T extends IItemTypeConfig<any, any>>(itemTypeConfig: T, id: string, data: Partial<FullType<T>>) => {
+export const updateItem = async <T extends IItemTypeConfig>(itemTypeConfig: T, id: string, data: Partial<GetItemType<T>>) => {
     const body: UpdateItemBody = {
         method: "updateItem",
         typeName: itemTypeConfig.name[0],
@@ -56,10 +56,10 @@ export const updateItem = async <T extends IItemTypeConfig<any, any>>(itemTypeCo
         updatedItemData: data,
     };
 
-    return request<FullType<T>>(body);
+    return request<GetItemType<T>>(body);
 };
 
-export const deleteItem = async (itemTypeConfig: IItemTypeConfig<any, any>, id: string) => {
+export const deleteItem = async (itemTypeConfig: IItemTypeConfig, id: string) => {
     const body: DeleteItemBody = {
         method: "deleteItem",
         typeName: itemTypeConfig.name[0],

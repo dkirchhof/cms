@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { FullType, IItemTypeConfig, ItemTypeConfigs } from "../../../shared/types/itemTypeConfig";
+import { GetItemType, IItemTypeConfig, ItemTypeConfigs } from "../../../shared/types/itemTypeConfig";
 import { findItemConfigByName } from "../../../shared/utils/findItemTypeConfig";
 import { getItem } from "../../api";
 import { IBlock } from "../../types/block";
@@ -8,7 +8,7 @@ import { KeyOfWithType } from "../../types/keyOfWithType";
 
 type State<T extends IItemTypeConfig>
     = { state: "LOADING" } 
-    | { state: "LOADED"; itemTypeConfig: T; item: FullType<T>; prop: KeyOfWithType<FullType<T>, IBlock>; }
+    | { state: "LOADED"; itemTypeConfig: T; item: GetItemType<T>; prop: KeyOfWithType<GetItemType<T>, IBlock>; }
     | { state: "ERROR"; message: string; }
 
 export const useLoadPropOfCustomTypeItem = <T extends IItemTypeConfig>(itemTypeConfigs: ItemTypeConfigs) => {
@@ -34,7 +34,7 @@ export const useLoadPropOfCustomTypeItem = <T extends IItemTypeConfig>(itemTypeC
                 throw new Error("prop doesn't exist in type");
             }
 
-            setState({ state: "LOADED", itemTypeConfig, item, prop: prop! });
+            setState({ state: "LOADED", itemTypeConfig, item, prop: prop as any });
         } catch (e: any) {
             setState({ state: "ERROR", message: e.message });
         }

@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { FullType, IItemTypeConfig, ItemTypeConfigs } from "../../../shared/types/itemTypeConfig";
+import { GetItemType, IItemTypeConfig, ItemTypeConfigs } from "../../../shared/types/itemTypeConfig";
 import { findItemConfigByName } from "../../../shared/utils/findItemTypeConfig";
 import { getItem } from "../../api";
 
 type State<T extends IItemTypeConfig>
     = { state: "LOADING" } 
-    | { state: "LOADED"; itemTypeConfig: T; item: FullType<T>; }
+    | { state: "LOADED"; itemTypeConfig: T; item: GetItemType<T>; }
     | { state: "ERROR"; message: string; }
 
 export const useLoadItem = <T extends IItemTypeConfig>(itemTypeConfigs: ItemTypeConfigs) => {
@@ -22,7 +22,7 @@ export const useLoadItem = <T extends IItemTypeConfig>(itemTypeConfigs: ItemType
                 throw new Error("couldn't find typeConfig");
             }
 
-            const item = await getItem(itemTypeConfig, id!);
+            const item = await getItem(itemTypeConfig, id!) as any;
 
             if (!item) {
                 throw new Error("couldn't find item");

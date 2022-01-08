@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { match } from "ts-pattern";
-import { FullType, IItemTypeConfig, ItemTypeConfigs } from "../../../shared/types/itemTypeConfig";
+import { GetItemType, IItemTypeConfig, ItemTypeConfigs } from "../../../shared/types/itemTypeConfig";
 import { deleteItem, updateItem } from "../../api";
 import { Breadcrumb } from "../../components/breadcrumb";
 import { DangerousButton, PrimaryButton, SecondaryButton } from "../../components/button";
@@ -29,10 +29,10 @@ const Loading = () => {
     );
 };
 
-const Loaded = <T extends IItemTypeConfig>(props: { itemTypeConfig: T; item: FullType<T>; }) => {
+const Loaded = <T extends IItemTypeConfig>(props: { itemTypeConfig: T; item: GetItemType<T>; }) => {
     const navigate = useNavigate();
 
-    const [editedFields, setEditedFields] = useState<Partial<FullType<T>>>({});
+    const [editedFields, setEditedFields] = useState<Partial<GetItemType<T>>>({});
    
     const del = async () => {
         try {
@@ -56,7 +56,7 @@ const Loaded = <T extends IItemTypeConfig>(props: { itemTypeConfig: T; item: Ful
         }
     };
 
-    const changeField = <P extends keyof T>(prop: P) => (value: T[P]) => {
+    const changeField = <P extends keyof GetItemType<T>>(prop: P) => (value: GetItemType<T>[P]) => {
         setEditedFields({
             ...editedFields,
             [prop]: value,
@@ -83,7 +83,7 @@ const Loaded = <T extends IItemTypeConfig>(props: { itemTypeConfig: T; item: Ful
             
             <Main>
                 <Fields>
-                    {mapObject<keyof T, PropEditor<any>>(inputs, ([prop, Input]) => {
+                    {mapObject<keyof GetItemType<T>, PropEditor<any>>(inputs, ([prop, Input]) => {
                         if (!Input) {
                             return null;
                         }

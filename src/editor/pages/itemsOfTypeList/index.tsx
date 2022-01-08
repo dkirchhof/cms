@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { match } from "ts-pattern";
-import { IItemTypeConfig, ItemTypeConfigs, MinimalType } from "../../../shared/types/itemTypeConfig";
+import { GetItemType, IItemTypeConfig, ItemTypeConfigs } from "../../../shared/types/itemTypeConfig";
 import { Breadcrumb } from "../../components/breadcrumb";
 import { PrimaryButton } from "../../components/button";
 import { ErrorDisplay } from "../../components/errorDisplay";
@@ -25,7 +25,7 @@ const Loading = () => {
     );
 };
 
-const Loaded = <T extends IItemTypeConfig>(props: { itemTypeConfig: T; items: MinimalType<T>[]; }) => {
+const Loaded = <T extends IItemTypeConfig>(props: { itemTypeConfig: T; items: GetItemType<T>[]; }) => {
     const navigate = useNavigate();
 
     const itemTypeSingularName = props.itemTypeConfig.name[0];
