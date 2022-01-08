@@ -1,13 +1,12 @@
 import update from "immer";
 import { createContext, useContext, useState } from "react";
 import { match } from "ts-pattern";
+import { FullType, IItemTypeConfig, ItemTypeConfigs } from "../../../shared/types/itemTypeConfig";
 import { Breadcrumb } from "../../components/breadcrumb";
 import { PrimaryButton, SecondaryButton } from "../../components/button";
 import { ErrorDisplay } from "../../components/errorDisplay";
 import { BUTTON_RESET, BUTTON_SAVE } from "../../messages";
 import { IBlock } from "../../types/block";
-import { IItem } from "../../types/item";
-import { IItemTypeConfig, ItemTypeConfigs } from "../../types/itemType";
 import { KeyOfWithType } from "../../types/keyOfWithType";
 import { deepCopy } from "../../utils/deepCopy";
 import { traversePath } from "../../utils/path";
@@ -20,8 +19,8 @@ import { useLoadPropOfCustomTypeItem } from "./useLoadPropOfCustomTypeItem";
 export const ItemContext = createContext<any>(null);
 export const useItem = <T extends any>() => useContext<T>(ItemContext);
 
-export const visualBlockEditorFactory = (itemTypeConfigs: ItemTypeConfigs) => <T extends IItem>() => {
-    const state = useLoadPropOfCustomTypeItem<T>(itemTypeConfigs);
+export const visualBlockEditorFactory = (itemTypeConfigs: ItemTypeConfigs) => () => {
+    const state = useLoadPropOfCustomTypeItem(itemTypeConfigs);
 
     return match(state)
         .with({ state: "LOADING" }, () => <LoadingVisualEditor />)
@@ -36,7 +35,7 @@ const LoadingVisualEditor = () => {
     );
 };
 
-const LoadedVisualEditor = <T extends IItem>(props: { itemTypeConfig: IItemTypeConfig<T>; item: T; prop: KeyOfWithType<T, IBlock> }) => {
+const LoadedVisualEditor = <T extends IItemTypeConfig>(props: { itemTypeConfig: T; item: FullType<T>; prop: KeyOfWithType<FullType<T>, IBlock> }) => {
     const [value, setValue] = useState<IBlock>(deepCopy(props.item[props.prop] as any));
 
     const changeData = (path: string) => (prop: string) => (dataValue: any) => {

@@ -1,21 +1,20 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { match } from "ts-pattern";
+import { FullType, IItemTypeConfig, ItemTypeConfigs } from "../../../shared/types/itemTypeConfig";
 import { deleteItem, updateItem } from "../../api";
 import { Breadcrumb } from "../../components/breadcrumb";
 import { DangerousButton, PrimaryButton, SecondaryButton } from "../../components/button";
 import { ErrorDisplay } from "../../components/errorDisplay";
 import { BUTTON_DELETE, BUTTON_RESET, BUTTON_SAVE } from "../../messages";
-import { IItem } from "../../types/item";
-import { IItemTypeConfig, ItemTypeConfigs } from "../../types/itemType";
 import { PropEditor } from "../../types/propEditor";
 import { mapObject } from "../../utils/mapObject";
 import { Header } from "../pageStyles";
 import { Container, Fields, Label, Main } from "./styles";
 import { useLoadItem } from "./useLoadItem";
 
-export const itemEditorFactory = (itemTypeConfigs: ItemTypeConfigs) => <T extends IItem>() => {
-    const state = useLoadItem<T>(itemTypeConfigs);
+export const itemEditorFactory = (itemTypeConfigs: ItemTypeConfigs) => () => {
+    const state = useLoadItem(itemTypeConfigs);
 
     return match(state)
         .with({ state: "LOADING" }, () => <Loading />)
@@ -30,10 +29,10 @@ const Loading = () => {
     );
 };
 
-const Loaded = <T extends IItem>(props: { itemTypeConfig: IItemTypeConfig<T>; item: T; }) => {
+const Loaded = <T extends IItemTypeConfig>(props: { itemTypeConfig: T; item: FullType<T>; }) => {
     const navigate = useNavigate();
 
-    const [editedFields, setEditedFields] = useState<Partial<T>>({});
+    const [editedFields, setEditedFields] = useState<Partial<FullType<T>>>({});
    
     const del = async () => {
         try {

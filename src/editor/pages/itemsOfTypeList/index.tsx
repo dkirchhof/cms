@@ -1,17 +1,16 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { match } from "ts-pattern";
+import { IItemTypeConfig, ItemTypeConfigs, MinimalType } from "../../../shared/types/itemTypeConfig";
 import { Breadcrumb } from "../../components/breadcrumb";
 import { PrimaryButton } from "../../components/button";
 import { ErrorDisplay } from "../../components/errorDisplay";
 import { CREATE_NEW_ITEM } from "../../messages";
-import { IItem } from "../../types/item";
-import { IItemTypeConfig, ItemTypeConfigs } from "../../types/itemType";
 import { Header } from "../pageStyles";
-import { Container, List, Main } from "./styles";
+import { Container, Main, Table } from "./styles";
 import { useLoadItemsOfType } from "./useLoadItemsOfType";
 
-export const itemsOfTypeListFactory = (itemTypeConfigs: ItemTypeConfigs) => <T extends IItem>() => {
-    const state = useLoadItemsOfType<T>(itemTypeConfigs);
+export const itemsOfTypeListFactory = (itemTypeConfigs: ItemTypeConfigs) => () => {
+    const state = useLoadItemsOfType(itemTypeConfigs);
 
     return match(state)
         .with({ state: "LOADING" }, () => <Loading />)
@@ -26,7 +25,9 @@ const Loading = () => {
     );
 };
 
-const Loaded = <T extends IItem>(props: { itemTypeConfig: IItemTypeConfig<T>; items: T[]; }) => {
+const Loaded = <T extends IItemTypeConfig>(props: { itemTypeConfig: T; items: MinimalType<T>[]; }) => {
+    const navigate = useNavigate();
+
     const itemTypeSingularName = props.itemTypeConfig.name[0];
     const itemTypePluralName = props.itemTypeConfig.name[1];
 
@@ -41,9 +42,20 @@ const Loaded = <T extends IItem>(props: { itemTypeConfig: IItemTypeConfig<T>; it
             </Header>
 
             <Main>
-                <List>
-                    {props.items.map(item => <Link key={item.id} to={item.id}>{props.itemTypeConfig.getLabel(item)}</Link>)}
-                </List>
+                <Table>
+                    <thead>
+                        <tr>
+                            {props.itemTypeConfig.listProps.map(prop => 
+                                <th key={prop.toString()}>{prop}</th>
+                            )}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {props.items.map(item => 
+                            <Item key={item.id} props={props.itemTypeConfig.listProps} item={item} onClick={() => navigate(item.id)} />
+                        )}
+                    </tbody>
+                </Table>
             </Main>
         </Container>
     );
@@ -53,4 +65,12 @@ const Error = (props: { message: string; }) => (
     <Container>
         <ErrorDisplay message={props.message} />
     </Container>
+);
+
+const Item = <T extends any>(props: { props: (keyof T)[]; item: T; onClick: () => void; }) => (
+    <tr onClick={props.onClick}>
+        {props.props.map(prop => 
+            <td key={prop.toString()}>{props.item[prop]}</td>
+        )}
+    </tr>
 );

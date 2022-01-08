@@ -5,7 +5,7 @@ import { itemEditorFactory } from "./pages/itemEditor";
 import { typesListFactory } from "./pages/typesList";
 import { visualBlockEditorFactory } from "./pages/visualBlockEditor";
 import { GlobalStyles } from "./styles";
-import { ItemTypeConfigs } from "./types/itemType";
+import { ItemTypeConfigs } from "../shared/types/itemTypeConfig";
 
 export const editorFactory = (itemTypes: ItemTypeConfigs) => () => {
     const TypesList = typesListFactory(itemTypes);

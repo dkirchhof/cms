@@ -1,43 +1,40 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { FullType, IItemTypeConfig, ItemTypeConfigs } from "../../../shared/types/itemTypeConfig";
 import { findItemConfigByName } from "../../../shared/utils/findItemTypeConfig";
 import { getItem } from "../../api";
 import { IBlock } from "../../types/block";
-import { IItem } from "../../types/item";
-import { IItemTypeConfig, ItemTypeConfigs } from "../../types/itemType";
 import { KeyOfWithType } from "../../types/keyOfWithType";
 
-type State<T extends IItem>
+type State<T extends IItemTypeConfig>
     = { state: "LOADING" } 
-    | { state: "LOADED"; itemTypeConfig: IItemTypeConfig<T>; item: T; prop: KeyOfWithType<T, IBlock>; }
+    | { state: "LOADED"; itemTypeConfig: T; item: FullType<T>; prop: KeyOfWithType<FullType<T>, IBlock>; }
     | { state: "ERROR"; message: string; }
 
-export const useLoadPropOfCustomTypeItem = <T extends IItem>(itemTypeConfigs: ItemTypeConfigs) => {
-    const { typeName, id, prop: _prop } = useParams();
-
-    const prop = _prop as KeyOfWithType<T, IBlock>;
+export const useLoadPropOfCustomTypeItem = <T extends IItemTypeConfig>(itemTypeConfigs: ItemTypeConfigs) => {
+    const { typeName, id, prop } = useParams();
 
     const [state, setState] = useState<State<T>>({ state: "LOADING" });
 
     const fetch = async () => {
         try {
-            const itemTypeConfig = findItemConfigByName(itemTypeConfigs, typeName!);
+            const itemTypeConfig = findItemConfigByName(itemTypeConfigs, typeName!) as any;
 
             if (!itemTypeConfig) {
                 throw new Error("couldn't find typeConfig");
             }
 
-            const item = await getItem<T>(itemTypeConfig, id!);
+            const item = await getItem(itemTypeConfig, id!) as any;
 
             if (!item) {
                 throw new Error("couldn't find item");
             }
 
-            if (item[prop] === undefined) {
+            if (item[prop!] === undefined) {
                 throw new Error("prop doesn't exist in type");
             }
 
-            setState({ state: "LOADED", itemTypeConfig, item, prop });
+            setState({ state: "LOADED", itemTypeConfig, item, prop: prop! });
         } catch (e: any) {
             setState({ state: "ERROR", message: e.message });
         }

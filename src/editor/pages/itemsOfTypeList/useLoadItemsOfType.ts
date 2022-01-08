@@ -1,29 +1,28 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { IItemTypeConfig, ItemTypeConfigs, MinimalType } from "../../../shared/types/itemTypeConfig";
 import { findItemConfigByName } from "../../../shared/utils/findItemTypeConfig";
 import { getItems } from "../../api";
-import { IItem } from "../../types/item";
-import { IItemTypeConfig, ItemTypeConfigs } from "../../types/itemType";
 
-type State<T extends IItem>
+type State<T extends IItemTypeConfig>
     = { state: "LOADING" } 
-    | { state: "LOADED"; itemTypeConfig: IItemTypeConfig<T>; items: T[]; }
+    | { state: "LOADED"; itemTypeConfig: T; items: MinimalType<T>[]; }
     | { state: "ERROR"; message: string; }
 
-export const useLoadItemsOfType = <T extends IItem>(itemTypeConfigs: ItemTypeConfigs) => {
+export const useLoadItemsOfType = <T extends IItemTypeConfig>(itemTypeConfigs: ItemTypeConfigs) => {
     const { typeName } = useParams();
 
     const [state, setState] = useState<State<T>>({ state: "LOADING" });
 
     const fetch = async() => {
         try {
-            const itemTypeConfig = findItemConfigByName(itemTypeConfigs, typeName!);
+            const itemTypeConfig = findItemConfigByName(itemTypeConfigs, typeName!) as any;
 
             if (!itemTypeConfig) {
                 throw new Error("couldn't find typeConfig");
             }
 
-            const items = await getItems<T>(itemTypeConfig);
+            const items = await getItems(itemTypeConfig) as any;
 
             setState({ state: "LOADED", itemTypeConfig, items });
         } catch (e: any) {

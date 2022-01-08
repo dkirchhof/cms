@@ -11,6 +11,8 @@ const Button = styled.button`
 
     &[disabled] {
         opacity: .5;
+
+        pointer-events: none;
     }
 `;
 
