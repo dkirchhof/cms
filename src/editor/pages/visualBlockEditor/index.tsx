@@ -84,7 +84,8 @@ const loadedVisualEditorFactory = (blockConfigs: BlockConfigs) => {
                 <Container>
                     <Header>
                         <Breadcrumb crumbs={[
-                            { urlSegment: `content/${itemTypePluralName}`, label: itemTypePluralName },
+                            { urlSegment: "content", label: "content" },
+                            { urlSegment: itemTypePluralName, label: itemTypePluralName },
                             { urlSegment: props.item.id, label: label },
                             { label: props.prop.toString() },
                         ]}/>

@@ -35,6 +35,7 @@ const Loaded = <T extends IItemTypeConfig>(props: { itemTypeConfig: T; items: Ge
         <Container>
             <Header>
                 <Breadcrumb crumbs={[
+                    { urlSegment: "content", label: "content" },
                     { label: itemTypePluralName },
                 ]}/>
 

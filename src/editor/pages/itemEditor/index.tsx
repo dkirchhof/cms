@@ -72,7 +72,8 @@ const Loaded = <T extends IItemTypeConfig>(props: { itemTypeConfig: T; item: Get
         <Container>
             <Header>
                 <Breadcrumb crumbs={[
-                    { urlSegment: `content/${itemTypePluralName}`, label: itemTypePluralName },
+                    { urlSegment: "content", label: "content" },
+                    { urlSegment: itemTypePluralName, label: itemTypePluralName },
                     { label: label  },
                 ]}/>
 
