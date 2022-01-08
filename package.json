@@ -8,15 +8,15 @@
     "bundle-dev": "esbuild dist/index.js --watch --bundle --sourcemap --outfile=public/bundle.js"
   },
   "dependencies": {
+    "express": "^4.17.2",
     "immer": "^9.0.7",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
     "react-router": "^6.2.1",
     "react-router-dom": "^6.2.1",
     "styled-components": "^5.3.3",
     "ts-pattern": "^3.3.4"
   },
   "devDependencies": {
+    "@types/express": "^4.17.13",
     "@types/react": "^17.0.38",
     "@types/react-dom": "^17.0.11",
     "@types/styled-components": "^5.1.18",
