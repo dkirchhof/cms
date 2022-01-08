@@ -1,4 +1,4 @@
-import { IBlock } from "../../../../types/block";
+import { BlockConfigs, IBlock } from "../../../../types/block";
 import { OutlinerItem } from "./outlinerItem";
 import { Container } from "./styles";
 
@@ -9,10 +9,12 @@ interface IProps {
     setSelectionPath: (path: string) => void;
 }
 
-export const Outliner = (props: IProps) => {
-    return (
-        <Container>
-            <OutlinerItem block={props.root} path="" selectionPath={props.selectionPath} setSelectionPath={props.setSelectionPath} />
-        </Container>
-    );
+export const outlinerFactory = (blockConfigs: BlockConfigs) => {
+    return (props: IProps) => {
+        return (
+            <Container>
+                <OutlinerItem block={props.root} blockConfigs={blockConfigs} path="" selectionPath={props.selectionPath} setSelectionPath={props.setSelectionPath} />
+            </Container>
+        );
+    };
 };

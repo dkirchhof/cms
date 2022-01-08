@@ -1,5 +1,5 @@
-import { BLOCKS } from "../../../../blocks";
 import { PrimaryButton, SecondaryButton } from "../../../../components/button";
+import { BlockConfigs } from "../../../../types/block";
 import { Container, List } from "./styles";
 
 export type SubmitFn = (blockName: string) => void;
@@ -9,12 +9,12 @@ interface IProps {
     submit: SubmitFn;
 }
 
-export const AddBlockDialog = (props: IProps) => {
+export const addBlockDialogFactory = (blockConfigs: BlockConfigs) => (props: IProps) => {
     return (
         <Container>
             <List>
-                {Object.keys(BLOCKS).map((blockName, i) => 
-                    <SecondaryButton key={i} onClick={() => props.submit(blockName)}>{blockName}</SecondaryButton>
+                {blockConfigs.map((blockConfig, i) => 
+                    <SecondaryButton key={i} onClick={() => props.submit(blockConfig.name)}>{blockConfig.name}</SecondaryButton>
                 )}
             </List>
 

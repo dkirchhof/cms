@@ -1,10 +1,14 @@
-import { BLOCKS } from "../blocks";
-import { IBlock } from "../types/block";
+import { BlockConfigs, IBlock } from "../types/block";
+import { findBlockConfigByName } from "./findBlockConfig";
 
-export const renderChildren = (children: IBlock[]) => {
+export const renderChildren = (blockConfigs: BlockConfigs, children: IBlock[]) => {
     return children.map((block, i) => {
-        const blockConfig = BLOCKS[block.blockName];
+        const blockConfig = findBlockConfigByName(blockConfigs, block.blockName);
 
-        return <blockConfig.Component key={i} data={block.data} />;
+        if (!blockConfig) {
+            throw new Error("couldn't find blockConfig");
+        }
+
+        return <blockConfig.Component key={i} blockConfigs={blockConfigs} data={block.data} />;
     });
 };

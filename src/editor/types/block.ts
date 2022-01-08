@@ -1,8 +1,9 @@
 import { PropEditor } from "./propEditor";
 
-export type BlocksMap = { [s: string]: IBlockConfig<any>; }
+export type BlockConfigs = IBlockConfig<any>[];
 
 export interface IBlockComponentProps<DATA> {
+    blockConfigs: BlockConfigs;
     data: DATA;
 }
 
@@ -17,6 +18,7 @@ export type GetBlockLabel<DATA> = (data: DATA) => string;
 export type GetBlockEditorInputs<DATA> = () => { [prop in keyof Omit<DATA, "children">]: PropEditor<DATA[prop]> };
 
 export interface IBlockConfig<DATA> {
+    name: string;
     getInitialData: GetBlockInitialData<DATA>;
     getEditorInputs: GetBlockEditorInputs<DATA>;
     getLabel: GetBlockLabel<DATA>;

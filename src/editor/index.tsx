@@ -6,12 +6,13 @@ import { typesListFactory } from "./pages/typesList";
 import { visualBlockEditorFactory } from "./pages/visualBlockEditor";
 import { GlobalStyles } from "./styles";
 import { ItemTypeConfigs } from "../shared/types/itemTypeConfig";
+import { BlockConfigs } from "./types/block";
 
-export const editorFactory = (itemTypes: ItemTypeConfigs) => () => {
-    const TypesList = typesListFactory(itemTypes);
-    const ItemsOfTypeList = itemsOfTypeListFactory(itemTypes);
-    const ItemEditor = itemEditorFactory(itemTypes);
-    const VisualBlockEditor = visualBlockEditorFactory(itemTypes);
+export const editorFactory = (itemTypeConfigs: ItemTypeConfigs, blockConfigs: BlockConfigs) => () => {
+    const TypesList = typesListFactory(itemTypeConfigs);
+    const ItemsOfTypeList = itemsOfTypeListFactory(itemTypeConfigs);
+    const ItemEditor = itemEditorFactory(itemTypeConfigs);
+    const VisualBlockEditor = visualBlockEditorFactory(itemTypeConfigs, blockConfigs);
 
     return (
         <>

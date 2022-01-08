@@ -1,7 +1,7 @@
-import { BLOCKS } from "../../../../blocks";
 import { PrimaryButton, SecondaryButton } from "../../../../components/button";
 import { ADD_BLOCK, REMOVE_BLOCK } from "../../../../messages";
-import { IBlock } from "../../../../types/block";
+import { BlockConfigs, IBlock } from "../../../../types/block";
+import { findBlockConfigByName } from "../../../../utils/findBlockConfig";
 import { Name, Container, Label } from "../editorStyles";
 
 interface IProps {
@@ -13,8 +13,13 @@ interface IProps {
     removeBlock: () => void;
 }
 
-export const BlockEditor = (props: IProps) => {
-    const blockConfig = BLOCKS[props.block.blockName];
+export const blockEditorFactory = (blockConfigs: BlockConfigs) => (props: IProps) => {
+    const blockConfig = findBlockConfigByName(blockConfigs, props.block.blockName);
+
+    if (!blockConfig) {
+        throw new Error("couldn't find blockConfig");
+    }
+
     const inputs = blockConfig.getEditorInputs();
 
     return (
