@@ -1,5 +1,6 @@
 import { CreateItemBody, DeleteItemBody, GetItemBody, GetItemsBody, RequestBody, UpdateItemBody } from "../../shared/types/requestData";
 import { IItem } from "../types/item";
+import { IItemTypeConfig } from "../types/itemType";
 
 const request = async <T>(body: RequestBody) => {
     const result = await fetch("/api/cms", {
@@ -19,39 +20,39 @@ const request = async <T>(body: RequestBody) => {
     }
 };
 
-export const getItem = async <T extends IItem>(typeName: string, id: string) => {
+export const getItem = async <T extends IItem>(itemTypeConfig: IItemTypeConfig<T>, id: string) => {
     const body: GetItemBody = {
         method: "getItem",
-        typeName,
+        typeName: itemTypeConfig.name[0],
         id,
     };
 
     return request<T>(body);
 };
 
-export const getItems = async <T extends IItem>(typeName: string) => {
+export const getItems = async <T extends IItem>(itemTypeConfig: IItemTypeConfig<T>) => {
     const body: GetItemsBody = {
         method: "getItems",
-        typeName,
+        typeName: itemTypeConfig.name[0],
     };
 
     return request<T[]>(body);
 };
 
-export const createItem = async <T extends IItem>(typeName: string, data: T) => {
+export const createItem = async <T extends IItem>(itemTypeConfig: IItemTypeConfig<T>, data: T) => {
     const body: CreateItemBody = {
         method: "createItem",
-        typeName,
+        typeName: itemTypeConfig.name[0],
         newItemData: data,
     };
 
     return request<T>(body);
 };
 
-export const updateItem = async <T extends IItem>(typeName: string, id: string, data: T) => { 
+export const updateItem = async <T extends IItem>(itemTypeConfig: IItemTypeConfig<T>, id: string, data: Partial<T>) => { 
     const body: UpdateItemBody = {
         method: "updateItem",
-        typeName,
+        typeName: itemTypeConfig.name[0],
         id,
         updatedItemData: data,
     };
@@ -59,10 +60,10 @@ export const updateItem = async <T extends IItem>(typeName: string, id: string, 
     return request<T>(body);
 };
 
-export const deleteItem = async (typeName: string, id: string) => {
+export const deleteItem = async (itemTypeConfig: IItemTypeConfig<any>, id: string) => {
     const body: DeleteItemBody = {
         method: "deleteItem",
-        typeName,
+        typeName: itemTypeConfig.name[0],
         id,
     };
 

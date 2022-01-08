@@ -23,7 +23,7 @@ export const useLoadItemsOfType = <T extends IItem>(itemTypeConfigs: ItemTypeCon
                 throw new Error("couldn't find typeConfig");
             }
 
-            const items = await getItems<T>(typeName!);
+            const items = await getItems<T>(itemTypeConfig);
 
             setState({ state: "LOADED", itemTypeConfig, items });
         } catch (e: any) {

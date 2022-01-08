@@ -1,9 +1,11 @@
 import { useState } from "react";
+import { useNavigate } from "react-router";
 import { match } from "ts-pattern";
+import { deleteItem, updateItem } from "../../api";
 import { Breadcrumb } from "../../components/breadcrumb";
-import { PrimaryButton, SecondaryButton } from "../../components/button";
+import { DangerousButton, PrimaryButton, SecondaryButton } from "../../components/button";
 import { ErrorDisplay } from "../../components/errorDisplay";
-import { BUTTON_RESET, BUTTON_SAVE } from "../../messages";
+import { BUTTON_DELETE, BUTTON_RESET, BUTTON_SAVE } from "../../messages";
 import { IItem } from "../../types/item";
 import { IItemTypeConfig, ItemTypeConfigs } from "../../types/itemType";
 import { PropEditor } from "../../types/propEditor";
@@ -29,14 +31,30 @@ const Loading = () => {
 };
 
 const Loaded = <T extends IItem>(props: { itemTypeConfig: IItemTypeConfig<T>; item: T; }) => {
+    const navigate = useNavigate();
+
     const [editedFields, setEditedFields] = useState<Partial<T>>({});
+   
+    const del = async () => {
+        try {
+            await deleteItem(props.itemTypeConfig, props.item.id);
+            
+            navigate(`/content/${itemTypePluralName}`);
+        } catch (e: any) {
+            console.error(e.message);
+        }
+    }
 
     const reset = () => {
         setEditedFields({});
     };
 
-    const save = () => {
-        console.log(editedFields);
+    const save = async () => {
+        try {
+            await updateItem(props.itemTypeConfig, props.item.id, editedFields);
+        } catch (e: any) {
+            console.error(e.message);
+        }
     };
 
     const changeField = <P extends keyof T>(prop: P) => (value: T[P]) => {
@@ -49,6 +67,7 @@ const Loaded = <T extends IItem>(props: { itemTypeConfig: IItemTypeConfig<T>; it
     const itemTypePluralName = props.itemTypeConfig.name[1];
     const label = props.itemTypeConfig.getLabel(props.item);
     const inputs = props.itemTypeConfig.getEditorInputs();
+    const hasChanges = Object.keys(editedFields).length;
 
     return (
         <Container>
@@ -58,8 +77,9 @@ const Loaded = <T extends IItem>(props: { itemTypeConfig: IItemTypeConfig<T>; it
                     { label: label  },
                 ]}/>
 
-                <SecondaryButton onClick={reset}>{BUTTON_RESET}</SecondaryButton>
-                <PrimaryButton onClick={save}>{BUTTON_SAVE}</PrimaryButton>
+                <DangerousButton onClick={del}>{BUTTON_DELETE}</DangerousButton>
+                <SecondaryButton onClick={reset} disabled={!hasChanges}>{BUTTON_RESET}</SecondaryButton>
+                <PrimaryButton onClick={save} disabled={!hasChanges}>{BUTTON_SAVE}</PrimaryButton>
             </Header>
             
             <Main>

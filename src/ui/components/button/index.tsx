@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { BORDER, PRIMARY, PRIMARY_FG } from "../../theme/colors";
+import { BORDER, DANGEROUS, PRIMARY, PRIMARY_FG } from "../../theme/colors";
 
 const Button = styled.button`
     padding: 8px;
@@ -23,4 +23,9 @@ export const SecondaryButton = styled(Button)`
     color: inherit;
     background: ${PRIMARY_FG};
     border: 1px solid ${BORDER};
+`;
+
+export const DangerousButton = styled(Button)`
+    color: ${PRIMARY_FG};
+    background: ${DANGEROUS};
 `;

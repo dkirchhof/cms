@@ -23,7 +23,7 @@ export const useLoadItem = <T extends IItem>(itemTypeConfigs: ItemTypeConfigs) =
                 throw new Error("couldn't find typeConfig");
             }
 
-            const item = await getItem<T>(typeName!, id!);
+            const item = await getItem<T>(itemTypeConfig, id!);
 
             if (!item) {
                 throw new Error("couldn't find item");

@@ -4,6 +4,7 @@ export const CONTENT = "Content";
 export const BUTTON_SAVE = "Save";
 export const BUTTON_CANCEL = "Cancel";
 export const BUTTON_RESET = "Reset";
+export const BUTTON_DELETE = "Delete";
 
 export const OPEN_VISUAL_EDITOR = "Open visual editor"
 
