@@ -1,5 +1,6 @@
 export type RequestBody 
     = GetItemBody
+    | GetItemForEditingBody
     | GetItemsBody
     | CreateItemBody
     | UpdateItemBody
@@ -8,6 +9,12 @@ export type RequestBody
 
 export type GetItemBody = {
     method: "getItem";
+    typeName: string;
+    id: string;
+};
+
+export type GetItemForEditingBody = {
+    method: "getItemForEditing";
     typeName: string;
     id: string;
 };

@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { GetItemType, IItemTypeConfig, ItemTypeConfigs } from "../../../types/itemTypeConfig";
+import { GetItemEditingType, IItemTypeConfig, ItemTypeConfigs } from "../../../types/itemTypeConfig";
 import { findItemConfigByName } from "../../../utils/findItemTypeConfig";
-import { getItem } from "../../api";
+import { getItemForEditing } from "../../api";
 
 type State<T extends IItemTypeConfig>
     = { state: "LOADING" } 
-    | { state: "LOADED"; itemTypeConfig: T; item: GetItemType<T>; }
+    | { state: "LOADED"; itemTypeConfig: T; item: GetItemEditingType<T>; }
     | { state: "ERROR"; message: string; }
 
 export const useLoadItem = <T extends IItemTypeConfig>(itemTypeConfigs: ItemTypeConfigs) => {
@@ -16,17 +16,13 @@ export const useLoadItem = <T extends IItemTypeConfig>(itemTypeConfigs: ItemType
     
     const fetch = async () => {
         try {
-            const itemTypeConfig = findItemConfigByName(itemTypeConfigs, typeName!) as any;
+            const itemTypeConfig = findItemConfigByName(itemTypeConfigs, typeName!) as T;
 
             if (!itemTypeConfig) {
                 throw new Error("couldn't find typeConfig");
             }
 
-            const item = await getItem(itemTypeConfig, id!) as any;
-
-            if (!item) {
-                throw new Error("couldn't find item");
-            }
+            const item = await getItemForEditing(itemTypeConfig, id!) as GetItemEditingType<T>;
 
             setState({ state: "LOADED", itemTypeConfig, item });
         } catch (e: any) {
