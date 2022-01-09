@@ -1,5 +1,5 @@
+import { BlockConfigs } from "../../../../../types/block";
 import { PrimaryButton, SecondaryButton } from "../../../../components/button";
-import { BlockConfigs } from "../../../../types/block";
 import { Container, List } from "./styles";
 
 export type SubmitFn = (blockName: string) => void;

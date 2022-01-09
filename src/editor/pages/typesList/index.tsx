@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ItemTypeConfigs } from "../../../shared/types/itemTypeConfig";
+import { ItemTypeConfigs } from "../../../types/itemTypeConfig";
 import { Container, List } from "./styles";
 
 export const typesListFactory = (itemTypeConfigs: ItemTypeConfigs) => () => {

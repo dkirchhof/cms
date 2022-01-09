@@ -1,4 +1,4 @@
-import { BlockConfigs, IBlock } from "../../../../types/block";
+import { BlockConfigs, IBlock } from "../../../../../types/block";
 import { OutlinerItem } from "./outlinerItem";
 import { Container } from "./styles";
 

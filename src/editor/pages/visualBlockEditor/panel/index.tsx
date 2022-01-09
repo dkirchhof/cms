@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { BlockConfigs, IBlock } from "../../../types/block";
-import { findBlockConfigByName } from "../../../utils/findBlockConfig";
+import { BlockConfigs, IBlock } from "../../../../types/block";
+import { findBlockConfigByName } from "../../../../utils/findBlockConfig";
 import { getIndex, getPathForChild, getPathForParent, traversePath } from "../../../utils/path";
 import { addBlockDialogFactory, SubmitFn as AddBlockDialogSubmitFn } from "./addBlockDialog";
 import { blockEditorFactory } from "./blockEditor";

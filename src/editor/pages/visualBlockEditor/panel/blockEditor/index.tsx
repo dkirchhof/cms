@@ -1,7 +1,7 @@
+import { BlockConfigs, IBlock } from "../../../../../types/block";
+import { findBlockConfigByName } from "../../../../../utils/findBlockConfig";
 import { PrimaryButton, SecondaryButton } from "../../../../components/button";
 import { ADD_BLOCK, REMOVE_BLOCK } from "../../../../messages";
-import { BlockConfigs, IBlock } from "../../../../types/block";
-import { findBlockConfigByName } from "../../../../utils/findBlockConfig";
 import { Name, Container, Label } from "../editorStyles";
 
 interface IProps {

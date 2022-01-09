@@ -1,12 +1,12 @@
 import update from "immer";
 import { createContext, useContext, useState } from "react";
 import { match } from "ts-pattern";
-import { GetItemType, IItemTypeConfig, ItemTypeConfigs } from "../../../shared/types/itemTypeConfig";
+import { BlockConfigs, IBlock } from "../../../types/block";
+import { GetItemType, IItemTypeConfig, ItemTypeConfigs } from "../../../types/itemTypeConfig";
 import { Breadcrumb } from "../../components/breadcrumb";
 import { PrimaryButton, SecondaryButton } from "../../components/button";
 import { ErrorDisplay } from "../../components/errorDisplay";
 import { BUTTON_RESET, BUTTON_SAVE } from "../../messages";
-import { BlockConfigs, IBlock } from "../../types/block";
 import { KeyOfWithType } from "../../types/keyOfWithType";
 import { deepCopy } from "../../utils/deepCopy";
 import { traversePath } from "../../utils/path";

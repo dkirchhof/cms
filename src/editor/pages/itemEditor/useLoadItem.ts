@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { GetItemType, IItemTypeConfig, ItemTypeConfigs } from "../../../shared/types/itemTypeConfig";
-import { findItemConfigByName } from "../../../shared/utils/findItemTypeConfig";
+import { GetItemType, IItemTypeConfig, ItemTypeConfigs } from "../../../types/itemTypeConfig";
+import { findItemConfigByName } from "../../../utils/findItemTypeConfig";
 import { getItem } from "../../api";
 
 type State<T extends IItemTypeConfig>

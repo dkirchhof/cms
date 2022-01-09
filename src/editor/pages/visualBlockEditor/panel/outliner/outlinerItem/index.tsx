@@ -1,5 +1,5 @@
-import { BlockConfigs, IBlock } from "../../../../../types/block";
-import { findBlockConfigByName } from "../../../../../utils/findBlockConfig";
+import { BlockConfigs, IBlock } from "../../../../../../types/block";
+import { findBlockConfigByName } from "../../../../../../utils/findBlockConfig";
 import { getPathForChild } from "../../../../../utils/path";
 import { BlockLabel, BlockName, ChildList, Tile } from "./styles";
 

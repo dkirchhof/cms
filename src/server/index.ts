@@ -1,6 +1,6 @@
 import { match } from "ts-pattern";
-import { ItemTypeConfigs } from "../shared/types/itemTypeConfig";
-import { RequestBody } from "../shared/types/requestData";
+import { ItemTypeConfigs } from "../types/itemTypeConfig";
+import { RequestBody } from "../types/requestData";
 import { createItem } from "./apiFns/createItem";
 import { deleteItem } from "./apiFns/deleteItem";
 import { getItem } from "./apiFns/getItem";

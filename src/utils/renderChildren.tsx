@@ -1,5 +1,5 @@
 import { BlockConfigs, IBlock } from "../types/block";
-import { findBlockConfigByName } from "./findBlockConfig";
+import { findBlockConfigByName } from "../utils/findBlockConfig";
 
 export const renderChildren = (blockConfigs: BlockConfigs, children: IBlock[]) => {
     return children.map((block, i) => {

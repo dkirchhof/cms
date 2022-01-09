@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { GetItemType, IItemTypeConfig, ItemTypeConfigs } from "../../../shared/types/itemTypeConfig";
-import { findItemConfigByName } from "../../../shared/utils/findItemTypeConfig";
+import { IBlock } from "../../../types/block";
+import { GetItemType, IItemTypeConfig, ItemTypeConfigs } from "../../../types/itemTypeConfig";
+import { findItemConfigByName } from "../../../utils/findItemTypeConfig";
 import { getItem } from "../../api";
-import { IBlock } from "../../types/block";
 import { KeyOfWithType } from "../../types/keyOfWithType";
 
 type State<T extends IItemTypeConfig>

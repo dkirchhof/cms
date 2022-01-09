@@ -1,4 +1,4 @@
-import { PropEditor } from "../../editor/types/propEditor";
+import { PropEditor } from "../editor/types/propEditor";
 
 export type GetItemType<T> = T extends IItemTypeConfig<infer U> ? U : never;
 

@@ -1,6 +1,6 @@
-import { ItemTypeConfigs } from "../../shared/types/itemTypeConfig";
-import { GetItemBody } from "../../shared/types/requestData";
-import { findItemConfigByName } from "../../shared/utils/findItemTypeConfig";
+import { ItemTypeConfigs } from "../../types/itemTypeConfig";
+import { GetItemBody } from "../../types/requestData";
+import { findItemConfigByName } from "../../utils/findItemTypeConfig";
 import { HTTPError } from "../types/httpError";
 import { IRequest } from "../types/request";
 import { IResponse } from "../types/response";

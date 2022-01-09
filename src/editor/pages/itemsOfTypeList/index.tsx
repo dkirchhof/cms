@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { match } from "ts-pattern";
-import { GetItemType, IItemTypeConfig, ItemTypeConfigs } from "../../../shared/types/itemTypeConfig";
+import { GetItemType, IItemTypeConfig, ItemTypeConfigs } from "../../../types/itemTypeConfig";
 import { Breadcrumb } from "../../components/breadcrumb";
 import { PrimaryButton } from "../../components/button";
 import { ErrorDisplay } from "../../components/errorDisplay";

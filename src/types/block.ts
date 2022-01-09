@@ -1,4 +1,4 @@
-import { PropEditor } from "./propEditor";
+import { PropEditor } from "../editor/types/propEditor";
 
 export type BlockConfigs = IBlockConfig<any>[];
 

@@ -1,5 +1,5 @@
-import { IItemTypeConfig, GetItemType } from "../../shared/types/itemTypeConfig";
-import { CreateItemBody, DeleteItemBody, GetItemBody, GetItemsBody, RequestBody, UpdateItemBody } from "../../shared/types/requestData";
+import { IItemTypeConfig, GetItemType } from "../../types/itemTypeConfig";
+import { CreateItemBody, DeleteItemBody, GetItemBody, GetItemsBody, RequestBody, UpdateItemBody } from "../../types/requestData";
 
 const request = async <T>(body: RequestBody) => {
     const result = await fetch("/api/cms", {

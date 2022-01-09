@@ -1,4 +1,4 @@
-import { IBlock } from "../types/block";
+import { IBlock } from "../../types/block";
 
 export const getPathForChild = (currentPath: string, childIndex: number) => {
     if (currentPath) {

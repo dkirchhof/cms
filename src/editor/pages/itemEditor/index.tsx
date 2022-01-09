@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { match } from "ts-pattern";
-import { GetItemType, IItemTypeConfig, ItemTypeConfigs } from "../../../shared/types/itemTypeConfig";
+import { GetItemType, IItemTypeConfig, ItemTypeConfigs } from "../../../types/itemTypeConfig";
 import { deleteItem, updateItem } from "../../api";
 import { Breadcrumb } from "../../components/breadcrumb";
 import { DangerousButton, PrimaryButton, SecondaryButton } from "../../components/button";
