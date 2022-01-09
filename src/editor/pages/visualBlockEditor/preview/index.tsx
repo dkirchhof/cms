@@ -3,11 +3,12 @@ import { renderChildren } from "../../../../utils/renderChildren";
 import { Container } from "./styles";
 
 interface IProps {
+    ctx: any;
     root: IBlock;
 }
 
 export const previewFactory = (blockConfigs: BlockConfigs) => (props: IProps) => (
     <Container>
-        {renderChildren(blockConfigs, props.root.data.children!)}
+        {renderChildren(blockConfigs, props.ctx, props.root.data.children!)}
     </Container>
 );

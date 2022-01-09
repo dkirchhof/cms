@@ -1,8 +1,9 @@
 import update from "immer";
-import { createContext, useContext, useState } from "react";
+import { useState } from "react";
 import { match } from "ts-pattern";
 import { BlockConfigs, IBlock } from "../../../types/block";
 import { GetItemType, IItemTypeConfig, ItemTypeConfigs } from "../../../types/itemTypeConfig";
+import { updateItem } from "../../api";
 import { Breadcrumb } from "../../components/breadcrumb";
 import { PrimaryButton, SecondaryButton } from "../../components/button";
 import { ErrorDisplay } from "../../components/errorDisplay";
@@ -15,9 +16,6 @@ import { panelFactory } from "./panel";
 import { previewFactory } from "./preview";
 import { Container, Main } from "./styles";
 import { useLoadPropOfCustomTypeItem } from "./useLoadPropOfCustomTypeItem";
-
-export const ItemContext = createContext<any>(null);
-export const useItem = <T extends any>() => useContext<T>(ItemContext);
 
 export const visualBlockEditorFactory = (itemTypeConfigs: ItemTypeConfigs, blockConfigs: BlockConfigs) => () => {
     const LoadedVisualEditor = loadedVisualEditorFactory(blockConfigs);
@@ -72,34 +70,36 @@ const loadedVisualEditorFactory = (blockConfigs: BlockConfigs) => {
             setValue(deepCopy(props.item[props.prop] as any));
         };
 
-        const save = () => {
-            console.log({ [props.prop]: value });
+        const save = async () => {
+            try {
+                await updateItem(props.itemTypeConfig, props.item.id, { [props.prop]: value } as any);
+            } catch (e: any) {
+                console.error(e.message);
+            }
         };
 
         const itemTypePluralName = props.itemTypeConfig.name[1];
         const label = props.itemTypeConfig.getLabel(props.item);
 
         return (
-            <ItemContext.Provider value={props.item}>
-                <Container>
-                    <Header>
-                        <Breadcrumb crumbs={[
-                            { urlSegment: "content", label: "content" },
-                            { urlSegment: itemTypePluralName, label: itemTypePluralName },
-                            { urlSegment: props.item.id, label: label },
-                            { label: props.prop.toString() },
-                        ]}/>
+            <Container>
+                <Header>
+                    <Breadcrumb crumbs={[
+                        { urlSegment: "content", label: "content" },
+                        { urlSegment: itemTypePluralName, label: itemTypePluralName },
+                        { urlSegment: props.item.id, label: label },
+                        { label: props.prop.toString() },
+                    ]}/>
 
-                        <SecondaryButton onClick={reset}>{BUTTON_RESET}</SecondaryButton>
-                        <PrimaryButton onClick={save}>{BUTTON_SAVE}</PrimaryButton>
-                    </Header>
+                    <SecondaryButton onClick={reset}>{BUTTON_RESET}</SecondaryButton>
+                    <PrimaryButton onClick={save}>{BUTTON_SAVE}</PrimaryButton>
+                </Header>
 
-                    <Main>
-                        <Preview root={value} />
-                        <Panel root={value} changeData={changeData} addBlock={addBlock} removeBlock={removeBlock} />
-                    </Main>
-                </Container>
-            </ItemContext.Provider>
+                <Main>
+                    <Preview ctx={props.item} root={value} />
+                    <Panel root={value} changeData={changeData} addBlock={addBlock} removeBlock={removeBlock} />
+                </Main>
+            </Container>
         );
     };
 };
