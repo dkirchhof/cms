@@ -7,7 +7,8 @@ import { updateItem } from "../../api";
 import { Breadcrumb } from "../../components/breadcrumb";
 import { PrimaryButton, SecondaryButton } from "../../components/button";
 import { ErrorDisplay } from "../../components/errorDisplay";
-import { BUTTON_RESET, BUTTON_SAVE } from "../../messages";
+import { useNotifications } from "../../components/notifications";
+import { BUTTON_RESET, BUTTON_SAVE, PROP_UPDATED } from "../../messages";
 import { KeyOfWithType } from "../../types/keyOfWithType";
 import { deepCopy } from "../../utils/deepCopy";
 import { traversePath } from "../../utils/path";
@@ -40,6 +41,8 @@ const loadedVisualEditorFactory = (blockConfigs: BlockConfigs) => {
     const Panel = panelFactory(blockConfigs);
 
     return <T extends IItemTypeConfig>(props: { itemTypeConfig: T; item: GetItemType<T>; prop: KeyOfWithType<GetItemType<T>, IBlock> }) => {
+        const showNotification = useNotifications();
+
         const [value, setValue] = useState<IBlock>(deepCopy(props.item[props.prop] as any));
 
         const changeData = (path: string) => (prop: string) => (dataValue: any) => {
@@ -73,8 +76,10 @@ const loadedVisualEditorFactory = (blockConfigs: BlockConfigs) => {
         const save = async () => {
             try {
                 await updateItem(props.itemTypeConfig, props.item.id, { [props.prop]: value } as any);
+
+                showNotification({ type: "success", message: PROP_UPDATED(props.prop.toString()) });
             } catch (e: any) {
-                console.error(e.message);
+                showNotification({ type: "error", message: e.message });
             }
         };
 

@@ -1,4 +1,5 @@
 import styled, { keyframes } from "styled-components";
+import { BACKGROUND } from "../theme/colors";
 
 const fadeIn = keyframes`
     from { opacity: 0; }
@@ -16,7 +17,7 @@ export const Header = styled.header`
 
     padding: 16px 32px;
 
-    background: white;
+    background: ${BACKGROUND};
     box-shadow: 0px 5px 10px rgb(0 0 0 / 10%);
 
     > nav {

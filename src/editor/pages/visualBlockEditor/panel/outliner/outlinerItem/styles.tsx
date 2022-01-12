@@ -1,10 +1,10 @@
 import styled from "styled-components";
-import { BORDER, PRIMARY } from "../../../../../theme/colors";
+import { BACKGROUND, BORDER, PRIMARY } from "../../../../../theme/colors";
 
 export const Tile = styled.div<{ selected: boolean; }>`
     padding: 16px;
 
-    background: white;
+    background: ${BACKGROUND};
     border-radius: 4px;
 
     cursor: pointer;

@@ -8,3 +8,4 @@ export const NAV = "#151A25";
 export const NAV_FG = "#ffffff";
 export const NAV_PRIMARY = "#a4c2e1"; 
 export const DANGEROUS = "#dd6a6a";
+export const SUCCESS = "#47b385";

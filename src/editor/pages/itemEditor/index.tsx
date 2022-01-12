@@ -6,7 +6,8 @@ import { deleteItem, updateItem } from "../../api";
 import { Breadcrumb } from "../../components/breadcrumb";
 import { DangerousButton, PrimaryButton, SecondaryButton } from "../../components/button";
 import { ErrorDisplay } from "../../components/errorDisplay";
-import { BUTTON_DELETE, BUTTON_RESET, BUTTON_SAVE } from "../../messages";
+import { useNotifications } from "../../components/notifications";
+import { BUTTON_DELETE, BUTTON_RESET, BUTTON_SAVE, ITEM_DELETED, ITEM_UPDATED } from "../../messages";
 import { PropEditor } from "../../types/propEditor";
 import { mapObject } from "../../utils/mapObject";
 import { Header } from "../pageStyles";
@@ -31,6 +32,7 @@ const Loading = () => {
 
 const Loaded = <T extends IItemTypeConfig>(props: { itemTypeConfig: T; item: GetItemEditingType<T>; }) => {
     const navigate = useNavigate();
+    const showNotification = useNotifications(); 
 
     const [editedFields, setEditedFields] = useState<Partial<GetItemEditingType<T>>>({});
    
@@ -38,9 +40,10 @@ const Loaded = <T extends IItemTypeConfig>(props: { itemTypeConfig: T; item: Get
         try {
             await deleteItem(props.itemTypeConfig, props.item.id);
             
+            showNotification({ type: "success", message: ITEM_DELETED(props.itemTypeConfig.name[0]) });
             navigate(`/content/${itemTypePluralName}`);
         } catch (e: any) {
-            console.error(e.message);
+            showNotification({ type: "error", message: e.message });
         }
     }
 
@@ -51,8 +54,10 @@ const Loaded = <T extends IItemTypeConfig>(props: { itemTypeConfig: T; item: Get
     const save = async () => {
         try {
             await updateItem(props.itemTypeConfig, props.item.id, editedFields);
+
+            showNotification({ type: "success", message: ITEM_UPDATED(props.itemTypeConfig.name[0]) });
         } catch (e: any) {
-            console.error(e.message);
+            showNotification({ type: "error", message: e.message });
         }
     };
 

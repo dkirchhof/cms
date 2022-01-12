@@ -1,4 +1,4 @@
-import { createGlobalStyle } from "styled-components";
+import styled, { createGlobalStyle } from "styled-components";
 import { GRAY_250 } from "./theme/colors";
 
 export const GlobalStyles = createGlobalStyle`
@@ -8,13 +8,13 @@ export const GlobalStyles = createGlobalStyle`
 
         font-family: sans-serif;
     }
+`;
 
-    #app {
-        display: grid;
-        grid-template-rows: auto 1fr;
+export const Container = styled.div`
+    display: grid;
+    grid-template-rows: auto 1fr;
 
-        height: 100vh;
-        
-        background: ${GRAY_250};
-    }
+    height: 100vh;
+    
+    background: ${GRAY_250};
 `;
