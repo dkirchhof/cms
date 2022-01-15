@@ -15,7 +15,6 @@ export const OuterContainer = styled.div`
 `;
 
 export const InnerContainer = styled.div<{ type: "success" | "error" }>`
-    width: 256px;
     margin-bottom: ${GUTTER_SIZE}px;
     padding: 16px;
 

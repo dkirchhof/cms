@@ -8,7 +8,7 @@ import { Breadcrumb } from "../../components/breadcrumb";
 import { PrimaryButton, SecondaryButton } from "../../components/button";
 import { ErrorDisplay } from "../../components/errorDisplay";
 import { useNotifications } from "../../components/notifications";
-import { BUTTON_RESET, BUTTON_SAVE, PROP_UPDATED } from "../../messages";
+import { BUTTON_RESET, BUTTON_UPDATE, PROP_UPDATED } from "../../messages";
 import { KeyOfWithType } from "../../types/keyOfWithType";
 import { deepCopy } from "../../utils/deepCopy";
 import { traversePath } from "../../utils/path";
@@ -97,7 +97,7 @@ const loadedVisualEditorFactory = (blockConfigs: BlockConfigs) => {
                     ]}/>
 
                     <SecondaryButton onClick={reset}>{BUTTON_RESET}</SecondaryButton>
-                    <PrimaryButton onClick={save}>{BUTTON_SAVE}</PrimaryButton>
+                    <PrimaryButton onClick={save}>{BUTTON_UPDATE}</PrimaryButton>
                 </Header>
 
                 <Main>
