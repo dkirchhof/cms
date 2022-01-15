@@ -7,7 +7,7 @@ import { Breadcrumb } from "../../components/breadcrumb";
 import { DangerousButton, PrimaryButton, SecondaryButton } from "../../components/button";
 import { ErrorDisplay } from "../../components/errorDisplay";
 import { useNotifications } from "../../components/notifications";
-import { BUTTON_DELETE, BUTTON_RESET, BUTTON_SAVE, ITEM_DELETED, ITEM_UPDATED } from "../../messages";
+import { BUTTON_DELETE, BUTTON_RESET, BUTTON_UPDATE, ITEM_DELETED, ITEM_UPDATED } from "../../messages";
 import { PropEditor } from "../../types/propEditor";
 import { mapObject } from "../../utils/mapObject";
 import { Header } from "../pageStyles";
@@ -84,7 +84,7 @@ const Loaded = <T extends IItemTypeConfig>(props: { itemTypeConfig: T; item: Get
 
                 <DangerousButton onClick={del}>{BUTTON_DELETE}</DangerousButton>
                 <SecondaryButton onClick={reset} disabled={!hasChanges}>{BUTTON_RESET}</SecondaryButton>
-                <PrimaryButton onClick={save} disabled={!hasChanges}>{BUTTON_SAVE}</PrimaryButton>
+                <PrimaryButton onClick={save} disabled={!hasChanges}>{BUTTON_UPDATE}</PrimaryButton>
             </Header>
             
             <Main>

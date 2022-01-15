@@ -2,6 +2,7 @@ export const HOME = "Home";
 export const CONTENT = "Content";
 
 export const BUTTON_SAVE = "Save";
+export const BUTTON_UPDATE = "Update";
 export const BUTTON_CANCEL = "Cancel";
 export const BUTTON_RESET = "Reset";
 export const BUTTON_DELETE = "Delete";
