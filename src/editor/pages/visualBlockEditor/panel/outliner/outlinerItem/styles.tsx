@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { BACKGROUND, BORDER, PRIMARY } from "../../../../../theme/colors";
+import { BACKGROUND, BORDER, GRAY_245, PRIMARY } from "../../../../../theme/colors";
 
 export const Tile = styled.div<{ selected: boolean; }>`
     padding: 16px;
@@ -11,6 +11,10 @@ export const Tile = styled.div<{ selected: boolean; }>`
 
     color: ${props => props.selected ? PRIMARY : "inherit"};
     border: 1px solid ${props => props.selected ? PRIMARY : BORDER};
+
+    :hover {
+        background: ${GRAY_245};
+    }
 `;
 
 export const BlockName = styled.div`

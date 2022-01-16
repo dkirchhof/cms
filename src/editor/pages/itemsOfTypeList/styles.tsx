@@ -35,6 +35,10 @@ export const Table = styled.table`
     > tbody > tr {
         cursor: pointer;
 
+        :hover {
+            background: ${GRAY_245};
+        }
+
         > td {
             padding: 16px;
 
