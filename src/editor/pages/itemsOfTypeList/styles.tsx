@@ -17,6 +17,7 @@ export const Main = styled.main`
 
 export const Table = styled.table`
     width: 100%;
+    table-layout: fixed;
 
     border: 1px solid ${BORDER};
     border-radius: 4px;

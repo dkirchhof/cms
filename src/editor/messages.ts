@@ -19,3 +19,6 @@ export const ADD_BLOCK = "Add block";
 export const REMOVE_BLOCK = "Remove block";
 
 export const PROP_UPDATED = (prop: string) => `The ${prop} has been successfully updated.`;
+
+export const CTX_MENU_EDIT = "Edit";
+export const CTX_MENU_DELETE = "Delete";
