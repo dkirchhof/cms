@@ -29,7 +29,7 @@ export const blockEditorFactory = (blockConfigs: BlockConfigs) => (props: IProps
             {Object.entries(inputs).map(([prop, Input]) => (
                 <Label key={prop}>
                     {prop}
-                    <Input prop={prop} value={props.block.data[prop]} onChange={props.onChange(prop)} />
+                    <Input prop={prop} value={props.block.data[prop]} onChange={props.onChange(prop)} blockConfigs={blockConfigs} />
                 </Label>
             ))}
 

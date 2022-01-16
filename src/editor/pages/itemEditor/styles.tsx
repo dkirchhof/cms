@@ -9,31 +9,25 @@ export const Container = styled(PageContainer)`
 `;
 
 export const Main = styled.main`
-    padding: 32px;
-
-    overflow: hidden;
-`;
-
-export const Fields = styled.div`
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-
-    height: 100%;
+    padding: 0px 32px 32px 32px;
 
     overflow-y: auto;
+    scroll-snap-type: y;
 `;
 
-export const Label = styled.label`
-    display: block;
+export const Row = styled.div<{ fullscreen: boolean; }>`
+    height: ${props => props.fullscreen ? "100%" : "auto"};
+    padding-top: 32px;
 
-    font-weight: bold;
+    display: flex;
+    flex-direction: column;
 
-    > * {
-        display: block;
+    scroll-snap-align: start;
 
-        margin-top: 8px;
-        box-sizing: border-box;
+    > div:nth-child(1) {
+        margin-bottom: 8px;
+
+        font-weight: bold;
     }
 
     > input, textarea {

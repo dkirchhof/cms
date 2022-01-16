@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { match } from "ts-pattern";
+import { BlockConfigs } from "../../../types/block";
 import { GetItemEditingType, IItemTypeConfig, ItemTypeConfigs } from "../../../types/itemTypeConfig";
 import { createItem, updateItem } from "../../api";
 import { Breadcrumb } from "../../components/breadcrumb";
@@ -11,17 +12,17 @@ import { BUTTON_RESET, BUTTON_SAVE, BUTTON_UPDATE, ITEM_CREATED, ITEM_UPDATED } 
 import { PropEditor } from "../../types/propEditor";
 import { mapObject } from "../../utils/mapObject";
 import { Header } from "../pageStyles";
-import { Container, Fields, Label, Main } from "./styles";
+import { Container, Row, Main } from "./styles";
 import { useLoadItem } from "./useLoadItem";
 
 type Mode = "create" | "update";
 
-export const itemEditorFactory = (itemTypeConfigs: ItemTypeConfigs) => () => {
+export const itemEditorFactory = (itemTypeConfigs: ItemTypeConfigs, blockConfigs: BlockConfigs) => () => {
     const state = useLoadItem(itemTypeConfigs);
 
     return match(state)
         .with({ state: "LOADING" }, () => <Loading />)
-        .with({ state: "LOADED" }, ({ itemTypeConfig, item, mode }) => <Loaded itemTypeConfig={itemTypeConfig} item={item} mode={mode} />)
+        .with({ state: "LOADED" }, ({ itemTypeConfig, item, mode }) => <Loaded itemTypeConfig={itemTypeConfig} blockConfigs={blockConfigs} item={item} mode={mode} />)
         .with({ state: "ERROR" }, ({ message }) => <Error message={message} />)
         .exhaustive();
 };
@@ -32,7 +33,7 @@ const Loading = () => {
     );
 };
 
-const Loaded = <T extends IItemTypeConfig>(props: { itemTypeConfig: T; item: GetItemEditingType<T>; mode: Mode }) => {
+const Loaded = <T extends IItemTypeConfig>(props: { itemTypeConfig: T; blockConfigs: BlockConfigs; item: GetItemEditingType<T>; mode: Mode }) => {
     const navigate = useNavigate();
     const showNotification = useNotifications();
 
@@ -94,23 +95,21 @@ const Loaded = <T extends IItemTypeConfig>(props: { itemTypeConfig: T; item: Get
             </Header>
 
             <Main>
-                <Fields>
-                    {mapObject<keyof GetItemEditingType<T>, PropEditor<any>>(inputs, ([prop, Input]) => {
-                        if (!Input) {
-                            return null;
-                        }
+                {mapObject<keyof GetItemEditingType<T>, PropEditor<any>>(inputs, ([prop, Input]) => {
+                    if (!Input) {
+                        return null;
+                    }
 
-                        const value = (editedFields[prop] !== undefined) ? editedFields[prop] : item[prop];
-                        const onChange = changeField(prop);
+                    const value = (editedFields[prop] !== undefined) ? editedFields[prop] : item[prop];
+                    const onChange = changeField(prop);
 
-                        return (
-                            <Label key={prop.toString()}>
-                                {prop}
-                                <Input prop={prop.toString()} value={value} onChange={onChange} />
-                            </Label>
-                        );
-                    })}
-                </Fields>
+                    return (
+                        <Row key={prop.toString()} fullscreen={Input.name === "VisualBlockEditor"}>
+                            <div>{prop}</div>
+                            <Input prop={prop.toString()} value={value} onChange={onChange} blockConfigs={props.blockConfigs} />
+                        </Row>
+                    );
+                })}
             </Main>
         </Container>
     );

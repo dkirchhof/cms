@@ -3,7 +3,6 @@ import { Header } from "./components/header";
 import { itemsOfTypeListFactory } from "./pages/itemsOfTypeList";
 import { itemEditorFactory } from "./pages/itemEditor";
 import { typesListFactory } from "./pages/typesList";
-import { visualBlockEditorFactory } from "./pages/visualBlockEditor";
 import { Container, GlobalStyles } from "./styles";
 import { ItemTypeConfigs } from "../types/itemTypeConfig";
 import { BlockConfigs } from "../types/block";
@@ -12,8 +11,7 @@ import { NotificationsProvider } from "./components/notifications";
 export const editorFactory = (itemTypeConfigs: ItemTypeConfigs, blockConfigs: BlockConfigs) => {
     const TypesList = typesListFactory(itemTypeConfigs);
     const ItemsOfTypeList = itemsOfTypeListFactory(itemTypeConfigs);
-    const ItemEditor = itemEditorFactory(itemTypeConfigs);
-    const VisualBlockEditor = visualBlockEditorFactory(itemTypeConfigs, blockConfigs);
+    const ItemEditor = itemEditorFactory(itemTypeConfigs, blockConfigs);
 
     return () => {
         return (
@@ -30,7 +28,6 @@ export const editorFactory = (itemTypeConfigs: ItemTypeConfigs, blockConfigs: Bl
                             <Route path="/content" element={<TypesList />} />
                             <Route path="/content/:typeName" element={<ItemsOfTypeList />} />
                             <Route path="/content/:typeName/:id" element={<ItemEditor />} />
-                            <Route path="/content/:typeName/:id/:prop" element={<VisualBlockEditor />} />
 
                             <Route path="/404" element={<div>404</div>} />
                             <Route path="*" element={<div>404</div>} />
