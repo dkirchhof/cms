@@ -2,24 +2,26 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { match } from "ts-pattern";
 import { GetItemEditingType, IItemTypeConfig, ItemTypeConfigs } from "../../../types/itemTypeConfig";
-import { deleteItem, updateItem } from "../../api";
+import { createItem, updateItem } from "../../api";
 import { Breadcrumb } from "../../components/breadcrumb";
-import { DangerousButton, PrimaryButton, SecondaryButton } from "../../components/button";
+import { PrimaryButton, SecondaryButton } from "../../components/button";
 import { ErrorDisplay } from "../../components/errorDisplay";
 import { useNotifications } from "../../components/notifications";
-import { BUTTON_DELETE, BUTTON_RESET, BUTTON_UPDATE, ITEM_DELETED, ITEM_UPDATED } from "../../messages";
+import { BUTTON_RESET, BUTTON_SAVE, BUTTON_UPDATE, ITEM_CREATED, ITEM_UPDATED } from "../../messages";
 import { PropEditor } from "../../types/propEditor";
 import { mapObject } from "../../utils/mapObject";
 import { Header } from "../pageStyles";
 import { Container, Fields, Label, Main } from "./styles";
 import { useLoadItem } from "./useLoadItem";
 
+type Mode = "create" | "update";
+
 export const itemEditorFactory = (itemTypeConfigs: ItemTypeConfigs) => () => {
     const state = useLoadItem(itemTypeConfigs);
 
     return match(state)
         .with({ state: "LOADING" }, () => <Loading />)
-        .with({ state: "LOADED" }, ({ itemTypeConfig, item }) => <Loaded itemTypeConfig={itemTypeConfig} item={item} />)
+        .with({ state: "LOADED" }, ({ itemTypeConfig, item, mode }) => <Loaded itemTypeConfig={itemTypeConfig} item={item} mode={mode} />)
         .with({ state: "ERROR" }, ({ message }) => <Error message={message} />)
         .exhaustive();
 };
@@ -30,22 +32,17 @@ const Loading = () => {
     );
 };
 
-const Loaded = <T extends IItemTypeConfig>(props: { itemTypeConfig: T; item: GetItemEditingType<T>; }) => {
+const Loaded = <T extends IItemTypeConfig>(props: { itemTypeConfig: T; item: GetItemEditingType<T>; mode: Mode }) => {
     const navigate = useNavigate();
-    const showNotification = useNotifications(); 
+    const showNotification = useNotifications();
 
+    const [item, setItem] = useState(props.item);
     const [editedFields, setEditedFields] = useState<Partial<GetItemEditingType<T>>>({});
-   
-    const del = async () => {
-        try {
-            await deleteItem(props.itemTypeConfig, props.item.id);
-            
-            showNotification({ type: "success", message: ITEM_DELETED(props.itemTypeConfig.name[0]) });
-            navigate(`/content/${itemTypePluralName}`);
-        } catch (e: any) {
-            showNotification({ type: "error", message: e.message });
-        }
-    }
+    
+    const mergedItem = {
+        ...item,
+        ...editedFields,
+    };
 
     const reset = () => {
         setEditedFields({});
@@ -53,9 +50,19 @@ const Loaded = <T extends IItemTypeConfig>(props: { itemTypeConfig: T; item: Get
 
     const save = async () => {
         try {
-            await updateItem(props.itemTypeConfig, props.item.id, editedFields);
+            if (props.mode === "create") {
+                const createdItem = await createItem(props.itemTypeConfig, mergedItem);
 
-            showNotification({ type: "success", message: ITEM_UPDATED(props.itemTypeConfig.name[0]) });
+                showNotification({ type: "success", message: ITEM_CREATED(props.itemTypeConfig.name[0]) });
+                navigate(`/content/${props.itemTypeConfig.name[1]}/${createdItem.id}`, { replace: true });
+            } else {
+                const updatedItem = await updateItem(props.itemTypeConfig, item.id, editedFields);
+
+                setItem(updatedItem);
+                reset();
+
+                showNotification({ type: "success", message: ITEM_UPDATED(props.itemTypeConfig.name[0]) });
+            }
         } catch (e: any) {
             showNotification({ type: "error", message: e.message });
         }
@@ -69,7 +76,7 @@ const Loaded = <T extends IItemTypeConfig>(props: { itemTypeConfig: T; item: Get
     };
 
     const itemTypePluralName = props.itemTypeConfig.name[1];
-    const label = props.itemTypeConfig.getLabel(props.item);
+    const label = props.itemTypeConfig.getLabel(mergedItem);
     const inputs = props.itemTypeConfig.getEditorInputs();
     const hasChanges = Object.keys(editedFields).length;
 
@@ -79,14 +86,13 @@ const Loaded = <T extends IItemTypeConfig>(props: { itemTypeConfig: T; item: Get
                 <Breadcrumb crumbs={[
                     { urlSegment: "content", label: "content" },
                     { urlSegment: itemTypePluralName, label: itemTypePluralName },
-                    { label: label  },
-                ]}/>
+                    { label: label },
+                ]} />
 
-                <DangerousButton onClick={del}>{BUTTON_DELETE}</DangerousButton>
                 <SecondaryButton onClick={reset} disabled={!hasChanges}>{BUTTON_RESET}</SecondaryButton>
-                <PrimaryButton onClick={save} disabled={!hasChanges}>{BUTTON_UPDATE}</PrimaryButton>
+                <PrimaryButton onClick={save} disabled={!hasChanges}>{props.mode === "create" ? BUTTON_SAVE : BUTTON_UPDATE}</PrimaryButton>
             </Header>
-            
+
             <Main>
                 <Fields>
                     {mapObject<keyof GetItemEditingType<T>, PropEditor<any>>(inputs, ([prop, Input]) => {
@@ -94,7 +100,7 @@ const Loaded = <T extends IItemTypeConfig>(props: { itemTypeConfig: T; item: Get
                             return null;
                         }
 
-                        const value = (editedFields[prop] !== undefined) ? editedFields[prop] : props.item[prop];
+                        const value = (editedFields[prop] !== undefined) ? editedFields[prop] : item[prop];
                         const onChange = changeField(prop);
 
                         return (

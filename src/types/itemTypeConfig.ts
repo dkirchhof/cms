@@ -19,8 +19,10 @@ export interface IItemTypeConfig<T extends IItem = IItem, U extends IItem = T> {
     deleteItem: (id: string) => Promise<void>;
 
     listProps: (keyof T)[];
-    getLabel: GetLabel<T>;
-    getEditorInputs: GetTypeEditorInputs<T>;
+    getLabel: GetLabel<T & U>;
+
+    getInitialData: () => U;
+    getEditorInputs: GetTypeEditorInputs<U>;
 }
 
 export interface IItem {
