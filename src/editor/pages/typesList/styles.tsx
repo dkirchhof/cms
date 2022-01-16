@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { BACKGROUND, BORDER } from "../../theme/colors";
+import { BACKGROUND, BORDER, GRAY_245 } from "../../theme/colors";
 import { PageContainer } from "../pageStyles";
 
 export const Container = styled(PageContainer)`
@@ -28,5 +28,9 @@ export const List = styled.div`
         cursor: pointer;
 
         text-decoration: none;
+
+        :hover {
+            background: ${GRAY_245};
+        }
     }
 `;
