@@ -100,20 +100,32 @@ const Loaded = <T extends IItem>(props: { itemTypeConfig: IItemTypeConfig<T>; it
         );
     };
 
+    const resetToUpdatedValues = () => {
+        setEditorFields(
+            update(fields => {
+                fields.forEach(field => {
+                    field.initialValue = field.currentValue;
+                    field.changed = false;
+                    field.errors = [];
+                });
+            })
+        );
+    };
+
     const save = async () => {
         try {
             const values = getValues(editorFields);
 
             if (itemId === null) {
-                const createdItem = await createItem(props.itemTypeConfig, values);
+                const id = await createItem(props.itemTypeConfig, values);
 
                 showNotification({ type: "success", message: ITEM_CREATED(props.itemTypeConfig.name[0]) });
-                navigate(`/content/${props.itemTypeConfig.name[1]}/${createdItem.id}`, { replace: true });
+                navigate(`/content/${props.itemTypeConfig.name[1]}/${id}`, { replace: true });
             } else {
-                const updatedItem = await updateItem(props.itemTypeConfig, itemId, values);
+                await updateItem(props.itemTypeConfig, itemId, values);
                 
                 showNotification({ type: "success", message: ITEM_UPDATED(props.itemTypeConfig.name[0]) });
-                setEditorFields(createEditorFields(props.itemTypeConfig, updatedItem));
+                resetToUpdatedValues();
             }
         } catch (e: any) {
             showNotification({ type: "error", message: e.message });

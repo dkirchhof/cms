@@ -45,7 +45,7 @@ export const createItem = async <T extends IItem>(itemTypeConfig: IItemTypeConfi
         values,
     };
 
-    return request<T>(body);
+    return request<string>(body);
 };
 
 export const updateItem = async <T extends IItem>(itemTypeConfig: IItemTypeConfig<T>, id: string, values: T) => {
@@ -56,7 +56,7 @@ export const updateItem = async <T extends IItem>(itemTypeConfig: IItemTypeConfi
         values,
     };
 
-    return request<T>(body);
+    return request<void>(body);
 };
 
 export const deleteItem = async (itemTypeConfig: IItemTypeConfig<any>, id: string) => {
@@ -66,5 +66,5 @@ export const deleteItem = async (itemTypeConfig: IItemTypeConfig<any>, id: strin
         id,
     };
 
-    return request(body);
+    return request<void>(body);
 };

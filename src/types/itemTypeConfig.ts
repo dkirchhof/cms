@@ -24,8 +24,8 @@ export interface IItemTypeConfig<T extends IItem = IItem> {
         api: {
             getItem: (id: string) => Promise<T>;
             getItems: () => Promise<T[]>;
-            createItem: (values: T) => Promise<T>;
-            updateItem: (id: string, values: T) => Promise<T>;
+            createItem: (values: T) => Promise<string>;
+            updateItem: (id: string, values: T) => Promise<void>;
             deleteItem: (id: string) => Promise<void>;
         };
     };

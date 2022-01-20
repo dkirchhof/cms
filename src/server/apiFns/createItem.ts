@@ -12,7 +12,7 @@ export const createItem = async (req: IRequest<CreateItemBody<any>>, res: IRespo
         throw new HTTPError(400, "couldn't find typeConfig");
     }
 
-    const item = await itemTypeConfig.backend.api.createItem(req.body.values);
+    const id = await itemTypeConfig.backend.api.createItem(req.body.values);
 
-    res.json(item);
+    res.text(id);
 };
