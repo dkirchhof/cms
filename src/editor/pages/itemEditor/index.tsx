@@ -17,6 +17,7 @@ interface IEditorField<T, P extends keyof T> extends IPropConfig<T> {
     prop: P;
     initialValue: T[P];
     currentValue: T[P];
+    changed: boolean;
     errors: string[];
 }
 
@@ -25,12 +26,14 @@ const createEditorFields = <T extends IItem>(itemTypeConfig: IItemTypeConfig<T>,
 
     return props.map(prop => {
         const config = itemTypeConfig.frontend.editor.propConfigs[prop] as IPropConfig<any>;
-        
+        const value = item?.[prop] || config.defaultValue;
+
         const editorField: IEditorField<T, any> = {
             prop,
-            initialValue: item?.[prop] || config.defaultValue,
-            currentValue: item?.[prop] || config.defaultValue,
-            errors: [],
+            initialValue: value,
+            currentValue: value,
+            changed: false,
+            errors: validate(config.validators, value),
             ...config,
         };
 
@@ -39,11 +42,19 @@ const createEditorFields = <T extends IItem>(itemTypeConfig: IItemTypeConfig<T>,
 };
 
 const checkIfHasChanges = (editorFields: IEditorField<any, any>[]) => {
-    return editorFields.some(field => field.currentValue !== field.initialValue);
+    return editorFields.some(field => field.changed);
+};
+
+const checkIfHasErrors = (editorFields: IEditorField<any, any>[]) => {
+    return editorFields.some(field => field.errors.length > 0);
 };
 
 const validate = <T extends any>(validators: PropValidator<T>[], value: T) => {
     return validators.map(validator => validator(value)).filter(Boolean) as string[];
+};
+
+const getValues = (editorFields: IEditorField<any, any>[]) => {
+    return editorFields.map(field => ({ prop: field.prop, value: field.currentValue }));
 };
 
 export const itemEditorFactory = (itemTypeConfigs: ItemTypeConfigs) => () => {
@@ -79,6 +90,7 @@ const Loaded = <T extends IItem>(props: { itemTypeConfig: IItemTypeConfig<T>; it
             update(fields => {
                 fields.forEach(field => {
                     field.currentValue = field.initialValue;
+                    field.changed = false;
                     field.errors = [];
                 });
             })
@@ -86,23 +98,23 @@ const Loaded = <T extends IItem>(props: { itemTypeConfig: IItemTypeConfig<T>; it
     };
 
     const save = async () => {
-        // try {
-        //     if (props.mode === "create") {
-        //         const createdItem = await createItem(props.itemTypeConfig, mergedItem);
+        try {
+            const values = getValues(editorFields);
 
-        //         showNotification({ type: "success", message: ITEM_CREATED(props.itemTypeConfig.name[0]) });
-        //         navigate(`/content/${props.itemTypeConfig.name[1]}/${createdItem.id}`, { replace: true });
-        //     } else {
-        //         const updatedItem = await updateItem(props.itemTypeConfig, item.id, editedFields);
+            if (itemId === null) {
+                const createdItem = await createItem(props.itemTypeConfig, values);
 
-        //         setItem(updatedItem);
-        //         reset();
-
-        //         showNotification({ type: "success", message: ITEM_UPDATED(props.itemTypeConfig.name[0]) });
-        //     }
-        // } catch (e: any) {
-        //     showNotification({ type: "error", message: e.message });
-        // }
+                showNotification({ type: "success", message: ITEM_CREATED(props.itemTypeConfig.name[0]) });
+                navigate(`/content/${props.itemTypeConfig.name[1]}/${createdItem.id}`, { replace: true });
+            } else {
+                const updatedItem = await updateItem(props.itemTypeConfig, itemId, values);
+                
+                showNotification({ type: "success", message: ITEM_UPDATED(props.itemTypeConfig.name[0]) });
+                setEditorFields(createEditorFields(props.itemTypeConfig, updatedItem));
+            }
+        } catch (e: any) {
+            showNotification({ type: "error", message: e.message });
+        }
     };
 
     const changeField = (index: number) => (value: any) => {
@@ -111,6 +123,7 @@ const Loaded = <T extends IItem>(props: { itemTypeConfig: IItemTypeConfig<T>; it
                 const field = fields[index];
 
                 field.currentValue = value;
+                field.changed = true;
                 field.errors = validate(field.validators, value);
             })
         );
@@ -118,6 +131,7 @@ const Loaded = <T extends IItem>(props: { itemTypeConfig: IItemTypeConfig<T>; it
 
     const itemTypePluralName = props.itemTypeConfig.name[1];
     const hasChanges = checkIfHasChanges(editorFields);
+    const hasErrors = checkIfHasErrors(editorFields);
 
     return (
         <Container>
@@ -129,7 +143,7 @@ const Loaded = <T extends IItem>(props: { itemTypeConfig: IItemTypeConfig<T>; it
                 ]} />
 
                 <SecondaryButton onClick={reset} disabled={!hasChanges}>{BUTTON_RESET}</SecondaryButton>
-                <PrimaryButton onClick={save} disabled={!hasChanges}>{itemId === null ? BUTTON_SAVE : BUTTON_UPDATE}</PrimaryButton>
+                <PrimaryButton onClick={save} disabled={!hasChanges || hasErrors}>{itemId === null ? BUTTON_SAVE : BUTTON_UPDATE}</PrimaryButton>
             </Header>
 
             <Main>
@@ -141,9 +155,11 @@ const Loaded = <T extends IItem>(props: { itemTypeConfig: IItemTypeConfig<T>; it
                             <div>{field.prop}</div>
                             <field.editor value={field.currentValue} onChange={changeField(i)} />
 
-                            <ul>
-                                {field.errors.map((error, i) => <li key={i}>{error}</li>)}
-                            </ul>
+                            {field.changed && (
+                                <ul>
+                                    {field.errors.map((error, i) => <li key={i}>{error}</li>)}
+                                </ul>
+                            )}
                         </Row>
                     );
                 })}
