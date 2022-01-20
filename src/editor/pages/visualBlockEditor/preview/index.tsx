@@ -5,10 +5,11 @@ import { Container } from "./styles";
 interface IProps {
     ctx: any;
     root: IBlock;
+    blockConfigs: BlockConfigs;
 }
 
-export const previewFactory = (blockConfigs: BlockConfigs) => (props: IProps) => (
+export const Preview = (props: IProps) => (
     <Container>
-        {renderChildren(blockConfigs, props.ctx, props.root.data.children!)}
+        {renderChildren(props.blockConfigs, props.ctx, props.root.data.children!)}
     </Container>
 );

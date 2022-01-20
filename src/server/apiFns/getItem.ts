@@ -12,7 +12,7 @@ export const getItem = async (req: IRequest<GetItemBody>, res: IResponse, itemTy
         throw new HTTPError(400, "couldn't find typeConfig");
     }
 
-    const item = await itemTypeConfig.getItem(req.body.id);
+    const item = await itemTypeConfig.backend.api.getItem(req.body.id);
 
     if (!item) {
         throw new HTTPError(404, "couldn't find item");

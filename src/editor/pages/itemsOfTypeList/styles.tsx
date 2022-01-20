@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { BORDER, GRAY_245 } from "../../theme/colors";
+import { BACKGROUND, BORDER, GRAY_245 } from "../../theme/colors";
 import { PageContainer } from "../pageStyles";
 
 export const Container = styled(PageContainer)`
@@ -25,25 +25,31 @@ export const Table = styled.table`
 
     overflow: hidden;
 
-    > thead > tr > th {
-        padding: 16px;
-
+    > thead {
         background: ${GRAY_245};
 
-        text-align: left;
-    }
-
-    > tbody > tr {
-        cursor: pointer;
-
-        :hover {
-            background: ${GRAY_245};
-        }
-
-        > td {
+        > tr > th {
             padding: 16px;
 
-            border-top: 1px solid ${BORDER};
+            text-align: left;
+        }
+    }
+
+    > tbody {
+        background: ${BACKGROUND};
+
+        > tr {
+            cursor: pointer;
+
+            :hover {
+                background: ${GRAY_245};
+            }
+
+            > td {
+                padding: 16px;
+
+                border-top: 1px solid ${BORDER};
+            }
         }
     }
 `;

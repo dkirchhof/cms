@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { match } from "ts-pattern";
-import { GetItemType, IItem, IItemTypeConfig, ItemTypeConfigs } from "../../../types/itemTypeConfig";
+import { IItem, IItemTypeConfig, ItemTypeConfigs } from "../../../types/itemTypeConfig";
 import { deleteItem } from "../../api";
 import { Breadcrumb } from "../../components/breadcrumb";
 import { PrimaryButton } from "../../components/button";
@@ -29,12 +29,16 @@ const Loading = () => {
     );
 };
 
-const Loaded = <T extends IItemTypeConfig>(props: { itemTypeConfig: T; items: GetItemType<T>[]; }) => {
+const Loaded = <T extends IItem>(props: { itemTypeConfig: IItemTypeConfig<T>; items: T[]; }) => {
     const navigate = useNavigate();
     const showNotification = useNotifications();
 
     const [items, setItems] = useState(props.items);
-
+    
+    const createItem = () => {
+        navigate("new");
+    };
+    
     const editItem = (itemId: string) => {
         navigate(itemId);
     };
@@ -53,7 +57,7 @@ const Loaded = <T extends IItemTypeConfig>(props: { itemTypeConfig: T; items: Ge
 
     const itemTypeSingularName = props.itemTypeConfig.name[0];
     const itemTypePluralName = props.itemTypeConfig.name[1];
-    const listProps = props.itemTypeConfig.listProps;
+    const listProps = props.itemTypeConfig.frontend.listProps;
 
     return (
         <Container>
@@ -63,7 +67,7 @@ const Loaded = <T extends IItemTypeConfig>(props: { itemTypeConfig: T; items: Ge
                     { label: itemTypePluralName },
                 ]} />
 
-                <PrimaryButton>{CREATE_NEW_ITEM(itemTypeSingularName)}</PrimaryButton>
+                <PrimaryButton onClick={createItem}>{CREATE_NEW_ITEM(itemTypeSingularName)}</PrimaryButton>
             </Header>
 
             <Main>

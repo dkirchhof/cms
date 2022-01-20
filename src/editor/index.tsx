@@ -5,13 +5,12 @@ import { itemEditorFactory } from "./pages/itemEditor";
 import { typesListFactory } from "./pages/typesList";
 import { Container, GlobalStyles } from "./styles";
 import { ItemTypeConfigs } from "../types/itemTypeConfig";
-import { BlockConfigs } from "../types/block";
 import { NotificationsProvider } from "./components/notifications";
 
-export const editorFactory = (itemTypeConfigs: ItemTypeConfigs, blockConfigs: BlockConfigs) => {
+export const editorFactory = (itemTypeConfigs: ItemTypeConfigs) => {
     const TypesList = typesListFactory(itemTypeConfigs);
     const ItemsOfTypeList = itemsOfTypeListFactory(itemTypeConfigs);
-    const ItemEditor = itemEditorFactory(itemTypeConfigs, blockConfigs);
+    const ItemEditor = itemEditorFactory(itemTypeConfigs);
 
     return () => {
         return (

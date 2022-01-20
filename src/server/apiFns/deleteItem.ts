@@ -12,7 +12,7 @@ export const deleteItem = async (req: IRequest<DeleteItemBody>, res: IResponse, 
         throw new HTTPError(400, "couldn't find typeConfig");
     }
 
-    await itemTypeConfig.deleteItem(req.body.id);
+    await itemTypeConfig.backend.api.deleteItem(req.body.id);
 
     res.json({});
 };

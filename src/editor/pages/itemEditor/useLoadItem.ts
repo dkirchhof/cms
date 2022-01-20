@@ -1,35 +1,35 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { GetItemEditingType, IItemTypeConfig, ItemTypeConfigs } from "../../../types/itemTypeConfig";
+import { IItem, IItemTypeConfig, ItemTypeConfigs } from "../../../types/itemTypeConfig";
 import { findItemConfigByName } from "../../../utils/findItemTypeConfig";
-import { getItemForEditing } from "../../api";
+import { getItem } from "../../api";
 
-type State<T extends IItemTypeConfig>
+type State<T extends IItem>
     = { state: "LOADING" } 
-    | { state: "LOADED"; itemTypeConfig: T; item: GetItemEditingType<T>; mode: "create" | "update" }
+    | { state: "LOADED"; itemTypeConfig: IItemTypeConfig<T>; item: T | null; }
     | { state: "ERROR"; message: string; }
 
-export const useLoadItem = <T extends IItemTypeConfig>(itemTypeConfigs: ItemTypeConfigs) => {
+export const useLoadItem = <T extends IItem>(itemTypeConfigs: ItemTypeConfigs) => {
     const { typeName, id } = useParams();
 
     const [state, setState] = useState<State<T>>({ state: "LOADING" });
     
     const fetch = async () => {
         try {
-            const itemTypeConfig = findItemConfigByName(itemTypeConfigs, typeName!) as T;
+            setState({ state: "LOADING" });
+
+            const itemTypeConfig = findItemConfigByName<T>(itemTypeConfigs, typeName!);
 
             if (!itemTypeConfig) {
                 throw new Error("couldn't find typeConfig");
             }
 
             if(id === "new") {
-                const item = itemTypeConfig.getInitialData() as GetItemEditingType<T>;
-
-                setState({ state: "LOADED", itemTypeConfig, item, mode: "create" });
+                setState({ state: "LOADED", itemTypeConfig, item: null });
             } else {
-               const item = await getItemForEditing(itemTypeConfig, id!) as GetItemEditingType<T>;
+               const item = await getItem(itemTypeConfig, id!);
 
-               setState({ state: "LOADED", itemTypeConfig, item, mode: "update" });
+               setState({ state: "LOADED", itemTypeConfig, item });
             }
         } catch (e: any) {
             setState({ state: "ERROR", message: e.message });

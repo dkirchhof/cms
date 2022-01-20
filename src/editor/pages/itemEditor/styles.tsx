@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { DANGEROUS } from "../../theme/colors";
 import { PageContainer } from "../pageStyles";
 
 export const Container = styled(PageContainer)`
@@ -32,5 +33,9 @@ export const Row = styled.div<{ fullscreen: boolean; }>`
 
     > input, textarea {
         width: 100%;
+    }
+
+    > ul {
+        color: ${DANGEROUS};
     }
 `;
