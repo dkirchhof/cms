@@ -1,5 +1,3 @@
-import { Values } from "./itemTypeConfig";
-
 export type RequestBody 
     = GetItemBody
     | GetItemsBody
@@ -22,14 +20,14 @@ export type GetItemsBody = {
 export type CreateItemBody<T> = {
     method: "createItem";
     typeName: string;
-    values: Values<T>;
+    values: T;
 };
 
 export type UpdateItemBody<T> = {
     method: "updateItem";
     typeName: string;
     id: string;
-    values: Values<T>;
+    values: T;
 };
 
 export type DeleteItemBody = {

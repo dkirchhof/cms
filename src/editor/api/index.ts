@@ -1,4 +1,4 @@
-import { IItemTypeConfig, IItem, Values } from "../../types/itemTypeConfig";
+import { IItemTypeConfig, IItem } from "../../types/itemTypeConfig";
 import { CreateItemBody, DeleteItemBody, GetItemBody, GetItemsBody, RequestBody, UpdateItemBody } from "../../types/requestData";
 
 const request = async <T>(body: RequestBody) => {
@@ -38,7 +38,7 @@ export const getItems = async <T extends IItem>(itemTypeConfig: IItemTypeConfig<
     return request<T[]>(body);
 };
 
-export const createItem = async <T extends IItem>(itemTypeConfig: IItemTypeConfig<T>, values: Values<T>) => {
+export const createItem = async <T extends IItem>(itemTypeConfig: IItemTypeConfig<T>, values: T) => {
     const body: CreateItemBody<T> = {
         method: "createItem",
         typeName: itemTypeConfig.name[0],
@@ -48,7 +48,7 @@ export const createItem = async <T extends IItem>(itemTypeConfig: IItemTypeConfi
     return request<T>(body);
 };
 
-export const updateItem = async <T extends IItem>(itemTypeConfig: IItemTypeConfig<T>, id: string, values: Values<T>) => {
+export const updateItem = async <T extends IItem>(itemTypeConfig: IItemTypeConfig<T>, id: string, values: T) => {
     const body: UpdateItemBody<T> = {
         method: "updateItem",
         typeName: itemTypeConfig.name[0],

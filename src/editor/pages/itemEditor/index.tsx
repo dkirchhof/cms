@@ -53,8 +53,11 @@ const validate = <T extends any>(validators: PropValidator<T>[], value: T) => {
     return validators.map(validator => validator(value)).filter(Boolean) as string[];
 };
 
-const getValues = (editorFields: IEditorField<any, any>[]) => {
-    return editorFields.map(field => ({ prop: field.prop, value: field.currentValue }));
+const getValues = <T extends IItem>(editorFields: IEditorField<T, any>[]) => {
+    return editorFields.reduce((prev, field) => ({
+        ...prev,
+        [field.prop]: field.currentValue,
+    }), {} as T);
 };
 
 export const itemEditorFactory = (itemTypeConfigs: ItemTypeConfigs) => () => {
