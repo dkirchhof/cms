@@ -9,6 +9,7 @@ export type PropValidator<T> = (value: T) => string | null;
 
 export interface IPropConfig<T> {
     label?: string;
+    fullscreen?: boolean;
     editor: PropEditor<T>;
     defaultValue: T;
     validators: PropValidator<T>[];

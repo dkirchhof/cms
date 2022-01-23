@@ -7,14 +7,14 @@ interface IProps {
 
     selectionPath: string;
     setSelectionPath: (path: string) => void;
+
+    blockConfigs: BlockConfigs;
 }
 
-export const outlinerFactory = (blockConfigs: BlockConfigs) => {
-    return (props: IProps) => {
-        return (
-            <Container>
-                <OutlinerItem block={props.root} blockConfigs={blockConfigs} path="" selectionPath={props.selectionPath} setSelectionPath={props.setSelectionPath} />
-            </Container>
-        );
-    };
+export const Outliner = (props: IProps) => {
+    return (
+        <Container>
+            <OutlinerItem block={props.root} blockConfigs={props.blockConfigs} path="" selectionPath={props.selectionPath} setSelectionPath={props.setSelectionPath} />
+        </Container>
+    );
 };

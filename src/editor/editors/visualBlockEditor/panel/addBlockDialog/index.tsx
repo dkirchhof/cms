@@ -7,13 +7,15 @@ export type SubmitFn = (blockName: string) => void;
 interface IProps {
     close: () => void;
     submit: SubmitFn;
+
+    blockConfigs: BlockConfigs;
 }
 
-export const addBlockDialogFactory = (blockConfigs: BlockConfigs) => (props: IProps) => {
+export const AddBlockDialog = (props: IProps) => {
     return (
         <Container>
             <List>
-                {blockConfigs.map((blockConfig, i) => 
+                {props.blockConfigs.map((blockConfig, i) => 
                     <SecondaryButton key={i} onClick={() => props.submit(blockConfig.name)}>{blockConfig.name}</SecondaryButton>
                 )}
             </List>

@@ -5,5 +5,6 @@ export const Container = styled.div`
     grid-template-columns: 1fr auto;
     gap: 16px;
 
+    height: 100%;
     overflow: hidden;
 `;

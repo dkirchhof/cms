@@ -1,7 +1,5 @@
 import { BlockConfigs, IBlock } from "../../../../../types/block";
 import { findBlockConfigByName } from "../../../../../utils/findBlockConfig";
-import { PrimaryButton, SecondaryButton } from "../../../../components/button";
-import { ADD_BLOCK, REMOVE_BLOCK } from "../../../../messages";
 import { Name, Container, Label } from "../editorStyles";
 
 interface IProps {
@@ -9,12 +7,12 @@ interface IProps {
     isRoot: boolean;
 
     onChange: (prop: string) => (value: any) => void;
-    addBlock: () => void;
-    removeBlock: () => void;
+
+    blockConfigs: BlockConfigs;
 }
 
-export const blockEditorFactory = (blockConfigs: BlockConfigs) => (props: IProps) => {
-    const blockConfig = findBlockConfigByName(blockConfigs, props.block.blockName);
+export const BlockEditor = (props: IProps) => {
+    const blockConfig = findBlockConfigByName(props.blockConfigs, props.block.blockName);
 
     if (!blockConfig) {
         throw new Error("couldn't find blockConfig");
@@ -32,9 +30,6 @@ export const blockEditorFactory = (blockConfigs: BlockConfigs) => (props: IProps
                     <Input value={props.block.data[prop]} onChange={props.onChange(prop)} />
                 </Label>
             ))}
-
-            {props.block.data.children && <PrimaryButton onClick={props.addBlock}>{ADD_BLOCK}</PrimaryButton>}
-            {!props.isRoot && <SecondaryButton onClick={props.removeBlock}>{REMOVE_BLOCK}</SecondaryButton>}
         </Container>
     );
 };

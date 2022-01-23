@@ -16,7 +16,7 @@ export const Main = styled.main`
     scroll-snap-type: y;
 `;
 
-export const Row = styled.div<{ fullscreen: boolean; }>`
+export const Row = styled.div<{ fullscreen?: boolean; }>`
     height: ${props => props.fullscreen ? "100%" : "auto"};
     padding-top: 32px;
 
