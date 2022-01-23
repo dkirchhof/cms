@@ -24,45 +24,45 @@ export const Panel = (props: IProps) => {
     const selected = traversePath(props.root, selectionPath);
 
     const addBlock = (path: string) => {
-        setShowAddBlockDialog({
-            submit: blockName => {
-                const blockConfig = findBlockConfigByName(props.blockConfigs, blockName);
+        // setShowAddBlockDialog({
+        //     submit: blockName => {
+        //         const blockConfig = findBlockConfigByName(props.blockConfigs, blockName);
 
-                if (!blockConfig) {
-                    throw new Error("couldn't find blockConfig");
-                }
+        //         if (!blockConfig) {
+        //             throw new Error("couldn't find blockConfig");
+        //         }
 
-                const block: IBlock = {
-                    blockName,
-                    data: blockConfig.getInitialData(),
-                };
+        //         const block: IBlock = {
+        //             blockName,
+        //             data: blockConfig.getInitialData(),
+        //         };
 
-                props.addBlock(path)(block);
+        //         props.addBlock(path)(block);
 
-                setShowAddBlockDialog(false);
-            },
-        });
+        //         setShowAddBlockDialog(false);
+        //     },
+        // });
     };
 
     const removeBlock = (path: string) => {
-        const parentPath = getPathForParent(path);
-        const index = getIndex(path);
+        // const parentPath = getPathForParent(path);
+        // const index = getIndex(path);
 
-        const parent = traversePath(props.root, parentPath);
+        // const parent = traversePath(props.root, parentPath);
 
-        // if its the last child
-        // check if there is a prev child and select it
-        // otherwise select the parent
+        // // if its the last child
+        // // check if there is a prev child and select it
+        // // otherwise select the parent
 
-        if (index === parent.data.children!.length - 1) {
-            if (parent.data.children!.length > 1) {
-                setSelectionPath(getPathForChild(parentPath, index - 1));
-            } else {
-                setSelectionPath(parentPath);
-            }
-        }
+        // if (index === parent.data.children!.length - 1) {
+        //     if (parent.data.children!.length > 1) {
+        //         setSelectionPath(getPathForChild(parentPath, index - 1));
+        //     } else {
+        //         setSelectionPath(parentPath);
+        //     }
+        // }
 
-        props.removeBlock(parentPath, index);
+        // props.removeBlock(parentPath, index);
     };
 
     return (

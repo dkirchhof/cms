@@ -19,7 +19,7 @@ export const OutlinerItem = ({ block, path, ...props }: IProps) => {
         throw new Error("couldn't find blockConfig");
     }
 
-    const label = blockConfig.getLabel(block.data);
+    const label = blockConfig.toString(block.data);
 
     return (
         <div>

@@ -18,18 +18,22 @@ export const BlockEditor = (props: IProps) => {
         throw new Error("couldn't find blockConfig");
     }
 
-    const inputs = blockConfig.getEditorInputs();
-
     return (
         <Container>
             <Name>{props.block.blockName}</Name>
 
-            {Object.entries(inputs).map(([prop, Input]) => (
-                <Label key={prop}>
-                    {prop}
-                    <Input value={props.block.data[prop]} onChange={props.onChange(prop)} />
-                </Label>
-            ))}
+            {Object.entries(blockConfig.propConfigs).map(([prop, config]) => {
+                if (!config.editor) {
+                    return null;
+                }
+
+                return (
+                    <Label key={prop}>
+                        {prop}
+                        <config.editor value={props.block.data[prop]} onChange={props.onChange(prop)} />
+                    </Label>
+                );
+            })}
         </Container>
     );
 };

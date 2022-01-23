@@ -13,6 +13,13 @@ export interface IBlockEditorProps<DATA> {
     onChange: <PROP extends keyof DATA>(prop: PROP, value: DATA[PROP]) => void;
 }
 
+export interface IPropConfig<T> {
+    // label?: string;
+    editor: PropEditor<T> | null;
+    defaultValue: T;
+    // validators: PropValidator<T>[];
+}
+
 export type BlockComponent<CTX, DATA> = (props: IBlockComponentProps<CTX, DATA>) => JSX.Element;
 export type GetBlockInitialData<DATA> = () => DATA;
 export type GetBlockLabel<DATA> = (data: DATA) => string;
@@ -20,9 +27,12 @@ export type GetBlockEditorInputs<DATA> = () => { [prop in keyof Omit<DATA, "chil
 
 export interface IBlockConfig<CTX, DATA> {
     name: string;
-    getInitialData: GetBlockInitialData<DATA>;
-    getEditorInputs: GetBlockEditorInputs<DATA>;
-    getLabel: GetBlockLabel<DATA>;
+    toString: (data: DATA) => string;
+
+    propConfigs: {
+        [prop in keyof DATA]: IPropConfig<DATA[prop]>;
+    };
+
     Component: BlockComponent<CTX, DATA>;
 }
 
