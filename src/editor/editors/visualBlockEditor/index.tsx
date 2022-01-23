@@ -1,8 +1,6 @@
 import update from "immer";
-import { useState } from "react";
 import { BlockConfigs, IBlock } from "../../../types/block";
 import { IPropEditorProps } from "../../types/propEditor";
-import { deepCopy } from "../../utils/deepCopy";
 import { traversePath } from "../../utils/path";
 import { Panel } from "./panel";
 import { Preview } from "./preview";
@@ -13,36 +11,34 @@ interface IOptions {
 }
 
 export const visualBlockEditorFactory = (options: IOptions) => (props: IPropEditorProps<IBlock>) => {
-    const [value, setValue] = useState<IBlock>(deepCopy(props.value));
-
     const changeData = (path: string) => (prop: string) => (dataValue: any) => {
-        setValue(
-            update(value => {
-                traversePath(value, path).data[prop] = dataValue;
-            }, value)
-        );
+        const newValue = update(value => {
+            traversePath(value, path).data[prop] = dataValue;
+        }, props.value)();
+
+        props.onChange(newValue);
     };
 
     const addBlock = (path: string) => (block: IBlock) => {
-        setValue(
-            update(value => {
-                traversePath(value, path).data.children!.push(block);
-            }, value)
-        );
+        // setValue(
+        //     update(value => {
+        //         traversePath(value, path).data.children!.push(block);
+        //     }, value)
+        // );
     };
 
     const removeBlock = (parentPath: string, index: number) => {
-        setValue(
-            update(value => {
-                traversePath(value, parentPath).data.children!.splice(index, 1);
-            }, value)
-        );
+        // setValue(
+        //     update(value => {
+        //         traversePath(value, parentPath).data.children!.splice(index, 1);
+        //     }, value)
+        // );
     };
 
     return (
         <Container>
-            <Preview blockConfigs={options.blockConfigs} ctx={{}} root={value} />
-            <Panel root={value} changeData={changeData} blockConfigs={options.blockConfigs} addBlock={addBlock} removeBlock={removeBlock} />
+            <Preview blockConfigs={options.blockConfigs} ctx={{}} root={props.value} />
+            <Panel root={props.value} changeData={changeData} blockConfigs={options.blockConfigs} addBlock={addBlock} removeBlock={removeBlock} />
         </Container>
     );
 };
