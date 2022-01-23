@@ -2,56 +2,72 @@ import { useEffect, useState } from "react";
 import { IItem, IItemTypeConfig } from "../../../types/itemTypeConfig";
 import { getEntities } from "../../api";
 import { IPropEditorProps } from "../../types/propEditor";
-import { Select } from "./styles";
+import Select, { MultiValue } from "react-select";
 
 interface IOptions<ENTITY extends IItem> {
     itemTypeConfig: IItemTypeConfig<ENTITY, any>;
 }
 
-const itemToString = <ENTITY extends IItem>(item: ENTITY, itemTypeConfig: IItemTypeConfig<ENTITY>) => {
-    return itemTypeConfig.frontend.listProps.map(prop => item[prop]).join(", ");
-};
+interface ISelectOption { label: string; value: string; }
 
 export const itemSelectorFactory = <ENTITY extends IItem>(options: IOptions<ENTITY>) => (props: IPropEditorProps<string>) => {
-    const [items, setItems] = useState<ENTITY[]>([]);
-    
-    const init = async () => {
-        const result = await getEntities(options.itemTypeConfig);
+    const [items, setItems] = useState<ISelectOption[]>([]);
 
-        setItems(result);
+    const init = async () => {
+        const entities = await getEntities(options.itemTypeConfig);
+
+        setItems(
+            entities.map(entity => ({ label: options.itemTypeConfig.frontend.toString(entity), value: entity.id }))
+        );
+    };
+
+    const onChange = (option: ISelectOption | null) => {
+        if (option) {
+            props.onChange(option.value);
+        }
     };
 
     useEffect(() => {
         init();
     }, []);
 
+    const value = items.find(item => item.value === props.value);
+
     return (
-        <Select value={props.value} onChange={e => props.onChange(e.currentTarget.value)}>
-            {items.map(item => <option key={item.id} value={item.id}>{itemToString(item, options.itemTypeConfig)}</option>)}
-        </Select>
+        <Select
+            options={items}
+            value={value}
+            onChange={onChange} />
     );
 };
 
-export const itemsSelectorFactory = <ENTITY extends IItem>(options: IOptions<ENTITY>) => (props: IPropEditorProps<string[]>) => {
-    const [items, setItems] = useState<ENTITY[]>([]);
-    
-    const init = async () => {
-        const result = await getEntities(options.itemTypeConfig);
 
-        setItems(result);
+export const itemsSelectorFactory = <ENTITY extends IItem>(options: IOptions<ENTITY>) => (props: IPropEditorProps<string[]>) => {
+    const [items, setItems] = useState<ISelectOption[]>([]);
+
+    const init = async () => {
+        const entities = await getEntities(options.itemTypeConfig);
+
+        setItems(
+            entities.map(entity => ({ label: options.itemTypeConfig.frontend.toString(entity), value: entity.id }))
+        );
     };
 
-    const onChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        props.onChange([...e.currentTarget.selectedOptions].map(option => option.value));
+    const onChange = (options: MultiValue<ISelectOption>) => {
+        props.onChange(options.map(option => option.value));
     };
 
     useEffect(() => {
         init();
     }, []);
 
+    const value = items.filter(item => props.value.includes(item.value));
+
     return (
-        <Select value={props.value} onChange={onChange} multiple>
-            {items.map(item => <option key={item.id} value={item.id}>{itemToString(item, options.itemTypeConfig)}</option>)}
-        </Select>
+        <Select
+            options={items}
+            value={value}
+            isMulti
+            onChange={onChange} />
     );
 };

@@ -35,6 +35,8 @@ export interface IItemTypeConfig<ENTITY extends IItem = IItem, EDITABLE_ITEM ext
     frontend: {
         listProps: (keyof ENTITY)[];
 
+        toString: (entity: ENTITY) => string;
+
         editor: {
             propConfigs: {
                 [prop in keyof Omit<EDITABLE_ITEM, "id">]: IPropConfig<EDITABLE_ITEM[prop]> | IBlockPropConfig; 
