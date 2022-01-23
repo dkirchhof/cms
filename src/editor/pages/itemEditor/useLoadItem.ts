@@ -2,23 +2,23 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { IItem, IItemTypeConfig, ItemTypeConfigs } from "../../../types/itemTypeConfig";
 import { findItemConfigByName } from "../../../utils/findItemTypeConfig";
-import { getItem } from "../../api";
+import { getEditableItem } from "../../api";
 
-type State<T extends IItem>
+type State<EDITABLE_ITEM extends IItem>
     = { state: "LOADING" } 
-    | { state: "LOADED"; itemTypeConfig: IItemTypeConfig<T>; item: T | null; }
+    | { state: "LOADED"; itemTypeConfig: IItemTypeConfig<any, EDITABLE_ITEM>; item: EDITABLE_ITEM | null; }
     | { state: "ERROR"; message: string; }
 
-export const useLoadItem = <T extends IItem>(itemTypeConfigs: ItemTypeConfigs) => {
+export const useLoadItem = <EDITABLE_ITEM extends IItem>(itemTypeConfigs: ItemTypeConfigs) => {
     const { typeName, id } = useParams();
 
-    const [state, setState] = useState<State<T>>({ state: "LOADING" });
+    const [state, setState] = useState<State<EDITABLE_ITEM>>({ state: "LOADING" });
     
     const fetch = async () => {
         try {
             setState({ state: "LOADING" });
 
-            const itemTypeConfig = findItemConfigByName<T>(itemTypeConfigs, typeName!);
+            const itemTypeConfig = findItemConfigByName<any, EDITABLE_ITEM>(itemTypeConfigs, typeName!);
 
             if (!itemTypeConfig) {
                 throw new Error("couldn't find typeConfig");
@@ -27,7 +27,7 @@ export const useLoadItem = <T extends IItem>(itemTypeConfigs: ItemTypeConfigs) =
             if(id === "new") {
                 setState({ state: "LOADED", itemTypeConfig, item: null });
             } else {
-               const item = await getItem(itemTypeConfig, id!);
+               const item = await getEditableItem(itemTypeConfig, id!);
 
                setState({ state: "LOADED", itemTypeConfig, item });
             }

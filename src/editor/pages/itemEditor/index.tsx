@@ -21,14 +21,14 @@ interface IEditorField<T, P extends keyof T> extends IPropConfig<T> {
     errors: string[];
 }
 
-const createEditorFields = <T extends IItem>(itemTypeConfig: IItemTypeConfig<T>, item: T | null) => {
-    const props = Object.keys(itemTypeConfig.frontend.editor.propConfigs) as (keyof T)[];
+const createEditorFields = <EDITABLE_ITEM extends IItem>(itemTypeConfig: IItemTypeConfig<any, EDITABLE_ITEM>, item: EDITABLE_ITEM | null) => {
+    const props = Object.keys(itemTypeConfig.frontend.editor.propConfigs) as (keyof EDITABLE_ITEM)[];
 
     return props.map(prop => {
         const config = itemTypeConfig.frontend.editor.propConfigs[prop] as IPropConfig<any>;
         const value = item?.[prop] || config.defaultValue;
 
-        const editorField: IEditorField<T, any> = {
+        const editorField: IEditorField<EDITABLE_ITEM, any> = {
             prop,
             initialValue: value,
             currentValue: value,
@@ -76,12 +76,12 @@ const Loading = () => {
     );
 };
 
-const Loaded = <T extends IItem>(props: { itemTypeConfig: IItemTypeConfig<T>; item: T | null; }) => {
+const Loaded = <EDITABLE_ITEM extends IItem>(props: { itemTypeConfig: IItemTypeConfig<any, EDITABLE_ITEM>; item: EDITABLE_ITEM | null; }) => {
     const navigate = useNavigate();
     const showNotification = useNotifications();
 
     const [itemId, setItemId] = useState<string | null>(null);
-    const [editorFields, setEditorFields] = useState<IEditorField<T, any>[]>([]);
+    const [editorFields, setEditorFields] = useState<IEditorField<EDITABLE_ITEM, any>[]>([]);
 
     useEffect(() => {
         setItemId(props.item?.id || null);

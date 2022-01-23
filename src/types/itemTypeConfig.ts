@@ -3,7 +3,7 @@ import { BlockConfigs, IBlock } from "./block";
 
 // export type GetItemType<T> = T extends IItemTypeConfig<infer U> ? U : never;
 
-export type ItemTypeConfigs = IItemTypeConfig<any>[];
+export type ItemTypeConfigs = IItemTypeConfig<any, any>[];
 
 export type PropValidator<T> = (value: T) => string | null;
 
@@ -17,25 +17,27 @@ export interface IBlockPropConfig extends IPropConfig<IBlock> {
     blockConfigs: BlockConfigs;
 }
 
-export interface IItemTypeConfig<T extends IItem = IItem> {
+export interface IItemTypeConfig<ENTITY extends IItem = IItem, EDITABLE_ITEM extends IItem = IItem> {
     name: [string, string];
     
     backend: {
         api: {
-            getItem: (id: string) => Promise<T>;
-            getItems: () => Promise<T[]>;
-            createItem: (values: T) => Promise<string>;
-            updateItem: (id: string, values: T) => Promise<void>;
+            getEntity: (id: string) => Promise<ENTITY>;
+            getEntities: () => Promise<ENTITY[]>
+
+            getEditableItem: (id: string) => Promise<EDITABLE_ITEM>;
+            createItem: (values: EDITABLE_ITEM) => Promise<string>;
+            updateItem: (id: string, values: EDITABLE_ITEM) => Promise<void>;
             deleteItem: (id: string) => Promise<void>;
         };
     };
     
     frontend: {
-        listProps: (keyof T)[];
+        listProps: (keyof ENTITY)[];
 
         editor: {
             propConfigs: {
-                [prop in keyof Omit<T, "id">]: IPropConfig<T[prop]> | IBlockPropConfig; 
+                [prop in keyof Omit<EDITABLE_ITEM, "id">]: IPropConfig<EDITABLE_ITEM[prop]> | IBlockPropConfig; 
             };
         };
     };

@@ -11,10 +11,10 @@ import { useNotifications } from "../../components/notifications";
 import { CREATE_NEW_ITEM, CTX_MENU_DELETE, CTX_MENU_EDIT, ITEM_DELETED } from "../../messages";
 import { Header } from "../pageStyles";
 import { Container, Main, Table } from "./styles";
-import { useLoadItemsOfType } from "./useLoadItemsOfType";
+import { useLoadEntities } from "./useLoadEntities";
 
-export const itemsOfTypeListFactory = (itemTypeConfigs: ItemTypeConfigs) => () => {
-    const state = useLoadItemsOfType(itemTypeConfigs);
+export const entityListFactory = (itemTypeConfigs: ItemTypeConfigs) => () => {
+    const state = useLoadEntities(itemTypeConfigs);
 
     return match(state)
         .with({ state: "LOADING" }, () => <Loading />)
