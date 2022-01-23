@@ -1,9 +1,13 @@
-import { IBlock } from "../../../types/block";
+import { BlockConfigs, IBlock } from "../../../types/block";
 import { VisualBlockEditor as Editor } from "../../pages/visualBlockEditor";
-import { PropEditor } from "../../types/propEditor";
+import { IPropEditorProps } from "../../types/propEditor";
 
-export const VisualBlockEditor: PropEditor<IBlock> = props => {
+interface IOptions {
+    blockConfigs: BlockConfigs;
+}
+
+export const visualBlockEditorFactory = (options: IOptions) => (props: IPropEditorProps<IBlock>) => {
     return (
-        <Editor blockConfigs={props.blockConfigs} root={props.value} />
+        <Editor blockConfigs={options.blockConfigs} root={props.value} />
     );
 };

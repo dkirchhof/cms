@@ -31,7 +31,7 @@ export const Row = styled.div<{ fullscreen: boolean; }>`
         font-weight: bold;
     }
 
-    > input, textarea {
+    > input, > textarea, > select {
         width: 100%;
     }
 
