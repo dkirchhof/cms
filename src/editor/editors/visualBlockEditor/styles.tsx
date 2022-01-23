@@ -1,10 +1,9 @@
 import styled from "styled-components";
-import { BACKGROUND } from "../../theme/colors";
 
-export const Wrapper = styled.div`
-    position: absolute;
-    inset: 0;
-    margin-top: -8px !important;
+export const Container = styled.div`
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 16px;
 
-    background: ${BACKGROUND};
+    overflow: hidden;
 `;
