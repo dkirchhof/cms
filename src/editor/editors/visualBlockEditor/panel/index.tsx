@@ -8,11 +8,11 @@ import { Outliner } from "./outliner";
 import { Container } from "./styles";
 
 interface IProps {
-    root: IBlock;
+    blocks: IBlock[];
+    blockConfigs: BlockConfigs;
 
     changeData: (path: string) => (prop: string) => (value: any) => void;
 
-    blockConfigs: BlockConfigs;
     addBlock: (path: string) => (block: IBlock) => void;
     removeBlock: (parentPath: string, index: number) => void;
 }
@@ -21,7 +21,7 @@ export const Panel = (props: IProps) => {
     const [selectionPath, setSelectionPath] = useState("");
     const [showAddBlockDialog, setShowAddBlockDialog] = useState<{ submit: AddBlockDialogSubmitFn } | false>(false);
 
-    const selected = traversePath(props.root, selectionPath);
+    const selected = traversePath(props.blocks, selectionPath);
 
     const addBlock = (path: string) => {
         // setShowAddBlockDialog({
@@ -67,17 +67,23 @@ export const Panel = (props: IProps) => {
 
     return (
         <Container>
-            <Outliner blockConfigs={props.blockConfigs} root={props.root} selectionPath={selectionPath} setSelectionPath={setSelectionPath} />
+            <Outliner 
+                blockConfigs={props.blockConfigs} 
+                blocks={props.blocks} 
+                selectionPath={selectionPath} 
+                setSelectionPath={setSelectionPath} 
+            />
 
-            {showAddBlockDialog
-                ? <AddBlockDialog blockConfigs={props.blockConfigs} submit={showAddBlockDialog.submit} close={() => setShowAddBlockDialog(false)} />
-                : <BlockEditor
-                    block={selected}
+            {/* {showAddBlockDialog */}
+            {/*     ? <AddBlockDialog blockConfigs={props.blockConfigs} submit={showAddBlockDialog.submit} close={() => setShowAddBlockDialog(false)} /> */}
+
+            {selected && (
+                <BlockEditor
                     blockConfigs={props.blockConfigs}
-                    isRoot={selectionPath === ""}
+                    block={selected}
                     onChange={props.changeData(selectionPath)}
                 />
-            }
+            )}
         </Container>
     );
 };

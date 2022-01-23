@@ -4,12 +4,12 @@ import { Container } from "./styles";
 
 interface IProps {
     ctx: any;
-    root: IBlock;
+    blocks: IBlock[];
     blockConfigs: BlockConfigs;
 }
 
 export const Preview = (props: IProps) => (
     <Container>
-        {renderChildren(props.blockConfigs, props.ctx, props.root.data.children!)}
+        {renderChildren(props.blockConfigs, props.ctx, props.blocks)}
     </Container>
 );

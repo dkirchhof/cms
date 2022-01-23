@@ -3,12 +3,10 @@ import { findBlockConfigByName } from "../../../../../utils/findBlockConfig";
 import { Name, Container, Label } from "../editorStyles";
 
 interface IProps {
+    blockConfigs: BlockConfigs;
     block: IBlock;
-    isRoot: boolean;
 
     onChange: (prop: string) => (value: any) => void;
-
-    blockConfigs: BlockConfigs;
 }
 
 export const BlockEditor = (props: IProps) => {

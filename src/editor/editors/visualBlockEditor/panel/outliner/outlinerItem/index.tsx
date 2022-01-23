@@ -30,7 +30,18 @@ export const OutlinerItem = ({ block, path, ...props }: IProps) => {
 
             {block.data.children && (
                 <ChildList>
-                    {block.data.children.map((childBlock: any, i: number) => <OutlinerItem key={i} block={childBlock} path={getPathForChild(path, i)} {...props} />)}
+                    {block.data.children.map((childBlock, i) => {
+                        const childPath = getPathForChild(path, i);
+
+                        return (
+                            <OutlinerItem 
+                                key={childPath}
+                                block={childBlock} 
+                                path={childPath} 
+                                {...props} 
+                            />
+                        );
+                    })}
                 </ChildList>
             )}
         </div>

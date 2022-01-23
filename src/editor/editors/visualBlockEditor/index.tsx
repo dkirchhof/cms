@@ -10,8 +10,12 @@ interface IOptions {
     blockConfigs: BlockConfigs;
 }
 
-export const visualBlockEditorFactory = (options: IOptions) => (props: IPropEditorProps<IBlock>) => {
+export const visualBlockEditorFactory = (options: IOptions) => (props: IPropEditorProps<IBlock[]>) => {
     const changeData = (path: string) => (prop: string) => (dataValue: any) => {
+        if (path === "") {
+            return;
+        }
+
         const newValue = update(value => {
             traversePath(value, path).data[prop] = dataValue;
         }, props.value)();
@@ -37,8 +41,8 @@ export const visualBlockEditorFactory = (options: IOptions) => (props: IPropEdit
 
     return (
         <Container>
-            <Preview blockConfigs={options.blockConfigs} ctx={{}} root={props.value} />
-            <Panel root={props.value} changeData={changeData} blockConfigs={options.blockConfigs} addBlock={addBlock} removeBlock={removeBlock} />
+            <Preview blockConfigs={options.blockConfigs} blocks={props.value} ctx={{}} />
+            <Panel blockConfigs={options.blockConfigs} blocks={props.value} changeData={changeData} addBlock={addBlock} removeBlock={removeBlock} />
         </Container>
     );
 };
