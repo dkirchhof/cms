@@ -17,7 +17,7 @@ export const itemSelectorFactory = <ENTITY extends IItem>(options: IOptions<ENTI
         const entities = await getEntities(options.itemTypeConfig);
 
         setItems(
-            entities.map(entity => ({ label: options.itemTypeConfig.frontend.toString(entity), value: entity.id }))
+            entities.map(entity => ({ label: options.itemTypeConfig.toString(entity), value: entity.id }))
         );
     };
 
@@ -49,7 +49,7 @@ export const itemsSelectorFactory = <ENTITY extends IItem>(options: IOptions<ENT
         const entities = await getEntities(options.itemTypeConfig);
 
         setItems(
-            entities.map(entity => ({ label: options.itemTypeConfig.frontend.toString(entity), value: entity.id }))
+            entities.map(entity => ({ label: options.itemTypeConfig.toString(entity), value: entity.id }))
         );
     };
 

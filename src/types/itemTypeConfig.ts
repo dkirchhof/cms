@@ -19,6 +19,7 @@ export interface IBlockPropConfig extends IPropConfig<IBlock> {
 
 export interface IItemTypeConfig<ENTITY extends IItem = IItem, EDITABLE_ITEM extends IItem = IItem> {
     name: [string, string];
+    toString: (entity: ENTITY) => string;
     
     backend: {
         api: {
@@ -34,8 +35,6 @@ export interface IItemTypeConfig<ENTITY extends IItem = IItem, EDITABLE_ITEM ext
     
     frontend: {
         listProps: (keyof ENTITY)[];
-
-        toString: (entity: ENTITY) => string;
 
         editor: {
             propConfigs: {
