@@ -32,6 +32,7 @@ export const Table = styled.table`
             padding: 16px;
 
             text-align: left;
+            text-transform: capitalize;
         }
     }
 
