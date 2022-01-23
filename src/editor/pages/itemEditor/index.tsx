@@ -170,7 +170,7 @@ const Loaded = <EDITABLE_ITEM extends IItem>(props: { itemTypeConfig: IItemTypeC
                             <div>{field.prop}</div>
                             <field.editor value={field.currentValue} onChange={changeField(i)} />
 
-                            {field.changed && (
+                            {field.changed && field.errors.length > 0 && (
                                 <ul>
                                     {field.errors.map((error, i) => <li key={i}>{error}</li>)}
                                 </ul>
