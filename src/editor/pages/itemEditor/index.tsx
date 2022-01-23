@@ -54,10 +54,16 @@ const validate = <T extends any>(validators: PropValidator<T>[], value: T) => {
 };
 
 const getValues = <T extends IItem>(editorFields: IEditorField<T, any>[]) => {
-    return editorFields.reduce((prev, field) => ({
-        ...prev,
-        [field.prop]: field.currentValue,
-    }), {} as T);
+    return editorFields.reduce((prev, field) => {
+        if (!field.changed) {
+            return prev; 
+        }
+
+        return {
+            ...prev,
+            [field.prop]: field.currentValue,
+        };
+    }, {} as T);
 };
 
 export const itemEditorFactory = (itemTypeConfigs: ItemTypeConfigs) => () => {

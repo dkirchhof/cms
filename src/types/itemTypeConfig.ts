@@ -25,7 +25,7 @@ export interface IItemTypeConfig<ENTITY extends IItem = IItem, EDITABLE_ITEM ext
 
             getEditableItem: (id: string) => Promise<EDITABLE_ITEM>;
             createItem: (values: EDITABLE_ITEM) => Promise<string>;
-            updateItem: (id: string, values: EDITABLE_ITEM) => Promise<void>;
+            updateItem: (id: string, values: Partial<EDITABLE_ITEM>) => Promise<void>;
             deleteItem: (id: string) => Promise<void>;
         };
     };
