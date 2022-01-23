@@ -22,7 +22,7 @@ interface IEditorField<T, P extends keyof T> extends IPropConfig<T> {
 }
 
 const createEditorFields = <EDITABLE_ITEM extends IItem>(itemTypeConfig: IItemTypeConfig<any, EDITABLE_ITEM>, item: EDITABLE_ITEM | null) => {
-    const props = Object.keys(itemTypeConfig.frontend.editor.propConfigs) as (keyof EDITABLE_ITEM)[];
+    const props = Object.keys(itemTypeConfig.frontend.editor.propConfigs) as (keyof Omit<EDITABLE_ITEM, "id">)[];
 
     return props.map(prop => {
         const config = itemTypeConfig.frontend.editor.propConfigs[prop] as IPropConfig<any>;

@@ -1,5 +1,4 @@
 import { PropEditor } from "../editor/types/propEditor";
-import { BlockConfigs, IBlock } from "./block";
 
 // export type GetItemType<T> = T extends IItemTypeConfig<infer U> ? U : never;
 
@@ -13,10 +12,6 @@ export interface IPropConfig<T> {
     editor: PropEditor<T>;
     defaultValue: T;
     validators: PropValidator<T>[];
-}
-
-export interface IBlockPropConfig extends IPropConfig<IBlock> {
-    blockConfigs: BlockConfigs;
 }
 
 export interface IItemTypeConfig<ENTITY extends IItem = IItem, EDITABLE_ITEM extends IItem = IItem> {
@@ -40,7 +35,7 @@ export interface IItemTypeConfig<ENTITY extends IItem = IItem, EDITABLE_ITEM ext
 
         editor: {
             propConfigs: {
-                [prop in keyof Omit<EDITABLE_ITEM, "id">]: IPropConfig<EDITABLE_ITEM[prop]> | IBlockPropConfig; 
+                [prop in keyof Omit<EDITABLE_ITEM, "id">]: IPropConfig<EDITABLE_ITEM[prop]>; 
             };
         };
     };
