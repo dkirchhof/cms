@@ -8,6 +8,7 @@ export type ItemTypeConfigs = IItemTypeConfig<any, any>[];
 export type PropValidator<T> = (value: T) => string | null;
 
 export interface IPropConfig<T> {
+    label?: string;
     editor: PropEditor<T>;
     defaultValue: T;
     validators: PropValidator<T>[];

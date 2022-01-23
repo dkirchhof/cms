@@ -29,6 +29,7 @@ export const Row = styled.div<{ fullscreen: boolean; }>`
         margin-bottom: 8px;
 
         font-weight: bold;
+        text-transform: capitalize;
     }
 
     > input, > textarea, > select {

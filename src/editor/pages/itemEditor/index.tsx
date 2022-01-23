@@ -167,7 +167,7 @@ const Loaded = <EDITABLE_ITEM extends IItem>(props: { itemTypeConfig: IItemTypeC
 
                     return (
                         <Row key={i} fullscreen={isVisualBlockEditor}>
-                            <div>{field.prop}</div>
+                            <div>{field.label || field.prop}</div>
                             <field.editor value={field.currentValue} onChange={changeField(i)} />
 
                             {field.changed && field.errors.length > 0 && (
