@@ -2,6 +2,7 @@ import { useState } from "react";
 import { IBlock } from "../../../../types/block";
 import { findBlockConfigByName } from "../../../../utils/findBlockConfig";
 import { getIndex, getPathForChild, getPathForParent, traversePath } from "../../../utils/path";
+import { useCMS } from "../hooks/useCMS";
 import { Selection } from "../types";
 import { AddBlockDialog, SubmitFn as AddBlockDialogSubmitFn } from "./addBlockDialog";
 import { BlockEditor } from "./blockEditor";
@@ -17,9 +18,11 @@ interface IProps {
 }
 
 export const Panel = (props: IProps) => {
+    const cms = useCMS();
+
     const [showAddBlockDialog, setShowAddBlockDialog] = useState<{ submit: AddBlockDialogSubmitFn } | false>(false);
 
-    // const selected = traversePath(props.blocks, props.selectionPath);
+    const selected = cms.selection && traversePath(props.blocks, cms.selection.path);
 
     const addBlock = (path: string) => {
         // setShowAddBlockDialog({
@@ -49,13 +52,12 @@ export const Panel = (props: IProps) => {
             {/* {showAddBlockDialog */}
             {/*     ? <AddBlockDialog blockConfigs={props.blockConfigs} submit={showAddBlockDialog.submit} close={() => setShowAddBlockDialog(false)} /> */}
 
-            {/* {selected && ( */}
-            {/*     <BlockEditor */}
-            {/*         blockConfigs={props.blockConfigs} */}
-            {/*         block={selected} */}
-            {/*         onChange={props.changeData(props.selectionPath)} */}
-            {/*     /> */}
-            {/* )} */}
+            {selected && (
+                <BlockEditor
+                    block={selected}
+                    onChange={props.changeData(cms.selection!.path)}
+                />
+            )}
         </Container>
     );
 };

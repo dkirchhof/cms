@@ -1,16 +1,18 @@
 import { BlockConfigs, IBlock } from "../../../../../types/block";
 import { findBlockConfigByName } from "../../../../../utils/findBlockConfig";
+import { useCMS } from "../../hooks/useCMS";
 import { Name, Container, Label } from "../editorStyles";
 
 interface IProps {
-    blockConfigs: BlockConfigs;
     block: IBlock;
 
     onChange: (prop: string) => (value: any) => void;
 }
 
 export const BlockEditor = (props: IProps) => {
-    const blockConfig = findBlockConfigByName(props.blockConfigs, props.block.blockName);
+    const cms = useCMS();
+
+    const blockConfig = findBlockConfigByName(cms.blockConfigs, props.block.blockName);
 
     if (!blockConfig) {
         throw new Error("couldn't find blockConfig");
