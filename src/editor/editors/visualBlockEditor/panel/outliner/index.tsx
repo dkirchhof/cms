@@ -6,9 +6,6 @@ import { Container } from "./styles";
 interface IProps {
     blockConfigs: BlockConfigs;
     blocks: IBlock[];
-
-    selectionPath: string;
-    setSelectionPath: (path: string) => void;
 }
 
 export const Outliner = (props: IProps) => {
@@ -23,8 +20,6 @@ export const Outliner = (props: IProps) => {
                         blockConfigs={props.blockConfigs}
                         block={block}
                         path={path}
-                        selectionPath={props.selectionPath}
-                        setSelectionPath={props.setSelectionPath}
                     />
                 );
             })}

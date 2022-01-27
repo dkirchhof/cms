@@ -16,6 +16,15 @@ export const getIndex = (path: string) => {
     return Number(path.split(",").pop());
 };
 
+export const getParentPathAndIndex = (path: string) => {
+    const parts = path.split(",");
+    
+    return {
+        parentPath: parts.length > 1 ? parts.slice(0, -1).join(",") : null,
+        index: Number(parts[parts.length - 1]),
+    };
+};
+
 type TraverseEmpty = (blocks: IBlock[], path: "") => null;
 type TraverseNonEmpty = (blocks: IBlock[], path: string) => IBlock;
 
@@ -36,3 +45,23 @@ export const traversePath = ((blocks, path) => {
 
     return traversePathRec(blocks, path.split(",").map(Number));
 }) as (TraverseEmpty & TraverseNonEmpty);
+
+export const getPath = (blocks: IBlock[], id: string, path = ""): string => {
+    for (let i = 0; i < blocks.length; i++) {
+        const myPath = getPathForChild(path, i);
+
+        if (blocks[i].id === id) {
+            return myPath;
+        }
+        
+        if (blocks[i].data.children) {
+            const childPath = getPath(blocks[i].data.children!, id, myPath);
+
+            if (childPath) {
+                return childPath;
+            }
+        }
+    }
+
+    return "";
+};

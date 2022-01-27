@@ -37,6 +37,7 @@ export interface IBlockConfig<CTX, DATA> {
 }
 
 export interface IBlock {
+    id: string;
     blockName: string;
     data: { [s: string]: any; children?: IBlock[]; };
 }
