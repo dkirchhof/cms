@@ -64,17 +64,8 @@ export const visualBlockEditorFactory = (options: IOptions) => (props: IPropEdit
     return (
         <CMSContext.Provider value={{ selection, setSelection, blockConfigs: options.blockConfigs, removeBlock }}>
             <Container>
-                <Preview
-                    blockConfigs={options.blockConfigs}
-                    blocks={props.value}
-                    ctx={{}}
-                />
-
-                <Panel
-                    blocks={props.value}
-                    changeData={changeData}
-                    addBlock={addBlock}
-                />
+                <Preview blocks={props.value} ctx={{}} />
+                <Panel blocks={props.value} changeData={changeData} addBlock={addBlock} />
             </Container>
         </CMSContext.Provider>
     );

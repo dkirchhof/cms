@@ -1,15 +1,19 @@
-import { BlockConfigs, IBlock } from "../../../../types/block";
+import { IBlock } from "../../../../types/block";
 import { renderChildren } from "../../../../utils/renderChildren";
+import { useCMS } from "../hooks/useCMS";
 import { Container } from "./styles";
 
 interface IProps {
     ctx: any;
     blocks: IBlock[];
-    blockConfigs: BlockConfigs;
 }
 
-export const Preview = (props: IProps) => (
-    <Container>
-        {renderChildren(props.blockConfigs, props.ctx, props.blocks)}
-    </Container>
-);
+export const Preview = (props: IProps) => {
+    const cms = useCMS();
+    
+    return (
+        <Container>
+            {renderChildren(cms.blockConfigs, props.ctx, props.blocks)}
+        </Container>
+    );
+};
