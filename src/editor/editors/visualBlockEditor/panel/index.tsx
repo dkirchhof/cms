@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { BlockConfigs, IBlock } from "../../../../types/block";
+import { IBlock } from "../../../../types/block";
 import { findBlockConfigByName } from "../../../../utils/findBlockConfig";
 import { getIndex, getPathForChild, getPathForParent, traversePath } from "../../../utils/path";
 import { Selection } from "../types";
@@ -10,7 +10,6 @@ import { Container } from "./styles";
 
 interface IProps {
     blocks: IBlock[];
-    blockConfigs: BlockConfigs;
 
     changeData: (path: string) => (prop: string) => (value: any) => void;
 
@@ -45,10 +44,7 @@ export const Panel = (props: IProps) => {
 
     return (
         <Container>
-            <Outliner 
-                blockConfigs={props.blockConfigs} 
-                blocks={props.blocks} 
-            />
+            <Outliner blocks={props.blocks} />
 
             {/* {showAddBlockDialog */}
             {/*     ? <AddBlockDialog blockConfigs={props.blockConfigs} submit={showAddBlockDialog.submit} close={() => setShowAddBlockDialog(false)} /> */}
