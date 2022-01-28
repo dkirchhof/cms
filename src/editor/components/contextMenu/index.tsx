@@ -1,4 +1,4 @@
-import { MouseEvent, useState } from "react";
+import { MouseEvent, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { Backdrop, Container } from "./styles";
 
@@ -20,6 +20,22 @@ export const useContextMenu = (entries: IContextMenuEntry[]) => {
         setIsOpen(false);
         entry.action();
     };
+
+    useEffect(() => {
+        if (isOpen) {
+            const handler = (e: KeyboardEvent) => {
+                if (e.key === "Escape") {
+                    setIsOpen(false);
+                }
+            };
+
+            addEventListener("keydown", handler);
+
+            return () => {
+                window.removeEventListener("keydown", handler);
+            };
+        }
+    }, [isOpen]);
 
     const ContextMenu = () => {
         if (!isOpen) {
