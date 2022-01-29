@@ -1,13 +1,15 @@
 import { MouseEvent, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { Backdrop, Container } from "./styles";
+import { Backdrop, Container, EntryGroup } from "./styles";
 
 interface IContextMenuEntry {
     label: string;
     action: () => void;
 }
 
-export const useContextMenu = (entries: IContextMenuEntry[]) => {
+type EntryGroup = (IContextMenuEntry | undefined)[];
+
+export const useContextMenu = (groups: EntryGroup[]) => {
     const [isOpen, setIsOpen] = useState<{ x: number; y: number; } | false>(false);
 
     const onBackdropClick = (e: MouseEvent) => {
@@ -45,7 +47,17 @@ export const useContextMenu = (entries: IContextMenuEntry[]) => {
         return createPortal((
             <Backdrop onClick={onBackdropClick} onContextMenu={onBackdropClick}>
                 <Container style={{ left: isOpen.x, top: isOpen.y }}>
-                    {entries.map((entry, i) => <button key={i} onClick={onEntryClick(entry)}>{entry.label}</button>)}
+                    {groups.map((group, i) => ( 
+                        <EntryGroup>
+                            {group.map((entry, j) => {
+                                if (!entry) {
+                                    return null;
+                                }
+
+                                return <button key={j} onClick={onEntryClick(entry)}>{entry.label}</button>;
+                            })}
+                        </EntryGroup>
+                    ))}
                 </Container>
             </Backdrop>
         ), document.body);

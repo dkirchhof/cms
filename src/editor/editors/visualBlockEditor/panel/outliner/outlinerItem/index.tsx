@@ -1,7 +1,7 @@
 import { IBlock } from "../../../../../../types/block";
 import { findBlockConfigByName } from "../../../../../../utils/findBlockConfig";
 import { useContextMenu } from "../../../../../components/contextMenu";
-import { CTX_MENU_DELETE, CTX_MENU_EDIT } from "../../../../../messages";
+import { CTX_MENU_ADD_CHILD_BLOCK_FIRST, CTX_MENU_ADD_CHILD_BLOCK_LAST, CTX_MENU_ADD_SIBLING_BLOCK_AFTER, CTX_MENU_ADD_SIBLING_BLOCK_BEFORE, CTX_MENU_DELETE, CTX_MENU_EDIT } from "../../../../../messages";
 import { getPathForChild } from "../../../../../utils/path";
 import { useCMS } from "../../../hooks/useCMS";
 import { BlockLabel, BlockName, ChildList, Tile } from "./styles";
@@ -21,8 +21,18 @@ export const OutlinerItem = ({ block, path, ...props }: IProps) => {
     }
 
     const { ContextMenu, openContextMenu } = useContextMenu([
-        { label: CTX_MENU_EDIT, action: () => cms.setSelection({ id: block.id, path }) },
-        { label: CTX_MENU_DELETE, action: () => cms.removeBlock(path) },
+        [
+            { label: CTX_MENU_EDIT, action: () => cms.setSelection({ id: block.id, path }) },
+        ],
+        [
+            { label: CTX_MENU_ADD_SIBLING_BLOCK_BEFORE, action: () => cms.setSelection({ id: block.id, path }) },
+            { label: CTX_MENU_ADD_SIBLING_BLOCK_AFTER, action: () => cms.setSelection({ id: block.id, path }) },
+            block.data.children  && { label: CTX_MENU_ADD_CHILD_BLOCK_FIRST, action: () => cms.setSelection({ id: block.id, path }) },
+            block.data.children && { label: CTX_MENU_ADD_CHILD_BLOCK_LAST, action: () => cms.setSelection({ id: block.id, path }) },
+        ],
+        [
+            { label: CTX_MENU_DELETE, action: () => cms.removeBlock(path) },
+        ],
     ]);
 
     const label = blockConfig.toString(block.data);

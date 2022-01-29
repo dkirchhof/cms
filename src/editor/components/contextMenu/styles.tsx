@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { NAV, NAV_FG, PRIMARY, PRIMARY_FG } from "../../theme/colors";
+import { BORDER, NAV, NAV_FG, PRIMARY, PRIMARY_FG } from "../../theme/colors";
 
 export const Backdrop = styled.div`
     position: fixed;
@@ -10,18 +10,23 @@ export const Backdrop = styled.div`
 export const Container = styled.div`
     position: absolute;
     min-width: 128px;
-    padding: 8px 0px;
-
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
 
     color: ${NAV_FG};
     background: ${NAV};
     border-radius: 4px;
     box-shadow: rgba(0, 0, 0, 0.4) 0px 0px 50px;
+`;
+
+export const EntryGroup = styled.div`
+    padding: 8px 0px;
+    
+    :not(:first-child) {
+        border-top: 1px solid ${BORDER};
+    }
 
     > button {
+        display: block;
+        width: 100%;
         padding: 8px 16px;
 
         color: inherit;

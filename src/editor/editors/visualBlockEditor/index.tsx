@@ -2,7 +2,7 @@ import update from "immer";
 import { useState } from "react";
 import { BlockConfigs, IBlock } from "../../../types/block";
 import { IPropEditorProps } from "../../types/propEditor";
-import { getIndex, getParentPathAndIndex, getPath, getPathForParent, traversePath } from "../../utils/path";
+import { getParentPathAndIndex, getPath, traversePath } from "../../utils/path";
 import { CMSContext } from "./contexts/cmsContext";
 import { Panel } from "./panel";
 import { Preview } from "./preview";

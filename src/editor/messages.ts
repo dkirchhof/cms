@@ -22,3 +22,7 @@ export const PROP_UPDATED = (prop: string) => `The ${prop} has been successfully
 
 export const CTX_MENU_EDIT = "Edit";
 export const CTX_MENU_DELETE = "Delete";
+export const CTX_MENU_ADD_CHILD_BLOCK_FIRST = "Add block (as first child)";
+export const CTX_MENU_ADD_CHILD_BLOCK_LAST = "Add block (as last child)";
+export const CTX_MENU_ADD_SIBLING_BLOCK_BEFORE = "Add block (before)";
+export const CTX_MENU_ADD_SIBLING_BLOCK_AFTER = "Add block (after)";

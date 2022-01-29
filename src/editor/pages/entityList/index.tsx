@@ -110,8 +110,10 @@ interface IItemProps<T extends IItem> {
 
 const Item = <T extends IItem>(props: IItemProps<T>) => {
     const { ContextMenu, openContextMenu } = useContextMenu([
-        { label: CTX_MENU_EDIT, action: () => props.editItem(props.item.id) },
-        { label: CTX_MENU_DELETE, action: () => props.delItem(props.item.id) },
+        [
+            { label: CTX_MENU_EDIT, action: () => props.editItem(props.item.id) },
+            { label: CTX_MENU_DELETE, action: () => props.delItem(props.item.id) },
+        ],
     ]);
 
     return (
