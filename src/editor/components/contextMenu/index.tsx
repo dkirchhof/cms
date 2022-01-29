@@ -1,4 +1,4 @@
-import { MouseEvent, useEffect, useState } from "react";
+import { MouseEvent, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Backdrop, Container, EntryGroup } from "./styles";
 
@@ -10,7 +10,10 @@ interface IContextMenuEntry {
 type EntryGroup = (IContextMenuEntry | undefined)[];
 
 export const useContextMenu = (groups: EntryGroup[]) => {
-    const [isOpen, setIsOpen] = useState<{ x: number; y: number; } | false>(false);
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    const [isOpen, setIsOpen] = useState(false);
+    const [position, setPosition] = useState<{ x: number; y: number; }>({ x: 0, y: 0 });
 
     const onBackdropClick = (e: MouseEvent) => {
         e.preventDefault();
@@ -25,16 +28,31 @@ export const useContextMenu = (groups: EntryGroup[]) => {
 
     useEffect(() => {
         if (isOpen) {
-            const handler = (e: KeyboardEvent) => {
+            const keydownHandler = (e: KeyboardEvent) => {
                 if (e.key === "Escape") {
                     setIsOpen(false);
                 }
             };
 
-            addEventListener("keydown", handler);
+            const blurHandler = () => {
+                setIsOpen(false);
+            };
+
+            addEventListener("keydown", keydownHandler);
+            addEventListener("blur", blurHandler);
+
+            // fix position
+
+            const { width, height } = containerRef.current!.getBoundingClientRect();
+            
+            const x = (position.x + width > window.innerWidth) ? position.x - width : position.x;
+            const y = (position.y + height > window.innerHeight) ? position.y - height : position.y;
+
+            setPosition({ x, y });
 
             return () => {
-                window.removeEventListener("keydown", handler);
+                window.removeEventListener("keydown", keydownHandler);
+                window.removeEventListener("blur", blurHandler);
             };
         }
     }, [isOpen]);
@@ -46,7 +64,7 @@ export const useContextMenu = (groups: EntryGroup[]) => {
 
         return createPortal((
             <Backdrop onClick={onBackdropClick} onContextMenu={onBackdropClick}>
-                <Container style={{ left: isOpen.x, top: isOpen.y }}>
+                <Container ref={containerRef} style={{ left: position.x, top: position.y }}>
                     {groups.map((group, i) => ( 
                         <EntryGroup key={i}>
                             {group.map((entry, j) => {
@@ -65,7 +83,9 @@ export const useContextMenu = (groups: EntryGroup[]) => {
 
     const openContextMenu = (e: React.MouseEvent) => {
         e.preventDefault();
-        setIsOpen({ x: e.clientX, y: e.clientY });
+
+        setPosition({ x: e.clientX, y: e.clientY });
+        setIsOpen(true);
     };
 
     return { ContextMenu, openContextMenu };

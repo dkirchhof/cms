@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { NAV, NAV_FG, NAV_PRIMARY } from "../../theme/colors";
+import { NAV, NAV_FG, PRIMARY } from "../../theme/colors";
 
 export const Container = styled.div`
     padding: 16px 32px;
@@ -19,7 +19,7 @@ export const Nav = styled.nav`
         text-decoration: none;
 
         &.active {
-            color: ${NAV_PRIMARY};
+            color: ${PRIMARY};
         }
     }
 `;

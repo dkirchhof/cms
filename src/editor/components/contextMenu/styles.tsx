@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { BORDER, NAV, NAV_FG, PRIMARY, PRIMARY_FG } from "../../theme/colors";
+import { NAV, NAV_FG, NAV_SEPARATOR, PRIMARY, PRIMARY_FG } from "../../theme/colors";
 
 export const Backdrop = styled.div`
     position: fixed;
@@ -21,7 +21,7 @@ export const EntryGroup = styled.div`
     padding: 8px 0px;
     
     :not(:first-child) {
-        border-top: 1px solid ${BORDER};
+        border-top: 1px solid ${NAV_SEPARATOR};
     }
 
     > button {
