@@ -48,7 +48,7 @@ export const useContextMenu = (groups: EntryGroup[]) => {
             <Backdrop onClick={onBackdropClick} onContextMenu={onBackdropClick}>
                 <Container style={{ left: isOpen.x, top: isOpen.y }}>
                     {groups.map((group, i) => ( 
-                        <EntryGroup>
+                        <EntryGroup key={i}>
                             {group.map((entry, j) => {
                                 if (!entry) {
                                     return null;
