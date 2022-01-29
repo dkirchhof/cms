@@ -1,1 +1,1 @@
-export type Selection = { id: string; path: string; } | null;
+export type Selection = string | null;

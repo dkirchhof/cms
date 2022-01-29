@@ -1,13 +1,14 @@
 import update from "immer";
 import { useState } from "react";
-import { BlockConfigs, IBlock } from "../../../types/block";
+import { BlockConfigs, IBlock, IBlockConfig } from "../../../types/block";
 import { IPropEditorProps } from "../../types/propEditor";
-import { getParentPathAndIndex, getPath, traversePath } from "../../utils/path";
+import { getParentPathAndIndex, getPath, getPathForChild, traversePath } from "../../utils/path";
 import { CMSContext } from "./contexts/cmsContext";
 import { Panel } from "./panel";
 import { Preview } from "./preview";
 import { Container } from "./styles";
 import { Selection } from "./types";
+import { createBlock } from "./utils/createBlock";
 
 interface IOptions {
     blockConfigs: BlockConfigs;
@@ -29,17 +30,27 @@ export const visualBlockEditorFactory = (options: IOptions) => (props: IPropEdit
         props.onChange(newValue);
     };
 
-    const addBlock = (path: string) => (block: IBlock) => {
-        // setValue(
-        //     update(value => {
-        //         traversePath(value, path).data.children!.push(block);
-        //     }, value)
-        // );
+    const addBlock = (blockConfig: IBlockConfig<any, any>, parentPath: string | null, index: number) => {
+        const block = createBlock(blockConfig);
+
+        const newValue = update(props.value, value => {
+            if (parentPath) {
+                traversePath(value, parentPath).data.children!.splice(index, 0, block);
+            } else {
+                value.splice(index, 0, block);
+            }
+        });
+
+        props.onChange(newValue);
+
+        setSelection(getPathForChild(parentPath, index));
     };
 
     const removeBlock = (path: string) => {
-        const { parentPath, index } = getParentPathAndIndex(path);
+        const selectedBlock = selection && traversePath(props.value, selection);
 
+        const { parentPath, index } = getParentPathAndIndex(path);
+        
         const newValue = update(props.value, value => {
             if (parentPath) {
                 traversePath(value, parentPath).data.children!.splice(index, 1);
@@ -50,22 +61,16 @@ export const visualBlockEditorFactory = (options: IOptions) => (props: IPropEdit
 
         props.onChange(newValue);
 
-        if (selection) {
-            const newPath = getPath(newValue, selection.id);
-
-            if (newPath) {
-                setSelection({ id: selection.id, path: newPath });
-            } else {
-                setSelection(null);
-            }
+        if (selectedBlock) {
+            setSelection(getPath(newValue, selectedBlock.id));
         }
     };
 
     return (
-        <CMSContext.Provider value={{ selection, setSelection, blockConfigs: options.blockConfigs, removeBlock }}>
+        <CMSContext.Provider value={{ selection, setSelection, blockConfigs: options.blockConfigs, addBlock, removeBlock }}>
             <Container>
                 <Preview blocks={props.value} ctx={{}} />
-                <Panel blocks={props.value} changeData={changeData} addBlock={addBlock} />
+                <Panel blocks={props.value} changeData={changeData} />
             </Container>
         </CMSContext.Provider>
     );

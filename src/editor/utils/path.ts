@@ -1,6 +1,6 @@
 import { IBlock } from "../../types/block";
 
-export const getPathForChild = (currentPath: string, childIndex: number) => {
+export const getPathForChild = (currentPath: string | null, childIndex: number) => {
     if (currentPath) {
         return `${currentPath},${childIndex}`;
     }
@@ -46,7 +46,7 @@ export const traversePath = ((blocks, path) => {
     return traversePathRec(blocks, path.split(",").map(Number));
 }) as (TraverseEmpty & TraverseNonEmpty);
 
-export const getPath = (blocks: IBlock[], id: string, path = ""): string => {
+export const getPath = (blocks: IBlock[], id: string, path = ""): string | null => {
     for (let i = 0; i < blocks.length; i++) {
         const myPath = getPathForChild(path, i);
 
@@ -63,5 +63,5 @@ export const getPath = (blocks: IBlock[], id: string, path = ""): string => {
         }
     }
 
-    return "";
+    return null;
 };

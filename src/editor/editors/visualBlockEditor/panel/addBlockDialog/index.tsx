@@ -1,26 +1,30 @@
-import { BlockConfigs } from "../../../../../types/block";
+import { IBlockConfig } from "../../../../../types/block";
 import { PrimaryButton, SecondaryButton } from "../../../../components/button";
-import { Container, List } from "./styles";
-
-export type SubmitFn = (blockName: string) => void;
+import { useCMS } from "../../hooks/useCMS";
+import { useEscToClose } from "../../hooks/useEscToClose";
+import { Backdrop, Container, List } from "./styles";
 
 interface IProps {
     close: () => void;
-    submit: SubmitFn;
-
-    blockConfigs: BlockConfigs;
+    submit: (blockConfig: IBlockConfig<any, any>) => void;
 }
 
 export const AddBlockDialog = (props: IProps) => {
-    return (
-        <Container>
-            <List>
-                {props.blockConfigs.map((blockConfig, i) => 
-                    <SecondaryButton key={i} onClick={() => props.submit(blockConfig.name)}>{blockConfig.name}</SecondaryButton>
-                )}
-            </List>
+    const cms = useCMS();
 
-            <PrimaryButton onClick={props.close}>Abbrechen</PrimaryButton>
-        </Container>
+    useEscToClose(props.close);
+
+    return (
+        <Backdrop onClick={props.close}>
+            <Container onClick={e => e.stopPropagation()}>
+                <List>
+                    {cms.blockConfigs.map((blockConfig, i) => 
+                        <SecondaryButton key={i} onClick={() => props.submit(blockConfig)}>{blockConfig.name}</SecondaryButton>
+                    )}
+                </List>
+
+                <PrimaryButton onClick={props.close}>Abbrechen</PrimaryButton>
+            </Container>
+        </Backdrop>
     );
 };

@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { BlockConfigs } from "../../../../types/block";
+import { BlockConfigs, IBlockConfig } from "../../../../types/block";
 import { Selection } from "../types";
 
 export interface ICMSContext {
@@ -7,6 +7,7 @@ export interface ICMSContext {
     setSelection: (selection: Selection) => void;
     
     blockConfigs: BlockConfigs;
+    addBlock: (blockConfig: IBlockConfig<any, any>, parentPath: string | null, index: number) => void;
     removeBlock: (path: string) => void;
 }
 

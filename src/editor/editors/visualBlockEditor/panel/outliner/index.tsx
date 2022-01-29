@@ -11,15 +11,9 @@ export const Outliner = (props: IProps) => {
     return (
         <Container>
             {props.blocks.map((block, i) => {
-                const path = getPathForChild("", i);
+                const path = getPathForChild(null, i);
 
-                return (
-                    <OutlinerItem 
-                        key={path}
-                        block={block}
-                        path={path}
-                    />
-                );
+                return <OutlinerItem key={path} block={block} path={path} />;
             })}
         </Container>
     );
