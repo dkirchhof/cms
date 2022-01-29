@@ -13,7 +13,7 @@ export const Main = styled.main`
     padding: 0px 32px 32px 32px;
 
     overflow-y: auto;
-    scroll-snap-type: y;
+    /* scroll-snap-type: y; */
 `;
 
 export const Row = styled.div<{ fullscreen?: boolean; }>`
@@ -23,7 +23,7 @@ export const Row = styled.div<{ fullscreen?: boolean; }>`
     display: flex;
     flex-direction: column;
 
-    scroll-snap-align: start;
+    /* scroll-snap-align: start; */
 
     > div:nth-child(1) {
         margin-bottom: 8px;
