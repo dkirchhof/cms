@@ -1,7 +1,7 @@
 import { nanoid } from "nanoid"
 import { IBlock, IBlockConfig } from "../../../../types/block"
 
-export const createBlock = (blockConfig: IBlockConfig<any, any>) => {
+export const createBlock = (blockConfig: IBlockConfig<any>) => {
     const block: IBlock = {
         id: nanoid(),
         blockName: blockConfig.name,

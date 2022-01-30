@@ -27,7 +27,7 @@ export const OutlinerItem = ({ block, path, ...props }: IProps) => {
 
     const [addBlockDialogMode, setAddBlockDialogMode] = useState<AddBlockDialogMode>(null);
 
-    const onAddBlockDialogSubmit = (blockConfig: IBlockConfig<any, any>) => {
+    const onAddBlockDialogSubmit = (blockConfig: IBlockConfig<any>) => {
         match(addBlockDialogMode)
             .with("ADD_SIBLING_BEFORE", () => {
                 const { parentPath, index } = getParentPathAndIndex(path);

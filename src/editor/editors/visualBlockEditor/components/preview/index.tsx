@@ -4,7 +4,6 @@ import { useCMS } from "../../hooks/useCMS";
 import { Container } from "./styles";
 
 interface IProps {
-    ctx: any;
     blocks: IBlock[];
 }
 
@@ -13,7 +12,7 @@ export const Preview = (props: IProps) => {
     
     return (
         <Container>
-            {renderChildren(cms.blockConfigs, props.ctx, props.blocks)}
+            {renderChildren(cms.blockConfigs, props.blocks)}
         </Container>
     );
 };

@@ -31,7 +31,7 @@ export const visualBlockEditorFactory = (options: IOptions) => (props: IPropEdit
         props.onChange(newValue);
     };
 
-    const addBlock = (blockConfig: IBlockConfig<any, any>, parentPath: string | null, index: number) => {
+    const addBlock = (blockConfig: IBlockConfig<any>, parentPath: string | null, index: number) => {
         const block = createBlock(blockConfig);
 
         const newValue = update(props.value, value => {
@@ -70,7 +70,7 @@ export const visualBlockEditorFactory = (options: IOptions) => (props: IPropEdit
     return (
         <CMSContext.Provider value={{ selection, setSelection, blockConfigs: options.blockConfigs, addBlock, removeBlock }}>
             <Container>
-                <Preview blocks={props.value} ctx={{}} />
+                <Preview blocks={props.value} />
                 <Outliner blocks={props.value} />
                 {selectedBlock && <BlockEditor block={selectedBlock} onChange={changeData(selection)} />}
             </Container>

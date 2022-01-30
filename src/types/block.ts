@@ -1,10 +1,9 @@
 import { PropEditor } from "../editor/types/propEditor";
 
-export type BlockConfigs = IBlockConfig<any, any>[];
+export type BlockConfigs = IBlockConfig<any>[];
 
-export interface IBlockComponentProps<CTX, DATA> {
+export interface IBlockComponentProps<DATA> {
     blockConfigs: BlockConfigs;
-    ctx: CTX;
     data: DATA;
 }
 
@@ -20,12 +19,12 @@ export interface IPropConfig<T> {
     // validators: PropValidator<T>[];
 }
 
-export type BlockComponent<CTX, DATA> = (props: IBlockComponentProps<CTX, DATA>) => JSX.Element;
+export type BlockComponent<DATA> = (props: IBlockComponentProps<DATA>) => JSX.Element;
 export type GetBlockInitialData<DATA> = () => DATA;
 export type GetBlockLabel<DATA> = (data: DATA) => string;
 export type GetBlockEditorInputs<DATA> = () => { [prop in keyof Omit<DATA, "children">]: PropEditor<DATA[prop]> };
 
-export interface IBlockConfig<CTX, DATA> {
+export interface IBlockConfig<DATA> {
     name: string;
     toString: (data: DATA) => string;
 
@@ -33,7 +32,7 @@ export interface IBlockConfig<CTX, DATA> {
         [prop in keyof DATA]: IPropConfig<DATA[prop]>;
     };
 
-    Component: BlockComponent<CTX, DATA>;
+    Component: BlockComponent<DATA>;
 }
 
 export interface IBlock {

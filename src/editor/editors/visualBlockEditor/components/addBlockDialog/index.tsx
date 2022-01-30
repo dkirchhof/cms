@@ -6,7 +6,7 @@ import { Backdrop, Container, List } from "./styles";
 
 interface IProps {
     close: () => void;
-    submit: (blockConfig: IBlockConfig<any, any>) => void;
+    submit: (blockConfig: IBlockConfig<any>) => void;
 }
 
 export const AddBlockDialog = (props: IProps) => {

@@ -7,7 +7,7 @@ export interface ICMSContext {
     setSelection: (selection: Selection) => void;
     
     blockConfigs: BlockConfigs;
-    addBlock: (blockConfig: IBlockConfig<any, any>, parentPath: string | null, index: number) => void;
+    addBlock: (blockConfig: IBlockConfig<any>, parentPath: string | null, index: number) => void;
     removeBlock: (path: string) => void;
 }
 

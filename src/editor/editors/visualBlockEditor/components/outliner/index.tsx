@@ -18,7 +18,7 @@ export const Outliner = (props: IProps) => {
 
         const [showAddBlockDialog, setShowBlockDialog] = useState(false);
 
-        const onAddBlockDialogSubmit = (blockConfig: IBlockConfig<any, any>) => {
+        const onAddBlockDialogSubmit = (blockConfig: IBlockConfig<any>) => {
             cms.addBlock(blockConfig, null, 0);
         };
 

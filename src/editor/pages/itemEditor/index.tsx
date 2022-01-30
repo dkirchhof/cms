@@ -2,6 +2,7 @@ import update from "immer";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { match } from "ts-pattern";
+import { ItemContext } from "../../../shared/contexts/itemContext";
 import { IItem, IItemTypeConfig, IPropConfig, ItemTypeConfigs, PropValidator } from "../../../types/itemTypeConfig";
 import { createItem, updateItem } from "../../api";
 import { Breadcrumb } from "../../components/breadcrumb";
@@ -13,7 +14,7 @@ import { Header } from "../pageStyles";
 import { Container, Row, Main } from "./styles";
 import { useLoadItem } from "./useLoadItem";
 
-interface IEditorField<T, P extends keyof T> extends IPropConfig<T> {
+export interface IEditorField<T, P extends keyof T> extends IPropConfig<T> {
     prop: P;
     initialValue: T[P];
     currentValue: T[P];
@@ -56,7 +57,7 @@ const validate = <T extends any>(validators: PropValidator<T>[], value: T) => {
 const getValues = <T extends IItem>(editorFields: IEditorField<T, any>[]) => {
     return editorFields.reduce((prev, field) => {
         if (!field.changed) {
-            return prev; 
+            return prev;
         }
 
         return {
@@ -129,7 +130,7 @@ const Loaded = <EDITABLE_ITEM extends IItem>(props: { itemTypeConfig: IItemTypeC
                 navigate(`/content/${props.itemTypeConfig.name[1]}/${id}`, { replace: true });
             } else {
                 await updateItem(props.itemTypeConfig, itemId, values);
-                
+
                 showNotification({ type: "success", message: ITEM_UPDATED(props.itemTypeConfig.name[0]) });
                 resetToUpdatedValues();
             }
@@ -155,35 +156,37 @@ const Loaded = <EDITABLE_ITEM extends IItem>(props: { itemTypeConfig: IItemTypeC
     const hasErrors = checkIfHasErrors(editorFields);
 
     return (
-        <Container>
-            <Header>
-                <Breadcrumb crumbs={[
-                    { urlSegment: "content", label: "content" },
-                    { urlSegment: itemTypePluralName, label: itemTypePluralName },
-                    { label: itemId || "new" },
-                ]} />
+        <ItemContext.Provider value={{ type: "EDITOR_FIELDS", editorFields}}>
+            <Container>
+                <Header>
+                    <Breadcrumb crumbs={[
+                        { urlSegment: "content", label: "content" },
+                        { urlSegment: itemTypePluralName, label: itemTypePluralName },
+                        { label: itemId || "new" },
+                    ]} />
 
-                <SecondaryButton onClick={reset} disabled={!hasChanges}>{BUTTON_RESET}</SecondaryButton>
-                <PrimaryButton onClick={save} disabled={!hasChanges || hasErrors}>{itemId === null ? BUTTON_SAVE : BUTTON_UPDATE}</PrimaryButton>
-            </Header>
+                    <SecondaryButton onClick={reset} disabled={!hasChanges}>{BUTTON_RESET}</SecondaryButton>
+                    <PrimaryButton onClick={save} disabled={!hasChanges || hasErrors}>{itemId === null ? BUTTON_SAVE : BUTTON_UPDATE}</PrimaryButton>
+                </Header>
 
-            <Main>
-                {editorFields.map((field, i) => {
-                    return (
-                        <Row key={i} fullscreen={field.fullscreen}>
-                            <div>{field.label || field.prop}</div>
-                            <field.editor value={field.currentValue} onChange={changeField(i)} />
+                <Main>
+                    {editorFields.map((field, i) => {
+                        return (
+                            <Row key={i} fullscreen={field.fullscreen}>
+                                <div>{field.label || field.prop}</div>
+                                <field.editor value={field.currentValue} onChange={changeField(i)} />
 
-                            {field.changed && field.errors.length > 0 && (
-                                <ul>
-                                    {field.errors.map((error, i) => <li key={i}>{error}</li>)}
-                                </ul>
-                            )}
-                        </Row>
-                    );
-                })}
-            </Main>
-        </Container>
+                                {field.changed && field.errors.length > 0 && (
+                                    <ul>
+                                        {field.errors.map((error, i) => <li key={i}>{error}</li>)}
+                                    </ul>
+                                )}
+                            </Row>
+                        );
+                    })}
+                </Main>
+            </Container>
+        </ItemContext.Provider>
     );
 };
 
