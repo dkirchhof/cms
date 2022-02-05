@@ -3,8 +3,21 @@ import { useEffect, useRef, useState } from "react";
 export const useThrottledValue = <T>(initialValue: T, onChange: (value: T) => void, throttleTime: number) => {
     const timeout = useRef<NodeJS.Timeout>();
 
-    const [value, setValue] = useState(initialValue);
+    const [value, setValue_] = useState(initialValue);
     
+    const setValue = (newValue: T) => {
+        setValue_(newValue);
+
+        if (timeout.current) {
+            clearTimeout(timeout.current);
+        }
+
+        timeout.current = setTimeout(() => {
+            onChange(newValue);
+            timeout.current = undefined;
+        }, throttleTime);
+    };
+
     useEffect(() => {
         return () => {
             if (timeout.current) {
@@ -14,19 +27,13 @@ export const useThrottledValue = <T>(initialValue: T, onChange: (value: T) => vo
     }, []);
 
     useEffect(() => {
-        setValue(initialValue);
-    }, [initialValue]);
+        setValue_(initialValue);
 
-    useEffect(() => {
         if (timeout.current) {
             clearTimeout(timeout.current);
         }
+    }, [initialValue]);
 
-        timeout.current = setTimeout(() => {
-            onChange(value);
-            timeout.current = undefined;
-        }, throttleTime);
-    }, [value]);
 
     return [value, setValue] as const;
 };
