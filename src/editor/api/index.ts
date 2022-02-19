@@ -1,5 +1,5 @@
 import { IItemTypeConfig, IItem } from "../../types/itemTypeConfig";
-import { CreateItemBody, DeleteItemBody, GetEntitiesBody, RequestBody, UpdateItemBody, GetEditableItemBody } from "../../types/requestData";
+import { CreateItemBody, DeleteItemBody, GetListBody, RequestBody, UpdateItemBody, GetItemBody } from "../../types/requestData";
 
 const request = async <T>(body: RequestBody) => {
     const result = await fetch("/api/cms", {
@@ -19,18 +19,18 @@ const request = async <T>(body: RequestBody) => {
     }
 };
 
-export const getEntities = async <LIST_ITEM_DATA>(itemTypeConfig: IItemTypeConfig<LIST_ITEM_DATA>) => {
-    const body: GetEntitiesBody = {
-        method: "getEntities",
+export const getList = async <LIST_ITEM_DATA>(itemTypeConfig: IItemTypeConfig<LIST_ITEM_DATA>) => {
+    const body: GetListBody = {
+        method: "getList",
         typeName: itemTypeConfig.name[0],
     };
 
     return request<IItem<LIST_ITEM_DATA>[]>(body);
 };
 
-export const getEditableItem = async <EDITOR_ITEM_DATA>(itemTypeConfig: IItemTypeConfig<any, EDITOR_ITEM_DATA>, id: string) => {
-    const body: GetEditableItemBody = {
-        method: "getEditableItem",
+export const getItem = async <EDITOR_ITEM_DATA>(itemTypeConfig: IItemTypeConfig<any, EDITOR_ITEM_DATA>, id: string) => {
+    const body: GetItemBody = {
+        method: "getItem",
         typeName: itemTypeConfig.name[0],
         id,
     };

@@ -1,18 +1,22 @@
 import { ItemTypeConfigs } from "../../types/itemTypeConfig";
-import { GetEntitiesBody } from "../../types/requestData";
+import { GetItemBody } from "../../types/requestData";
 import { findItemConfigByName } from "../../utils/findItemTypeConfig";
 import { HTTPError } from "../types/httpError";
 import { IRequest } from "../types/request";
 import { IResponse } from "../types/response";
 
-export const getEntities = async (req: IRequest<GetEntitiesBody>, res: IResponse, itemTypeConfigs: ItemTypeConfigs) => {
+export const getItem = async (req: IRequest<GetItemBody>, res: IResponse, itemTypeConfigs: ItemTypeConfigs) => {
     const itemTypeConfig = findItemConfigByName(itemTypeConfigs, req.body.typeName);
 
     if (!itemTypeConfig) {
         throw new HTTPError(400, "couldn't find typeConfig");
     }
 
-    const items = await itemTypeConfig.api.getList();
+    const item = await itemTypeConfig.api.getItem(req.body.id);
 
-    res.json(items);
+    if (!item) {
+        throw new HTTPError(404, "couldn't find item");
+    }
+
+    res.json(item);
 };

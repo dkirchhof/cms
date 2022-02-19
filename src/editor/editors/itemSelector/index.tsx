@@ -1,20 +1,20 @@
 import { useEffect, useState } from "react";
-import { IItem, IItemTypeConfig } from "../../../types/itemTypeConfig";
-import { getEntities } from "../../api";
+import { IItemTypeConfig } from "../../../types/itemTypeConfig";
+import { getList } from "../../api";
 import { IPropEditorProps } from "../../types/propEditor";
 import Select, { MultiValue } from "react-select";
 
-interface IOptions<ENTITY extends IItem> {
-    itemTypeConfig: IItemTypeConfig<ENTITY, any>;
+interface IOptions<LIST_ITEM_DATA> {
+    itemTypeConfig: IItemTypeConfig<LIST_ITEM_DATA, any>;
 }
 
 interface ISelectOption { label: string; value: string; }
 
-export const itemSelectorFactory = <ENTITY extends IItem>(options: IOptions<ENTITY>) => (props: IPropEditorProps<string>) => {
+export const itemSelectorFactory = <LIST_ITEM_DATA extends any>(options: IOptions<LIST_ITEM_DATA>) => (props: IPropEditorProps<string>) => {
     const [items, setItems] = useState<ISelectOption[]>([]);
 
     const init = async () => {
-        const entities = await getEntities(options.itemTypeConfig);
+        const entities = await getList(options.itemTypeConfig);
 
         setItems(
             entities.map(entity => ({ label: options.itemTypeConfig.toString(entity), value: entity.id }))
@@ -42,11 +42,11 @@ export const itemSelectorFactory = <ENTITY extends IItem>(options: IOptions<ENTI
 };
 
 
-export const itemsSelectorFactory = <ENTITY extends IItem>(options: IOptions<ENTITY>) => (props: IPropEditorProps<string[]>) => {
+export const itemsSelectorFactory = <LIST_ITEM_DATA extends any>(options: IOptions<LIST_ITEM_DATA>) => (props: IPropEditorProps<string[]>) => {
     const [items, setItems] = useState<ISelectOption[]>([]);
 
     const init = async () => {
-        const entities = await getEntities(options.itemTypeConfig);
+        const entities = await getList(options.itemTypeConfig);
 
         setItems(
             entities.map(entity => ({ label: options.itemTypeConfig.toString(entity), value: entity.id }))

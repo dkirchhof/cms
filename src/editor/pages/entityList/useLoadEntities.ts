@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { IItem, IItemTypeConfig, ItemTypeConfigs } from "../../../types/itemTypeConfig";
 import { findItemConfigByName } from "../../../utils/findItemTypeConfig";
-import { getEntities } from "../../api";
+import { getList } from "../../api";
 
 type State<LIST_ITEM_DATA>
     = { state: "LOADING" } 
@@ -24,7 +24,7 @@ export const useLoadEntities = <LIST_ITEM_DATA>(itemTypeConfigs: ItemTypeConfigs
                 throw new Error("couldn't find typeConfig");
             }
 
-            const items = await getEntities(itemTypeConfig);
+            const items = await getList(itemTypeConfig);
 
             setState({ state: "LOADED", itemTypeConfig, items });
         } catch (e: any) {

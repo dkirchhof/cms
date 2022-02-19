@@ -3,8 +3,8 @@ import { ItemTypeConfigs } from "../types/itemTypeConfig";
 import { RequestBody } from "../types/requestData";
 import { createItem } from "./apiFns/createItem";
 import { deleteItem } from "./apiFns/deleteItem";
-import { getEditableItem } from "./apiFns/getEditableItem";
-import { getEntities } from "./apiFns/getEntities";
+import { getItem } from "./apiFns/getItem";
+import { getList } from "./apiFns/getList";
 import { updateItem } from "./apiFns/updateItem";
 import { HTTPError } from "./types/httpError";
 
@@ -17,8 +17,8 @@ export const requestHandler = (itemTypeConfigs: ItemTypeConfigs) => async (req: 
         const body: RequestBody = req.body;
 
         await match(body.method)
-            .with("getEntities", () => getEntities(req, res, itemTypeConfigs))
-            .with("getEditableItem", () => getEditableItem(req, res, itemTypeConfigs))
+            .with("getList", () => getList(req, res, itemTypeConfigs))
+            .with("getItem", () => getItem(req, res, itemTypeConfigs))
             .with("createItem", () => createItem(req, res, itemTypeConfigs))
             .with("updateItem", () => updateItem(req, res, itemTypeConfigs))
             .with("deleteItem", () => deleteItem(req, res, itemTypeConfigs))

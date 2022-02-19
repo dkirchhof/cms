@@ -1,18 +1,18 @@
 export type RequestBody 
-    = GetEntitiesBody
-    | GetEditableItemBody
+    = GetListBody
+    | GetItemBody
     | CreateItemBody<any>
     | UpdateItemBody<any>
     | DeleteItemBody
     ;
 
-export type GetEntitiesBody = { 
-    method: "getEntities";
+export type GetListBody = { 
+    method: "getList";
     typeName: string;
 };
 
-export type GetEditableItemBody = {
-    method: "getEditableItem";
+export type GetItemBody = {
+    method: "getItem";
     typeName: string;
     id: string;
 }

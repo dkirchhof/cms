@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { IItem, IItemTypeConfig, ItemTypeConfigs } from "../../../types/itemTypeConfig";
 import { findItemConfigByName } from "../../../utils/findItemTypeConfig";
-import { getEditableItem } from "../../api";
+import { getItem } from "../../api";
 
 type State<EDITOR_ITEM_DATA>
     = { state: "LOADING" } 
@@ -27,7 +27,7 @@ export const useLoadItem = <EDITOR_ITEM_DATA>(itemTypeConfigs: ItemTypeConfigs) 
             if(id === "new") {
                 setState({ state: "LOADED", itemTypeConfig, item: null });
             } else {
-               const item = await getEditableItem(itemTypeConfig, id!);
+               const item = await getItem(itemTypeConfig, id!);
 
                setState({ state: "LOADED", itemTypeConfig, item });
             }

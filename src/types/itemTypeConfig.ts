@@ -14,6 +14,8 @@ export interface IPropConfig<T> {
 
 export interface IItemTypeConfig<LIST_ITEM_DATA = any, EDITOR_ITEM_DATA = any> {
     name: [string, string];
+    toString: (item: IItem<LIST_ITEM_DATA>) => string;
+
     listProps: (keyof LIST_ITEM_DATA)[];
     
     api: {
