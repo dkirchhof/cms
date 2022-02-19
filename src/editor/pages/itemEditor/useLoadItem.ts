@@ -4,21 +4,21 @@ import { IItem, IItemTypeConfig, ItemTypeConfigs } from "../../../types/itemType
 import { findItemConfigByName } from "../../../utils/findItemTypeConfig";
 import { getEditableItem } from "../../api";
 
-type State<EDITABLE_ITEM extends IItem>
+type State<EDITOR_ITEM_DATA>
     = { state: "LOADING" } 
-    | { state: "LOADED"; itemTypeConfig: IItemTypeConfig<any, EDITABLE_ITEM>; item: EDITABLE_ITEM | null; }
+    | { state: "LOADED"; itemTypeConfig: IItemTypeConfig<any, EDITOR_ITEM_DATA>; item: IItem<EDITOR_ITEM_DATA> | null; }
     | { state: "ERROR"; message: string; }
 
-export const useLoadItem = <EDITABLE_ITEM extends IItem>(itemTypeConfigs: ItemTypeConfigs) => {
+export const useLoadItem = <EDITOR_ITEM_DATA>(itemTypeConfigs: ItemTypeConfigs) => {
     const { typeName, id } = useParams();
 
-    const [state, setState] = useState<State<EDITABLE_ITEM>>({ state: "LOADING" });
+    const [state, setState] = useState<State<EDITOR_ITEM_DATA>>({ state: "LOADING" });
     
     const fetch = async () => {
         try {
             setState({ state: "LOADING" });
 
-            const itemTypeConfig = findItemConfigByName<any, EDITABLE_ITEM>(itemTypeConfigs, typeName!);
+            const itemTypeConfig = findItemConfigByName<any, EDITOR_ITEM_DATA>(itemTypeConfigs, typeName!);
 
             if (!itemTypeConfig) {
                 throw new Error("couldn't find typeConfig");

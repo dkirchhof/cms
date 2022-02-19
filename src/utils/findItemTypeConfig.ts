@@ -1,5 +1,5 @@
-import { IItem, IItemTypeConfig } from "../types/itemTypeConfig";
+import { IItemTypeConfig, ItemTypeConfigs } from "../types/itemTypeConfig";
 
-export const findItemConfigByName = <ENTITY extends IItem, EDITABLE_ITEM extends IItem>(itemTypeConfigs: IItemTypeConfig[], name: string) => {
-    return itemTypeConfigs.find(config => config.name[0] === name || config.name[1] === name) as IItemTypeConfig<ENTITY, EDITABLE_ITEM> | undefined;
+export const findItemConfigByName = <LIST_ITEM_DATA, EDITOR_ITEM_DATA>(itemTypeConfigs: ItemTypeConfigs, name: string) => {
+    return itemTypeConfigs.find(config => config.name[0] === name || config.name[1] === name) as IItemTypeConfig<LIST_ITEM_DATA, EDITOR_ITEM_DATA> | undefined;
 };

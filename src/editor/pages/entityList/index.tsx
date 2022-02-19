@@ -29,7 +29,7 @@ const Loading = () => {
     );
 };
 
-const Loaded = <T extends IItem>(props: { itemTypeConfig: IItemTypeConfig<T>; items: T[]; }) => {
+const Loaded = <LIST_ITEM_DATA extends any>(props: { itemTypeConfig: IItemTypeConfig<LIST_ITEM_DATA>; items: IItem<LIST_ITEM_DATA>[]; }) => {
     const navigate = useNavigate();
     const showNotification = useNotifications();
 
@@ -57,7 +57,7 @@ const Loaded = <T extends IItem>(props: { itemTypeConfig: IItemTypeConfig<T>; it
 
     const itemTypeSingularName = props.itemTypeConfig.name[0];
     const itemTypePluralName = props.itemTypeConfig.name[1];
-    const listProps = props.itemTypeConfig.frontend.listProps;
+    const listProps = props.itemTypeConfig.listProps;
 
     return (
         <Container>
@@ -100,15 +100,15 @@ const Error = (props: { message: string; }) => (
     </Container>
 );
 
-interface IItemProps<T extends IItem> {
-    listProps: (keyof T)[];
-    item: T;
+interface IItemProps<LIST_ITEM_DATA extends any> {
+    listProps: (keyof LIST_ITEM_DATA)[];
+    item: IItem<LIST_ITEM_DATA>;
 
     editItem: (itemId: string) => void;
     delItem: (itemId: string) => void;
 }
 
-const Item = <T extends IItem>(props: IItemProps<T>) => {
+const Item = <LIST_ITEM_DATA extends any>(props: IItemProps<LIST_ITEM_DATA>) => {
     const { ContextMenu, openContextMenu } = useContextMenu([
         [
             { label: CTX_MENU_EDIT, action: () => props.editItem(props.item.id) },
@@ -118,7 +118,7 @@ const Item = <T extends IItem>(props: IItemProps<T>) => {
 
     return (
         <tr onClick={() => props.editItem(props.item.id)} onContextMenu={openContextMenu}>
-            {props.listProps.map(prop => <td key={prop.toString()}>{props.item[prop]}</td>)}
+            {props.listProps.map(prop => <td key={prop.toString()}>{props.item.data[prop]}</td>)}
 
             <ContextMenu />
         </tr>

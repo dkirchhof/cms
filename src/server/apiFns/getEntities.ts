@@ -12,7 +12,7 @@ export const getEntities = async (req: IRequest<GetEntitiesBody>, res: IResponse
         throw new HTTPError(400, "couldn't find typeConfig");
     }
 
-    const items = await itemTypeConfig.backend.api.getEntities();
+    const items = await itemTypeConfig.api.getList();
 
     res.json(items);
 };

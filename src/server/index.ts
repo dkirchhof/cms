@@ -4,7 +4,6 @@ import { RequestBody } from "../types/requestData";
 import { createItem } from "./apiFns/createItem";
 import { deleteItem } from "./apiFns/deleteItem";
 import { getEditableItem } from "./apiFns/getEditableItem";
-import { getEntity } from "./apiFns/getEntity";
 import { getEntities } from "./apiFns/getEntities";
 import { updateItem } from "./apiFns/updateItem";
 import { HTTPError } from "./types/httpError";
@@ -18,7 +17,6 @@ export const requestHandler = (itemTypeConfigs: ItemTypeConfigs) => async (req: 
         const body: RequestBody = req.body;
 
         await match(body.method)
-            .with("getEntity", () => getEntity(req, res, itemTypeConfigs))
             .with("getEntities", () => getEntities(req, res, itemTypeConfigs))
             .with("getEditableItem", () => getEditableItem(req, res, itemTypeConfigs))
             .with("createItem", () => createItem(req, res, itemTypeConfigs))

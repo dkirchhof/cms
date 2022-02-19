@@ -1,7 +1,5 @@
 import { PropEditor } from "../editor/types/propEditor";
 
-// export type GetItemType<T> = T extends IItemTypeConfig<infer U> ? U : never;
-
 export type ItemTypeConfigs = IItemTypeConfig<any, any>[];
 
 export type PropValidator<T> = (value: T) => string | null;
@@ -14,33 +12,24 @@ export interface IPropConfig<T> {
     validators: PropValidator<T>[];
 }
 
-export interface IItemTypeConfig<ENTITY extends IItem = IItem, EDITABLE_ITEM extends IItem = IItem> {
+export interface IItemTypeConfig<LIST_ITEM_DATA = any, EDITOR_ITEM_DATA = any> {
     name: [string, string];
-    toString: (entity: ENTITY) => string;
+    listProps: (keyof LIST_ITEM_DATA)[];
     
-    backend: {
-        api: {
-            getEntity: (id: string) => Promise<ENTITY>;
-            getEntities: () => Promise<ENTITY[]>
-
-            getEditableItem: (id: string) => Promise<EDITABLE_ITEM>;
-            createItem: (values: EDITABLE_ITEM) => Promise<string>;
-            updateItem: (id: string, values: Partial<EDITABLE_ITEM>) => Promise<void>;
-            deleteItem: (id: string) => Promise<void>;
-        };
+    api: {
+        getList: () => Promise<IItem<LIST_ITEM_DATA>[]>;
+        getItem: (id: string) => Promise<IItem<EDITOR_ITEM_DATA>>;
+        createItem: (values: EDITOR_ITEM_DATA) => Promise<string>;
+        updateItem: (id: string, values: Partial<EDITOR_ITEM_DATA>) => Promise<void>;
+        deleteItem: (id: string) => Promise<void>;
     };
     
-    frontend: {
-        listProps: (keyof ENTITY)[];
-
-        editor: {
-            propConfigs: {
-                [prop in keyof Omit<EDITABLE_ITEM, "id">]: IPropConfig<EDITABLE_ITEM[prop]>; 
-            };
-        };
+    editor: {
+        [prop in keyof EDITOR_ITEM_DATA]: IPropConfig<EDITOR_ITEM_DATA[prop]>; 
     };
 }
 
-export interface IItem {
+export interface IItem<DATA> {
     id: string;
+    data: DATA;
 }

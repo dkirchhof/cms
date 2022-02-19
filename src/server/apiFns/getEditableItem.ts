@@ -12,7 +12,7 @@ export const getEditableItem = async (req: IRequest<GetEditableItemBody>, res: I
         throw new HTTPError(400, "couldn't find typeConfig");
     }
 
-    const item = await itemTypeConfig.backend.api.getEditableItem(req.body.id);
+    const item = await itemTypeConfig.api.getItem(req.body.id);
 
     if (!item) {
         throw new HTTPError(404, "couldn't find item");

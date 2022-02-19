@@ -12,7 +12,7 @@ export const updateItem = async (req: IRequest<UpdateItemBody<any>>, res: IRespo
         throw new HTTPError(400, "couldn't find typeConfig");
     }
 
-    await itemTypeConfig.backend.api.updateItem(req.body.id, req.body.values);
+    await itemTypeConfig.api.updateItem(req.body.id, req.body.values);
 
     res.json({});
 };

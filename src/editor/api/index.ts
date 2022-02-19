@@ -1,5 +1,5 @@
 import { IItemTypeConfig, IItem } from "../../types/itemTypeConfig";
-import { CreateItemBody, DeleteItemBody, GetEntityBody, GetEntitiesBody, RequestBody, UpdateItemBody, GetEditableItemBody } from "../../types/requestData";
+import { CreateItemBody, DeleteItemBody, GetEntitiesBody, RequestBody, UpdateItemBody, GetEditableItemBody } from "../../types/requestData";
 
 const request = async <T>(body: RequestBody) => {
     const result = await fetch("/api/cms", {
@@ -19,37 +19,27 @@ const request = async <T>(body: RequestBody) => {
     }
 };
 
-export const getEntity = async <ENTITY extends IItem>(itemTypeConfig: IItemTypeConfig<ENTITY>, id: string) => {
-    const body: GetEntityBody = {
-        method: "getEntity",
-        typeName: itemTypeConfig.name[0],
-        id,
-    };
-
-    return request<ENTITY>(body);
-};
-
-export const getEntities = async <ENTITY extends IItem>(itemTypeConfig: IItemTypeConfig<ENTITY>) => {
+export const getEntities = async <LIST_ITEM_DATA>(itemTypeConfig: IItemTypeConfig<LIST_ITEM_DATA>) => {
     const body: GetEntitiesBody = {
         method: "getEntities",
         typeName: itemTypeConfig.name[0],
     };
 
-    return request<ENTITY[]>(body);
+    return request<IItem<LIST_ITEM_DATA>[]>(body);
 };
 
-export const getEditableItem = async <EDITABLE_ITEM extends IItem>(itemTypeConfig: IItemTypeConfig<any, EDITABLE_ITEM>, id: string) => {
+export const getEditableItem = async <EDITOR_ITEM_DATA>(itemTypeConfig: IItemTypeConfig<any, EDITOR_ITEM_DATA>, id: string) => {
     const body: GetEditableItemBody = {
         method: "getEditableItem",
         typeName: itemTypeConfig.name[0],
         id,
     };
 
-    return request<EDITABLE_ITEM>(body);
+    return request<IItem<EDITOR_ITEM_DATA>>(body);
 };
 
-export const createItem = async <EDITABLE_ITEM extends IItem>(itemTypeConfig: IItemTypeConfig<any, EDITABLE_ITEM>, values: EDITABLE_ITEM) => {
-    const body: CreateItemBody<EDITABLE_ITEM> = {
+export const createItem = async <EDITOR_ITEM_DATA>(itemTypeConfig: IItemTypeConfig<any, EDITOR_ITEM_DATA>, values: EDITOR_ITEM_DATA) => {
+    const body: CreateItemBody<EDITOR_ITEM_DATA> = {
         method: "createItem",
         typeName: itemTypeConfig.name[0],
         values,
@@ -58,8 +48,8 @@ export const createItem = async <EDITABLE_ITEM extends IItem>(itemTypeConfig: II
     return request<string>(body);
 };
 
-export const updateItem = async <EDITABLE_ITEM extends IItem>(itemTypeConfig: IItemTypeConfig<any, EDITABLE_ITEM>, id: string, values: EDITABLE_ITEM) => {
-    const body: UpdateItemBody<EDITABLE_ITEM> = {
+export const updateItem = async <EDITOR_ITEM_DATA>(itemTypeConfig: IItemTypeConfig<any, EDITOR_ITEM_DATA>, id: string, values: EDITOR_ITEM_DATA) => {
+    const body: UpdateItemBody<EDITOR_ITEM_DATA> = {
         method: "updateItem",
         typeName: itemTypeConfig.name[0],
         id,

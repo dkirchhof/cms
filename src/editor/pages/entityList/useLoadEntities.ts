@@ -4,21 +4,21 @@ import { IItem, IItemTypeConfig, ItemTypeConfigs } from "../../../types/itemType
 import { findItemConfigByName } from "../../../utils/findItemTypeConfig";
 import { getEntities } from "../../api";
 
-type State<ENTITY extends IItem>
+type State<LIST_ITEM_DATA>
     = { state: "LOADING" } 
-    | { state: "LOADED"; itemTypeConfig: IItemTypeConfig<ENTITY, any>; items: ENTITY[]; }
+    | { state: "LOADED"; itemTypeConfig: IItemTypeConfig<LIST_ITEM_DATA, any>; items: IItem<LIST_ITEM_DATA>[]; }
     | { state: "ERROR"; message: string; }
 
-export const useLoadEntities = <ENTITY extends IItem>(itemTypeConfigs: ItemTypeConfigs) => {
+export const useLoadEntities = <LIST_ITEM_DATA>(itemTypeConfigs: ItemTypeConfigs) => {
     const { typeName } = useParams();
 
-    const [state, setState] = useState<State<ENTITY>>({ state: "LOADING" });
+    const [state, setState] = useState<State<LIST_ITEM_DATA>>({ state: "LOADING" });
 
     const fetch = async() => {
         try {
             setState({ state: "LOADING" });
 
-            const itemTypeConfig = findItemConfigByName<ENTITY, any>(itemTypeConfigs, typeName!);
+            const itemTypeConfig = findItemConfigByName<LIST_ITEM_DATA, any>(itemTypeConfigs, typeName!);
 
             if (!itemTypeConfig) {
                 throw new Error("couldn't find typeConfig");

@@ -22,14 +22,14 @@ export interface IEditorField<T, P extends keyof T> extends IPropConfig<T> {
     errors: string[];
 }
 
-const createEditorFields = <EDITABLE_ITEM extends IItem>(itemTypeConfig: IItemTypeConfig<any, EDITABLE_ITEM>, item: EDITABLE_ITEM | null) => {
-    const props = Object.keys(itemTypeConfig.frontend.editor.propConfigs) as (keyof Omit<EDITABLE_ITEM, "id">)[];
+const createEditorFields = <EDITOR_ITEM_DATA extends any>(itemTypeConfig: IItemTypeConfig<any, EDITOR_ITEM_DATA>, data?: EDITOR_ITEM_DATA) => {
+    const props = Object.keys(itemTypeConfig.editor) as (keyof Omit<EDITOR_ITEM_DATA, "id">)[];
 
     return props.map(prop => {
-        const config = itemTypeConfig.frontend.editor.propConfigs[prop] as IPropConfig<any>;
-        const value = item?.[prop] || config.defaultValue;
+        const config = itemTypeConfig.editor[prop] as IPropConfig<any>;
+        const value = data?.[prop] || config.defaultValue;
 
-        const editorField: IEditorField<EDITABLE_ITEM, any> = {
+        const editorField: IEditorField<EDITOR_ITEM_DATA, any> = {
             prop,
             initialValue: value,
             currentValue: value,
@@ -54,8 +54,8 @@ const validate = <T extends any>(validators: PropValidator<T>[], value: T) => {
     return validators.map(validator => validator(value)).filter(Boolean) as string[];
 };
 
-const getValues = <T extends IItem>(editorFields: IEditorField<T, any>[]) => {
-    return editorFields.reduce((prev, field) => {
+const getValues = <T extends any>(editorFields: IEditorField<T, any>[]) => {
+    return editorFields.reduce((prev: any, field) => {
         if (!field.changed) {
             return prev;
         }
@@ -83,16 +83,16 @@ const Loading = () => {
     );
 };
 
-const Loaded = <EDITABLE_ITEM extends IItem>(props: { itemTypeConfig: IItemTypeConfig<any, EDITABLE_ITEM>; item: EDITABLE_ITEM | null; }) => {
+const Loaded = <EDITOR_ITEM_DATA extends any>(props: { itemTypeConfig: IItemTypeConfig<any, EDITOR_ITEM_DATA>; item: IItem<EDITOR_ITEM_DATA> | null; }) => {
     const navigate = useNavigate();
     const showNotification = useNotifications();
 
     const [itemId, setItemId] = useState<string | null>(null);
-    const [editorFields, setEditorFields] = useState<IEditorField<EDITABLE_ITEM, any>[]>([]);
+    const [editorFields, setEditorFields] = useState<IEditorField<EDITOR_ITEM_DATA, any>[]>([]);
 
     useEffect(() => {
         setItemId(props.item?.id || null);
-        setEditorFields(createEditorFields(props.itemTypeConfig, props.item));
+        setEditorFields(createEditorFields(props.itemTypeConfig, props.item?.data));
     }, [props.item]);
 
     const reset = () => {
