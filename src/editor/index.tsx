@@ -7,10 +7,10 @@ import { Container, GlobalStyles } from "./styles";
 import { ItemTypeConfigs } from "../types/itemTypeConfig";
 import { NotificationsProvider } from "./components/notifications";
 
-export const editorFactory = (itemTypeConfigs: ItemTypeConfigs) => {
+export const editorFactory = (itemTypeConfigs: ItemTypeConfigs, locales: readonly string[]) => {
     const TypesList = typesListFactory(itemTypeConfigs);
     const EntityList = entityListFactory(itemTypeConfigs);
-    const ItemEditor = itemEditorFactory(itemTypeConfigs);
+    const ItemEditor = itemEditorFactory(itemTypeConfigs, locales);
 
     return () => {
         return (

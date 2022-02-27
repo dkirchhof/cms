@@ -45,8 +45,6 @@ interface ILocalizedField<T = any> extends IPropConfig<T> {
 type FieldGroup = INonLocalizedFieldGroup | ILocalizedFieldGroup;
 type EditorFieldGroups = FieldGroup[];
 
-const LOCALES = ["de-DE", "en-US"];
-
 const createLocalizedFieldGroup = (prop: string, propConfig: IPropConfig<any>, data: EditorItemData | undefined, locales: readonly string[]) => {
     const group: ILocalizedFieldGroup = {
         prop,
@@ -106,10 +104,10 @@ const createNonLocalizedField = (propConfig: IPropConfig<any>, value: any) => {
     return editorField;
 };
 
-const createEditorFieldGroups = <EDITOR_ITEM_DATA extends EditorItemData>(itemTypeConfig: IItemTypeConfig<any, EDITOR_ITEM_DATA>, data?: EDITOR_ITEM_DATA) => {
+const createEditorFieldGroups = <EDITOR_ITEM_DATA extends EditorItemData>(itemTypeConfig: IItemTypeConfig<any, EDITOR_ITEM_DATA>, data: EDITOR_ITEM_DATA | undefined, locales: readonly string[]) => {
     return Object.entries(itemTypeConfig.editor).map(([prop, propConfig]: [string, IPropConfig<any> & { localize?: true }]) => {
         if (propConfig.localize) {
-            return createLocalizedFieldGroup(prop, propConfig, data, LOCALES);
+            return createLocalizedFieldGroup(prop, propConfig, data, locales);
         }
 
         return createNonLocalizedFieldGroup(prop, propConfig, data);
@@ -169,12 +167,12 @@ const getValues = <T extends EditorItemData>(editorFieldGroups: EditorFieldGroup
     }, {} as T);
 };
 
-export const itemEditorFactory = (itemTypeConfigs: ItemTypeConfigs) => () => {
+export const itemEditorFactory = (itemTypeConfigs: ItemTypeConfigs, locales: readonly string[]) => () => {
     const state = useLoadItem(itemTypeConfigs);
 
     return match(state)
         .with({ state: "LOADING" }, () => <Loading />)
-        .with({ state: "LOADED" }, ({ itemTypeConfig, item }) => <Loaded itemTypeConfig={itemTypeConfig} item={item} />)
+        .with({ state: "LOADED" }, ({ itemTypeConfig, item }) => <Loaded itemTypeConfig={itemTypeConfig} item={item} locales={locales} />)
         .with({ state: "ERROR" }, ({ message }) => <Error message={message} />)
         .exhaustive();
 };
@@ -185,7 +183,7 @@ const Loading = () => {
     );
 };
 
-const Loaded = (props: { itemTypeConfig: IItemTypeConfig<any, any>; item: IItem<any> | null; }) => {
+const Loaded = (props: { itemTypeConfig: IItemTypeConfig<any, any>; item: IItem<any> | null; locales: readonly string[]; }) => {
     const navigate = useNavigate();
     const showNotification = useNotifications();
 
@@ -194,7 +192,7 @@ const Loaded = (props: { itemTypeConfig: IItemTypeConfig<any, any>; item: IItem<
 
     useEffect(() => {
         setItemId(props.item?.id || null);
-        setEditorFieldGroups(createEditorFieldGroups(props.itemTypeConfig, props.item?.data));
+        setEditorFieldGroups(createEditorFieldGroups(props.itemTypeConfig, props.item?.data, props.locales));
     }, [props.item]);
 
     const reset = () => {
