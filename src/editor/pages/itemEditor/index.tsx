@@ -1,9 +1,9 @@
 import update from "immer";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { match } from "ts-pattern";
 import { ItemContext } from "../../../shared/contexts/itemContext";
-import { IItem, IItemTypeConfig, IPropConfig, ItemTypeConfigs, PropValidator } from "../../../types/itemTypeConfig";
+import { EditorItemData, IItem, IItemTypeConfig, IPropConfig, ItemTypeConfigs, PropValidator } from "../../../types/itemTypeConfig";
 import { createItem, updateItem } from "../../api";
 import { Breadcrumb } from "../../components/breadcrumb";
 import { PrimaryButton, SecondaryButton } from "../../components/button";
@@ -11,59 +11,161 @@ import { ErrorDisplay } from "../../components/errorDisplay";
 import { useNotifications } from "../../components/notifications";
 import { BUTTON_RESET, BUTTON_SAVE, BUTTON_UPDATE, ITEM_CREATED, ITEM_UPDATED } from "../../messages";
 import { Header } from "../pageStyles";
-import { Container, Row, Main } from "./styles";
+import { Container, Main, Group, PropName, Lang, Errors } from "./styles";
 import { useLoadItem } from "./useLoadItem";
 
-export interface IEditorField<T, P extends keyof T> extends IPropConfig<T> {
-    prop: P;
-    initialValue: T[P];
-    currentValue: T[P];
+interface INonLocalizedFieldGroup extends IPropConfig<any> {
+    prop: string;
+    localize: false;
+    fields: [INonLocalizedField];
+}
+
+interface ILocalizedFieldGroup extends IPropConfig<any> {
+    prop: string;
+    localize: true;
+    fields: ILocalizedField[];
+}
+
+interface INonLocalizedField<T = any> extends IPropConfig<T> {
+    locale?: undefined;
+    initialValue: T;
+    currentValue: T;
     changed: boolean;
     errors: string[];
 }
 
-const createEditorFields = <EDITOR_ITEM_DATA extends any>(itemTypeConfig: IItemTypeConfig<any, EDITOR_ITEM_DATA>, data?: EDITOR_ITEM_DATA) => {
-    const props = Object.keys(itemTypeConfig.editor) as (keyof Omit<EDITOR_ITEM_DATA, "id">)[];
+interface ILocalizedField<T = any> extends IPropConfig<T> {
+    locale: string;
+    initialValue: T;
+    currentValue: T;
+    changed: boolean;
+    errors: string[];
+}
 
-    return props.map(prop => {
-        const config = itemTypeConfig.editor[prop] as IPropConfig<any>;
-        const value = data?.[prop] || config.defaultValue;
+type FieldGroup = INonLocalizedFieldGroup | ILocalizedFieldGroup;
+type EditorFieldGroups = FieldGroup[];
 
-        const editorField: IEditorField<EDITOR_ITEM_DATA, any> = {
-            prop,
-            initialValue: value,
-            currentValue: value,
-            changed: false,
-            errors: validate(config.validators, value),
-            ...config,
-        };
+const LOCALES = ["de-DE", "en-US"];
 
-        return editorField;
+const createLocalizedFieldGroup = (prop: string, propConfig: IPropConfig<any>, data: EditorItemData | undefined, locales: readonly string[]) => {
+    const group: ILocalizedFieldGroup = {
+        prop,
+        localize: true,
+        defaultValue: propConfig.defaultValue,
+        editor: propConfig.editor,
+        validators: propConfig.validators,
+        fields: locales.map(locale => {
+            const value = data?.[prop][locale] || propConfig.defaultValue;
+
+            return createLocalizedField(propConfig, value, locale);
+        }),
+    };
+
+    return group;
+};
+
+const createNonLocalizedFieldGroup = (prop: string, propConfig: IPropConfig<any>, data: EditorItemData | undefined) => {
+    const value = data?.[prop] || propConfig.defaultValue;
+
+    const group: INonLocalizedFieldGroup = {
+        prop,
+        localize: false,
+        defaultValue: propConfig.defaultValue,
+        editor: propConfig.editor,
+        validators: propConfig.validators,
+        fields: [
+            createNonLocalizedField(propConfig, value),
+        ],
+    };
+
+    return group;
+};
+
+const createLocalizedField = (propConfig: IPropConfig<any>, value: any, locale: string) => {
+    const editorField: ILocalizedField = {
+        ...propConfig,
+        locale,
+        initialValue: value,
+        currentValue: value,
+        changed: false,
+        errors: validate(propConfig.validators, value),
+    };
+
+    return editorField;
+};
+
+const createNonLocalizedField = (propConfig: IPropConfig<any>, value: any) => {
+    const editorField: INonLocalizedField = {
+        ...propConfig,
+        initialValue: value,
+        currentValue: value,
+        changed: false,
+        errors: validate(propConfig.validators, value),
+    };
+
+    return editorField;
+};
+
+const createEditorFieldGroups = <EDITOR_ITEM_DATA extends EditorItemData>(itemTypeConfig: IItemTypeConfig<any, EDITOR_ITEM_DATA>, data?: EDITOR_ITEM_DATA) => {
+    return Object.entries(itemTypeConfig.editor).map(([prop, propConfig]: [string, IPropConfig<any> & { localize?: true }]) => {
+        if (propConfig.localize) {
+            return createLocalizedFieldGroup(prop, propConfig, data, LOCALES);
+        }
+
+        return createNonLocalizedFieldGroup(prop, propConfig, data);
     });
 };
 
-const checkIfHasChanges = (editorFields: IEditorField<any, any>[]) => {
-    return editorFields.some(field => field.changed);
+const checkIfGroupHasChanges = (editorFieldGroup: FieldGroup) => {
+    return editorFieldGroup.fields.some(field => field.changed);
 };
 
-const checkIfHasErrors = (editorFields: IEditorField<any, any>[]) => {
-    return editorFields.some(field => field.errors.length > 0);
+const checkIfGroupsHaveChanges = (editorFieldGroups: EditorFieldGroups) => {
+    return editorFieldGroups.some(checkIfGroupHasChanges);
+};
+
+const checkIfGroupHasErrors = (editorFieldGroup: FieldGroup) => {
+    return editorFieldGroup.fields.some(field => field.errors.length > 0);
+};
+
+const checkIfGroupsHaveErrors = (editorFieldGroups: EditorFieldGroups) => {
+    return editorFieldGroups.some(checkIfGroupHasErrors);
 };
 
 const validate = <T extends any>(validators: PropValidator<T>[], value: T) => {
     return validators.map(validator => validator(value)).filter(Boolean) as string[];
 };
 
-const getValues = <T extends any>(editorFields: IEditorField<T, any>[]) => {
-    return editorFields.reduce((prev: any, field) => {
-        if (!field.changed) {
-            return prev;
+const getValues = <T extends EditorItemData>(editorFieldGroups: EditorFieldGroups) => {
+    return editorFieldGroups.reduce((result, group) => {
+        if (!checkIfGroupHasChanges(group)) {
+            return result;
         }
 
-        return {
-            ...prev,
-            [field.prop]: field.currentValue,
-        };
+        if (group.localize) {
+            return {
+                ...result,
+                [group.prop]: group.fields.reduce((fields, field) => {
+                    if (!field.changed) {
+                        return fields;
+                    }
+
+                    return {
+                        ...fields,
+                        [field.locale]: field.currentValue,
+                    };
+                }, {}),
+            };
+        }
+        
+        if (group.fields[0].changed) {
+            return {
+                ...result,
+                [group.prop]: group.fields[0].currentValue,
+            };
+        }
+
+        return result;
     }, {} as T);
 };
 
@@ -83,37 +185,41 @@ const Loading = () => {
     );
 };
 
-const Loaded = <EDITOR_ITEM_DATA extends any>(props: { itemTypeConfig: IItemTypeConfig<any, EDITOR_ITEM_DATA>; item: IItem<EDITOR_ITEM_DATA> | null; }) => {
+const Loaded = (props: { itemTypeConfig: IItemTypeConfig<any, any>; item: IItem<any> | null; }) => {
     const navigate = useNavigate();
     const showNotification = useNotifications();
 
     const [itemId, setItemId] = useState<string | null>(null);
-    const [editorFields, setEditorFields] = useState<IEditorField<EDITOR_ITEM_DATA, any>[]>([]);
+    const [editorFieldGroups, setEditorFieldGroups] = useState<EditorFieldGroups>([]);
 
     useEffect(() => {
         setItemId(props.item?.id || null);
-        setEditorFields(createEditorFields(props.itemTypeConfig, props.item?.data));
+        setEditorFieldGroups(createEditorFieldGroups(props.itemTypeConfig, props.item?.data));
     }, [props.item]);
 
     const reset = () => {
-        setEditorFields(
-            update(fields => {
-                fields.forEach(field => {
-                    field.currentValue = field.initialValue;
-                    field.changed = false;
-                    field.errors = [];
+        setEditorFieldGroups(
+            update((groups: EditorFieldGroups) => {
+                groups.forEach(group => {
+                    group.fields.forEach(field => {
+                        field.currentValue = field.initialValue;
+                        field.changed = false;
+                        field.errors = [];
+                    });
                 });
             })
         );
     };
 
-    const resetToUpdatedValues = () => {
-        setEditorFields(
-            update(fields => {
-                fields.forEach(field => {
-                    field.initialValue = field.currentValue;
-                    field.changed = false;
-                    field.errors = [];
+    const setCurrentToInitialValues = () => {
+        setEditorFieldGroups(
+            update((groups: EditorFieldGroups) => {
+                groups.forEach(group => {
+                    group.fields.forEach(field => {
+                        field.initialValue = field.currentValue;
+                        field.changed = false;
+                        field.errors = [];
+                    });
                 });
             })
         );
@@ -121,7 +227,7 @@ const Loaded = <EDITOR_ITEM_DATA extends any>(props: { itemTypeConfig: IItemType
 
     const save = async () => {
         try {
-            const values = getValues(editorFields);
+            const values = getValues(editorFieldGroups);
 
             if (itemId === null) {
                 const id = await createItem(props.itemTypeConfig, values);
@@ -132,31 +238,53 @@ const Loaded = <EDITOR_ITEM_DATA extends any>(props: { itemTypeConfig: IItemType
                 await updateItem(props.itemTypeConfig, itemId, values);
 
                 showNotification({ type: "success", message: ITEM_UPDATED(props.itemTypeConfig.name[0]) });
-                resetToUpdatedValues();
+                setCurrentToInitialValues();
             }
         } catch (e: any) {
             showNotification({ type: "error", message: e.message });
         }
     };
 
-    const changeField = (index: number) => (value: any) => {
-        setEditorFields(
-            update(fields => {
-                const field = fields[index];
+    const changeNonLocalizedField = (prop: string, value: any) => {
+        setEditorFieldGroups(
+            update((groups: EditorFieldGroups) => {
+                const group = groups.find(group => group.prop === prop)! as INonLocalizedFieldGroup;
+                const field = group.fields[0];
 
                 field.currentValue = value;
                 field.changed = true;
-                field.errors = validate(field.validators, value);
+                field.errors = validate(group.validators, value);
             })
         );
     };
 
+    const changeLocalizedField = (prop: string, locale: string, value: any) => {
+        setEditorFieldGroups(
+            update((groups: EditorFieldGroups) => {
+                const group = groups.find(group => group.prop === prop)! as ILocalizedFieldGroup;
+                const field = group.fields.find(field => field.locale === locale)!;
+
+                field.currentValue = value;
+                field.changed = true;
+                field.errors = validate(group.validators, value);
+            })
+        );
+    };
+
+    const changeField = (prop: string, locale?: string) => (value: any) => {
+        if (locale) {
+            changeLocalizedField(prop, locale, value);
+        } else {
+            changeNonLocalizedField(prop, value);
+        }
+    };
+
     const itemTypePluralName = props.itemTypeConfig.name[1];
-    const hasChanges = checkIfHasChanges(editorFields);
-    const hasErrors = checkIfHasErrors(editorFields);
+    const hasChanges = checkIfGroupsHaveChanges(editorFieldGroups);
+    const hasErrors = checkIfGroupsHaveErrors(editorFieldGroups);
 
     return (
-        <ItemContext.Provider value={{ type: "EDITOR_FIELDS", editorFields}}>
+        <ItemContext.Provider value={{ type: "EDITOR_FIELDS", editorFields: {} }}>
             <Container>
                 <Header>
                     <Breadcrumb crumbs={[
@@ -170,20 +298,25 @@ const Loaded = <EDITOR_ITEM_DATA extends any>(props: { itemTypeConfig: IItemType
                 </Header>
 
                 <Main>
-                    {editorFields.map((field, i) => {
-                        return (
-                            <Row key={i} fullscreen={field.fullscreen}>
-                                <div>{field.label || field.prop}</div>
-                                <field.editor value={field.currentValue} onChange={changeField(i)} />
+                    {editorFieldGroups.map(group => (
+                        <Group key={group.prop}>
+                            <PropName>{group.prop}</PropName>
 
-                                {field.changed && field.errors.length > 0 && (
-                                    <ul>
-                                        {field.errors.map((error, i) => <li key={i}>{error}</li>)}
-                                    </ul>
-                                )}
-                            </Row>
-                        );
-                    })}
+                            {group.fields.map((field, i) => (
+                                <Fragment key={i}>
+                                    {field.locale && <Lang>{field.locale}</Lang>}
+
+                                    <group.editor value={field.currentValue} onChange={changeField(group.prop, field.locale)} />
+
+                                    {field.changed && field.errors.length > 0 && (
+                                        <Errors>
+                                            {field.errors.map((error, i) => <li key={i}>{error}</li>)}
+                                        </Errors>
+                                    )}
+                                </Fragment>
+                            ))}
+                        </Group>
+                    ))}
                 </Main>
             </Container>
         </ItemContext.Provider>

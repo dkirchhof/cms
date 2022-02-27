@@ -1,4 +1,5 @@
 import { PropEditor } from "../editor/types/propEditor";
+import { Localized } from "./i18n";
 
 export type ItemTypeConfigs = IItemTypeConfig<any, any>[];
 
@@ -12,7 +13,18 @@ export interface IPropConfig<T> {
     validators: PropValidator<T>[];
 }
 
-export interface IItemTypeConfig<LIST_ITEM_DATA = any, EDITOR_ITEM_DATA = any> {
+export interface ILocalizedPropConfig<T> extends IPropConfig<T> {
+    localize: true;
+}
+
+export type ListItemData = Record<string, any>;
+export type EditorItemData = Record<string, any>;
+
+export type EditorItemDataFieldToPropConfig<T> = T extends Localized<infer U, any>
+    ? ILocalizedPropConfig<U>
+    : IPropConfig<T>;
+
+export interface IItemTypeConfig<LIST_ITEM_DATA extends ListItemData = any, EDITOR_ITEM_DATA extends EditorItemData = any> {
     name: [string, string];
     toString: (item: IItem<LIST_ITEM_DATA>) => string;
 
@@ -27,7 +39,7 @@ export interface IItemTypeConfig<LIST_ITEM_DATA = any, EDITOR_ITEM_DATA = any> {
     };
     
     editor: {
-        [prop in keyof EDITOR_ITEM_DATA]: IPropConfig<EDITOR_ITEM_DATA[prop]>; 
+        [prop in keyof EDITOR_ITEM_DATA]: EditorItemDataFieldToPropConfig<EDITOR_ITEM_DATA[prop]>;
     };
 }
 

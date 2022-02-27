@@ -1,4 +1,4 @@
-import { IItemTypeConfig, IItem } from "../../types/itemTypeConfig";
+import { IItemTypeConfig, IItem, EditorItemData } from "../../types/itemTypeConfig";
 import { CreateItemBody, DeleteItemBody, GetListBody, RequestBody, UpdateItemBody, GetItemBody } from "../../types/requestData";
 
 const request = async <T>(body: RequestBody) => {
@@ -28,7 +28,7 @@ export const getList = async <LIST_ITEM_DATA>(itemTypeConfig: IItemTypeConfig<LI
     return request<IItem<LIST_ITEM_DATA>[]>(body);
 };
 
-export const getItem = async <EDITOR_ITEM_DATA>(itemTypeConfig: IItemTypeConfig<any, EDITOR_ITEM_DATA>, id: string) => {
+export const getItem = async <EDITOR_ITEM_DATA extends EditorItemData>(itemTypeConfig: IItemTypeConfig<any, EDITOR_ITEM_DATA>, id: string) => {
     const body: GetItemBody = {
         method: "getItem",
         typeName: itemTypeConfig.name[0],
@@ -38,7 +38,7 @@ export const getItem = async <EDITOR_ITEM_DATA>(itemTypeConfig: IItemTypeConfig<
     return request<IItem<EDITOR_ITEM_DATA>>(body);
 };
 
-export const createItem = async <EDITOR_ITEM_DATA>(itemTypeConfig: IItemTypeConfig<any, EDITOR_ITEM_DATA>, values: EDITOR_ITEM_DATA) => {
+export const createItem = async <EDITOR_ITEM_DATA extends EditorItemData>(itemTypeConfig: IItemTypeConfig<any, EDITOR_ITEM_DATA>, values: EDITOR_ITEM_DATA) => {
     const body: CreateItemBody<EDITOR_ITEM_DATA> = {
         method: "createItem",
         typeName: itemTypeConfig.name[0],
@@ -48,7 +48,7 @@ export const createItem = async <EDITOR_ITEM_DATA>(itemTypeConfig: IItemTypeConf
     return request<string>(body);
 };
 
-export const updateItem = async <EDITOR_ITEM_DATA>(itemTypeConfig: IItemTypeConfig<any, EDITOR_ITEM_DATA>, id: string, values: EDITOR_ITEM_DATA) => {
+export const updateItem = async <EDITOR_ITEM_DATA extends EditorItemData>(itemTypeConfig: IItemTypeConfig<any, EDITOR_ITEM_DATA>, id: string, values: EDITOR_ITEM_DATA) => {
     const body: UpdateItemBody<EDITOR_ITEM_DATA> = {
         method: "updateItem",
         typeName: itemTypeConfig.name[0],

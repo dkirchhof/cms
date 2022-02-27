@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { IItem, IItemTypeConfig, ItemTypeConfigs } from "../../../types/itemTypeConfig";
+import { EditorItemData, IItem, IItemTypeConfig, ItemTypeConfigs } from "../../../types/itemTypeConfig";
 import { findItemConfigByName } from "../../../utils/findItemTypeConfig";
 import { getItem } from "../../api";
 
-type State<EDITOR_ITEM_DATA>
+type State<EDITOR_ITEM_DATA extends EditorItemData>
     = { state: "LOADING" } 
     | { state: "LOADED"; itemTypeConfig: IItemTypeConfig<any, EDITOR_ITEM_DATA>; item: IItem<EDITOR_ITEM_DATA> | null; }
     | { state: "ERROR"; message: string; }
 
-export const useLoadItem = <EDITOR_ITEM_DATA>(itemTypeConfigs: ItemTypeConfigs) => {
+export const useLoadItem = <EDITOR_ITEM_DATA extends EditorItemData>(itemTypeConfigs: ItemTypeConfigs) => {
     const { typeName, id } = useParams();
 
     const [state, setState] = useState<State<EDITOR_ITEM_DATA>>({ state: "LOADING" });

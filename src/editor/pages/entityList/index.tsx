@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { match } from "ts-pattern";
-import { IItem, IItemTypeConfig, ItemTypeConfigs } from "../../../types/itemTypeConfig";
+import { IItem, IItemTypeConfig, ItemTypeConfigs, ListItemData } from "../../../types/itemTypeConfig";
 import { deleteItem } from "../../api";
 import { Breadcrumb } from "../../components/breadcrumb";
 import { PrimaryButton } from "../../components/button";
@@ -29,7 +29,7 @@ const Loading = () => {
     );
 };
 
-const Loaded = <LIST_ITEM_DATA extends any>(props: { itemTypeConfig: IItemTypeConfig<LIST_ITEM_DATA>; items: IItem<LIST_ITEM_DATA>[]; }) => {
+const Loaded = <LIST_ITEM_DATA extends ListItemData>(props: { itemTypeConfig: IItemTypeConfig<LIST_ITEM_DATA>; items: IItem<LIST_ITEM_DATA>[]; }) => {
     const navigate = useNavigate();
     const showNotification = useNotifications();
 

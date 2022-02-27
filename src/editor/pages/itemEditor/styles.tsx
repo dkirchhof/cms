@@ -1,42 +1,41 @@
 import styled from "styled-components";
-import { DANGEROUS } from "../../theme/colors";
+import { DANGEROUS, GRAY_128 } from "../../theme/colors";
 import { PageContainer } from "../pageStyles";
 
 export const Container = styled(PageContainer)`
     display: grid;
     grid-template-rows: auto 1fr;
-
     overflow: hidden;
 `;
 
 export const Main = styled.main`
-    padding: 0px 32px 32px 32px;
-
-    overflow-y: auto;
-    /* scroll-snap-type: y; */
-`;
-
-export const Row = styled.div<{ fullscreen?: boolean; }>`
-    height: ${props => props.fullscreen ? "100%" : "auto"};
-    padding-top: 32px;
-
     display: flex;
     flex-direction: column;
+    gap: 16px;
+    padding: 32px;
+    overflow-y: auto;
+`;
 
-    /* scroll-snap-align: start; */
-
-    > div:nth-child(1) {
-        margin-bottom: 8px;
-
-        font-weight: bold;
-        text-transform: capitalize;
-    }
-
-    > input, > textarea, > select {
+export const Group = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    > select, > input {
         width: 100%;
     }
+`;
 
-    > ul {
-        color: ${DANGEROUS};
-    }
+export const PropName = styled.div`
+    font-weight: bold;
+    text-transform: capitalize;
+`;
+
+export const Lang = styled.div`
+    color: ${GRAY_128};
+    font-size: 12px;
+`;
+
+export const Errors = styled.ul`
+    margin: 8px 0px 0px 0px;
+    color: ${DANGEROUS};
 `;
