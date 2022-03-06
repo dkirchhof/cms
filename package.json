@@ -4,8 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "build-dev": "tsc -w",
-    "bundle-dev": "esbuild dist/index.js --watch --bundle --sourcemap --outfile=public/bundle.js"
+    "dev": "tsc -w"
   },
   "dependencies": {
     "express": "^4.17.2",
