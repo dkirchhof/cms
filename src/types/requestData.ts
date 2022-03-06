@@ -1,3 +1,5 @@
+import { EditorFields, IEditorItem } from "../itemTypeBuilder/editorField";
+
 export type RequestBody 
     = GetListBody
     | GetItemBody
@@ -17,17 +19,17 @@ export type GetItemBody = {
     id: string;
 }
 
-export type CreateItemBody<T> = {
+export type CreateItemBody<T extends EditorFields> = {
     method: "createItem";
     typeName: string;
-    values: T;
+    values: IEditorItem<T>;
 };
 
-export type UpdateItemBody<T> = {
+export type UpdateItemBody<T extends EditorFields> = {
     method: "updateItem";
     typeName: string;
     id: string;
-    values: T;
+    values: IEditorItem<T>;
 };
 
 export type DeleteItemBody = {

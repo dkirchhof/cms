@@ -1,4 +1,6 @@
-import { IItemTypeConfig, IItem, EditorItemData } from "../../types/itemTypeConfig";
+import { IItemTypeConfig, IItemTypeConfigForEditor, IItemTypeConfigForList } from "../../itemTypeBuilder";
+import { EditorFields, IEditorItem } from "../../itemTypeBuilder/editorField";
+import { IListItem } from "../../itemTypeBuilder/listField";
 import { CreateItemBody, DeleteItemBody, GetListBody, RequestBody, UpdateItemBody, GetItemBody } from "../../types/requestData";
 
 const request = async <T>(body: RequestBody) => {
@@ -19,27 +21,27 @@ const request = async <T>(body: RequestBody) => {
     }
 };
 
-export const getList = async <LIST_ITEM_DATA>(itemTypeConfig: IItemTypeConfig<LIST_ITEM_DATA>) => {
+export const getList = async <LIST_PROPS extends string>(itemTypeConfig: IItemTypeConfigForList<LIST_PROPS>) => {
     const body: GetListBody = {
         method: "getList",
         typeName: itemTypeConfig.name[0],
     };
 
-    return request<IItem<LIST_ITEM_DATA>[]>(body);
+    return request<IListItem<LIST_PROPS>[]>(body);
 };
 
-export const getItem = async <EDITOR_ITEM_DATA extends EditorItemData>(itemTypeConfig: IItemTypeConfig<any, EDITOR_ITEM_DATA>, id: string) => {
+export const getItem = async <EDITOR extends EditorFields>(itemTypeConfig: IItemTypeConfigForEditor<EDITOR>, id: string) => {
     const body: GetItemBody = {
         method: "getItem",
         typeName: itemTypeConfig.name[0],
         id,
     };
 
-    return request<IItem<EDITOR_ITEM_DATA>>(body);
+    return request<IEditorItem<EDITOR>>(body);
 };
 
-export const createItem = async <EDITOR_ITEM_DATA extends EditorItemData>(itemTypeConfig: IItemTypeConfig<any, EDITOR_ITEM_DATA>, values: EDITOR_ITEM_DATA) => {
-    const body: CreateItemBody<EDITOR_ITEM_DATA> = {
+export const createItem = async <EDITOR extends EditorFields>(itemTypeConfig: IItemTypeConfigForEditor<EDITOR>, values: IEditorItem<EDITOR>) => {
+    const body: CreateItemBody<EDITOR> = {
         method: "createItem",
         typeName: itemTypeConfig.name[0],
         values,
@@ -48,8 +50,8 @@ export const createItem = async <EDITOR_ITEM_DATA extends EditorItemData>(itemTy
     return request<string>(body);
 };
 
-export const updateItem = async <EDITOR_ITEM_DATA extends EditorItemData>(itemTypeConfig: IItemTypeConfig<any, EDITOR_ITEM_DATA>, id: string, values: EDITOR_ITEM_DATA) => {
-    const body: UpdateItemBody<EDITOR_ITEM_DATA> = {
+export const updateItem = async <EDITOR extends EditorFields>(itemTypeConfig: IItemTypeConfigForEditor<EDITOR>, id: string, values: IEditorItem<EDITOR>) => {
+    const body: UpdateItemBody<EDITOR> = {
         method: "updateItem",
         typeName: itemTypeConfig.name[0],
         id,
@@ -59,7 +61,7 @@ export const updateItem = async <EDITOR_ITEM_DATA extends EditorItemData>(itemTy
     return request<void>(body);
 };
 
-export const deleteItem = async (itemTypeConfig: IItemTypeConfig<any, any>, id: string) => {
+export const deleteItem = async (itemTypeConfig: IItemTypeConfig, id: string) => {
     const body: DeleteItemBody = {
         method: "deleteItem",
         typeName: itemTypeConfig.name[0],

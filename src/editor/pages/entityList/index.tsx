@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { match } from "ts-pattern";
-import { IItem, IItemTypeConfig, ItemTypeConfigs, ListItemData } from "../../../types/itemTypeConfig";
+import { IItemTypeConfigForList } from "../../../itemTypeBuilder";
+import { IListItem } from "../../../itemTypeBuilder/listField";
 import { deleteItem } from "../../api";
 import { Breadcrumb } from "../../components/breadcrumb";
 import { PrimaryButton } from "../../components/button";
@@ -13,7 +14,7 @@ import { Header } from "../pageStyles";
 import { Container, Main, Table } from "./styles";
 import { useLoadEntities } from "./useLoadEntities";
 
-export const entityListFactory = (itemTypeConfigs: ItemTypeConfigs) => () => {
+export const entityListFactory = (itemTypeConfigs: IItemTypeConfigForList<any>[]) => () => {
     const state = useLoadEntities(itemTypeConfigs);
 
     return match(state)
@@ -29,7 +30,7 @@ const Loading = () => {
     );
 };
 
-const Loaded = <LIST_ITEM_DATA extends ListItemData>(props: { itemTypeConfig: IItemTypeConfig<LIST_ITEM_DATA>; items: IItem<LIST_ITEM_DATA>[]; }) => {
+const Loaded = <LIST_PROPS extends string>(props: { itemTypeConfig: IItemTypeConfigForList<LIST_PROPS>; items: IListItem<LIST_PROPS>[]; }) => {
     const navigate = useNavigate();
     const showNotification = useNotifications();
 
@@ -57,7 +58,7 @@ const Loaded = <LIST_ITEM_DATA extends ListItemData>(props: { itemTypeConfig: II
 
     const itemTypeSingularName = props.itemTypeConfig.name[0];
     const itemTypePluralName = props.itemTypeConfig.name[1];
-    const listProps = props.itemTypeConfig.listProps;
+    const listProps = props.itemTypeConfig.list;
 
     return (
         <Container>
@@ -100,15 +101,15 @@ const Error = (props: { message: string; }) => (
     </Container>
 );
 
-interface IItemProps<LIST_ITEM_DATA extends any> {
-    listProps: (keyof LIST_ITEM_DATA)[];
-    item: IItem<LIST_ITEM_DATA>;
+interface IItemProps<LIST_PROPS extends string> {
+    listProps: readonly LIST_PROPS[];
+    item: IListItem<LIST_PROPS>;
 
     editItem: (itemId: string) => void;
     delItem: (itemId: string) => void;
 }
 
-const Item = <LIST_ITEM_DATA extends any>(props: IItemProps<LIST_ITEM_DATA>) => {
+const Item = <LIST_PROPS extends string>(props: IItemProps<LIST_PROPS>) => {
     const { ContextMenu, openContextMenu } = useContextMenu([
         [
             { label: CTX_MENU_EDIT, action: () => props.editItem(props.item.id) },
@@ -118,7 +119,7 @@ const Item = <LIST_ITEM_DATA extends any>(props: IItemProps<LIST_ITEM_DATA>) => 
 
     return (
         <tr onClick={() => props.editItem(props.item.id)} onContextMenu={openContextMenu}>
-            {props.listProps.map(prop => <td key={prop.toString()}>{props.item.data[prop]}</td>)}
+            {props.listProps.map(prop => <td key={prop.toString()}>{props.item[prop]}</td>)}
 
             <ContextMenu />
         </tr>

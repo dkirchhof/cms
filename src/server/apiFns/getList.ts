@@ -1,11 +1,11 @@
-import { ItemTypeConfigs } from "../../types/itemTypeConfig";
+import { IItemTypeConfig } from "../../itemTypeBuilder";
 import { GetListBody } from "../../types/requestData";
 import { findItemConfigByName } from "../../utils/findItemTypeConfig";
 import { HTTPError } from "../types/httpError";
 import { IRequest } from "../types/request";
 import { IResponse } from "../types/response";
 
-export const getList = async (req: IRequest<GetListBody>, res: IResponse, itemTypeConfigs: ItemTypeConfigs) => {
+export const getList = async (req: IRequest<GetListBody>, res: IResponse, itemTypeConfigs: IItemTypeConfig[]) => {
     const itemTypeConfig = findItemConfigByName(itemTypeConfigs, req.body.typeName);
 
     if (!itemTypeConfig) {

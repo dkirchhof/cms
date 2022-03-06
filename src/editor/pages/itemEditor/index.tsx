@@ -2,8 +2,9 @@ import update from "immer";
 import { Fragment, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { match } from "ts-pattern";
+import { IItemTypeConfigForEditor } from "../../../itemTypeBuilder";
+import { EditorFields, IEditorField, IEditorItem, PropValidator } from "../../../itemTypeBuilder/editorField";
 import { ItemContext } from "../../../shared/contexts/itemContext";
-import { EditorItemData, IItem, IItemTypeConfig, IPropConfig, ItemTypeConfigs, PropValidator } from "../../../types/itemTypeConfig";
 import { createItem, updateItem } from "../../api";
 import { Breadcrumb } from "../../components/breadcrumb";
 import { PrimaryButton, SecondaryButton } from "../../components/button";
@@ -14,19 +15,17 @@ import { Header } from "../pageStyles";
 import { Container, Main, Group, PropName, Lang, Errors } from "./styles";
 import { useLoadItem } from "./useLoadItem";
 
-interface INonLocalizedFieldGroup extends IPropConfig<any> {
+interface INonLocalizedFieldGroup extends IEditorField<any, false> {
     prop: string;
-    localize: false;
     fields: [INonLocalizedField];
 }
 
-interface ILocalizedFieldGroup extends IPropConfig<any> {
+interface ILocalizedFieldGroup extends IEditorField<any, true> {
     prop: string;
-    localize: true;
     fields: ILocalizedField[];
 }
 
-interface INonLocalizedField<T = any> extends IPropConfig<T> {
+interface INonLocalizedField<T = any> extends IEditorField<T, false> {
     locale?: undefined;
     initialValue: T;
     currentValue: T;
@@ -34,7 +33,7 @@ interface INonLocalizedField<T = any> extends IPropConfig<T> {
     errors: string[];
 }
 
-interface ILocalizedField<T = any> extends IPropConfig<T> {
+interface ILocalizedField<T = any> extends IEditorField<T, true> {
     locale: string;
     initialValue: T;
     currentValue: T;
@@ -45,7 +44,7 @@ interface ILocalizedField<T = any> extends IPropConfig<T> {
 type FieldGroup = INonLocalizedFieldGroup | ILocalizedFieldGroup;
 type EditorFieldGroups = FieldGroup[];
 
-const createLocalizedFieldGroup = (prop: string, propConfig: IPropConfig<any>, data: EditorItemData | undefined, locales: readonly string[]) => {
+const createLocalizedFieldGroup = (prop: string, propConfig: IEditorField<any, true>, item: IEditorItem | undefined, locales: readonly string[]) => {
     const group: ILocalizedFieldGroup = {
         prop,
         localize: true,
@@ -53,7 +52,7 @@ const createLocalizedFieldGroup = (prop: string, propConfig: IPropConfig<any>, d
         editor: propConfig.editor,
         validators: propConfig.validators,
         fields: locales.map(locale => {
-            const value = data?.[prop][locale] || propConfig.defaultValue;
+            const value = (item?.[prop] as any)[locale] || propConfig.defaultValue;
 
             return createLocalizedField(propConfig, value, locale);
         }),
@@ -62,8 +61,8 @@ const createLocalizedFieldGroup = (prop: string, propConfig: IPropConfig<any>, d
     return group;
 };
 
-const createNonLocalizedFieldGroup = (prop: string, propConfig: IPropConfig<any>, data: EditorItemData | undefined) => {
-    const value = data?.[prop] || propConfig.defaultValue;
+const createNonLocalizedFieldGroup = (prop: string, propConfig: IEditorField<any, false>, item: IEditorItem | undefined) => {
+    const value = item?.[prop] || propConfig.defaultValue;
 
     const group: INonLocalizedFieldGroup = {
         prop,
@@ -79,7 +78,7 @@ const createNonLocalizedFieldGroup = (prop: string, propConfig: IPropConfig<any>
     return group;
 };
 
-const createLocalizedField = (propConfig: IPropConfig<any>, value: any, locale: string) => {
+const createLocalizedField = (propConfig: IEditorField<any, true>, value: any, locale: string) => {
     const editorField: ILocalizedField = {
         ...propConfig,
         locale,
@@ -92,7 +91,7 @@ const createLocalizedField = (propConfig: IPropConfig<any>, value: any, locale: 
     return editorField;
 };
 
-const createNonLocalizedField = (propConfig: IPropConfig<any>, value: any) => {
+const createNonLocalizedField = (propConfig: IEditorField<any, false>, value: any) => {
     const editorField: INonLocalizedField = {
         ...propConfig,
         initialValue: value,
@@ -104,13 +103,16 @@ const createNonLocalizedField = (propConfig: IPropConfig<any>, value: any) => {
     return editorField;
 };
 
-const createEditorFieldGroups = <EDITOR_ITEM_DATA extends EditorItemData>(itemTypeConfig: IItemTypeConfig<any, EDITOR_ITEM_DATA>, data: EDITOR_ITEM_DATA | undefined, locales: readonly string[]) => {
-    return Object.entries(itemTypeConfig.editor).map(([prop, propConfig]: [string, IPropConfig<any> & { localize?: true }]) => {
+const createEditorFieldGroups = <EDITOR extends EditorFields>(itemTypeConfig: IItemTypeConfigForEditor<EDITOR>, item: IEditorItem<EDITOR> | undefined, locales: readonly string[]) => {
+    return Object.entries(itemTypeConfig.editor).map(entry => {
+        const prop = entry[0];
+        const propConfig = entry[1] as IEditorField<any, any>;
+
         if (propConfig.localize) {
-            return createLocalizedFieldGroup(prop, propConfig, data, locales);
+            return createLocalizedFieldGroup(prop, propConfig, item, locales);
         }
 
-        return createNonLocalizedFieldGroup(prop, propConfig, data);
+        return createNonLocalizedFieldGroup(prop, propConfig, item);
     });
 };
 
@@ -134,7 +136,7 @@ const validate = <T extends any>(validators: PropValidator<T>[], value: T) => {
     return validators.map(validator => validator(value)).filter(Boolean) as string[];
 };
 
-const getValues = <T extends EditorItemData>(editorFieldGroups: EditorFieldGroups) => {
+const getValues = <T extends IEditorItem>(editorFieldGroups: EditorFieldGroups) => {
     return editorFieldGroups.reduce((result, group) => {
         if (!checkIfGroupHasChanges(group)) {
             return result;
@@ -167,7 +169,7 @@ const getValues = <T extends EditorItemData>(editorFieldGroups: EditorFieldGroup
     }, {} as T);
 };
 
-export const itemEditorFactory = (itemTypeConfigs: ItemTypeConfigs, locales: readonly string[]) => () => {
+export const itemEditorFactory = (itemTypeConfigs: IItemTypeConfigForEditor<any>[], locales: readonly string[]) => () => {
     const state = useLoadItem(itemTypeConfigs);
 
     return match(state)
@@ -183,7 +185,7 @@ const Loading = () => {
     );
 };
 
-const Loaded = (props: { itemTypeConfig: IItemTypeConfig<any, any>; item: IItem<any> | null; locales: readonly string[]; }) => {
+const Loaded = <EDITOR extends EditorFields>(props: { itemTypeConfig: IItemTypeConfigForEditor<EDITOR>; item?: IEditorItem<EDITOR>; locales: readonly string[]; }) => {
     const navigate = useNavigate();
     const showNotification = useNotifications();
 
@@ -192,7 +194,7 @@ const Loaded = (props: { itemTypeConfig: IItemTypeConfig<any, any>; item: IItem<
 
     useEffect(() => {
         setItemId(props.item?.id || null);
-        setEditorFieldGroups(createEditorFieldGroups(props.itemTypeConfig, props.item?.data, props.locales));
+        setEditorFieldGroups(createEditorFieldGroups(props.itemTypeConfig, props.item, props.locales));
     }, [props.item]);
 
     const reset = () => {

@@ -1,12 +1,19 @@
 import { useContext } from "react";
 import { match } from "ts-pattern";
-import { IEditorField } from "../../editor/pages/itemEditor";
 import { ItemContext } from "../contexts/itemContext";
 
-const createEditorFieldsProxy = (target: IEditorField<any, any>[]) => {
+// const createEditorFieldsProxy = (target: IEditorField<any, any>[]) => {
+    // const handler = {
+    //     get: function(target: IEditorField<any, any>[], prop: string) {
+    //         return target.find(field => field.prop === prop)?.currentValue;
+    //     }
+    // };
+// };
+
+const createEditorFieldsProxy = (target: any) => {
     const handler = {
-        get: function(target: IEditorField<any, any>[], prop: string) {
-            return target.find(field => field.prop === prop)?.currentValue;
+        get: function(target: any, prop: string) {
+            return target.find((field: any) => field.prop === prop)?.currentValue;
         }
     };
 

@@ -1,24 +1,25 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { IItem, IItemTypeConfig, ItemTypeConfigs, ListItemData } from "../../../types/itemTypeConfig";
+import { IItemTypeConfigForList } from "../../../itemTypeBuilder";
+import { IListItem } from "../../../itemTypeBuilder/listField";
 import { findItemConfigByName } from "../../../utils/findItemTypeConfig";
 import { getList } from "../../api";
 
-type State<LIST_ITEM_DATA extends ListItemData>
+type State<LIST_PROPS extends string>
     = { state: "LOADING" } 
-    | { state: "LOADED"; itemTypeConfig: IItemTypeConfig<LIST_ITEM_DATA, any>; items: IItem<LIST_ITEM_DATA>[]; }
+    | { state: "LOADED"; itemTypeConfig: IItemTypeConfigForList<LIST_PROPS>; items: IListItem<LIST_PROPS>[]; }
     | { state: "ERROR"; message: string; }
 
-export const useLoadEntities = <LIST_ITEM_DATA extends ListItemData>(itemTypeConfigs: ItemTypeConfigs) => {
+export const useLoadEntities = <LIST_PROPS extends string>(itemTypeConfigs: IItemTypeConfigForList<LIST_PROPS>[]) => {
     const { typeName } = useParams();
 
-    const [state, setState] = useState<State<LIST_ITEM_DATA>>({ state: "LOADING" });
+    const [state, setState] = useState<State<LIST_PROPS>>({ state: "LOADING" });
 
     const fetch = async() => {
         try {
             setState({ state: "LOADING" });
 
-            const itemTypeConfig = findItemConfigByName<LIST_ITEM_DATA, any>(itemTypeConfigs, typeName!);
+            const itemTypeConfig = findItemConfigByName(itemTypeConfigs, typeName!);
 
             if (!itemTypeConfig) {
                 throw new Error("couldn't find typeConfig");

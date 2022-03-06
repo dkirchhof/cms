@@ -4,10 +4,10 @@ import { entityListFactory } from "./pages/entityList";
 import { itemEditorFactory } from "./pages/itemEditor";
 import { typesListFactory } from "./pages/typesList";
 import { Container, GlobalStyles } from "./styles";
-import { ItemTypeConfigs } from "../types/itemTypeConfig";
 import { NotificationsProvider } from "./components/notifications";
+import { IItemTypeConfig } from "../itemTypeBuilder";
 
-export const editorFactory = (itemTypeConfigs: ItemTypeConfigs, locales: readonly string[]) => {
+export const editorFactory = (itemTypeConfigs: IItemTypeConfig[], locales: readonly string[]) => {
     const TypesList = typesListFactory(itemTypeConfigs);
     const EntityList = entityListFactory(itemTypeConfigs);
     const ItemEditor = itemEditorFactory(itemTypeConfigs, locales);

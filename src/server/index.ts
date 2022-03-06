@@ -1,5 +1,5 @@
 import { match } from "ts-pattern";
-import { ItemTypeConfigs } from "../types/itemTypeConfig";
+import { IItemTypeConfig } from "../itemTypeBuilder";
 import { RequestBody } from "../types/requestData";
 import { createItem } from "./apiFns/createItem";
 import { deleteItem } from "./apiFns/deleteItem";
@@ -8,7 +8,7 @@ import { getList } from "./apiFns/getList";
 import { updateItem } from "./apiFns/updateItem";
 import { HTTPError } from "./types/httpError";
 
-export const requestHandler = (itemTypeConfigs: ItemTypeConfigs) => async (req: any, res: any) => {
+export const requestHandlerFactory = (itemTypeConfigs: IItemTypeConfig[]) => async (req: any, res: any) => {
     try {
         if (req.method !== "POST") {
             throw new HTTPError(405, "only post is allowed");

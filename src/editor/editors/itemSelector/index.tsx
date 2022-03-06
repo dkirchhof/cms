@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
-import { IItemTypeConfig } from "../../../types/itemTypeConfig";
 import { getList } from "../../api";
 import { IPropEditorProps } from "../../types/propEditor";
 import Select, { MultiValue } from "react-select";
+import { IItemTypeConfigForList } from "../../../itemTypeBuilder";
 
-interface IOptions<LIST_ITEM_DATA> {
-    itemTypeConfig: IItemTypeConfig<LIST_ITEM_DATA, any>;
+interface IOptions<LIST_PROPS extends string> {
+    itemTypeConfig: IItemTypeConfigForList<LIST_PROPS>;
 }
 
 interface ISelectOption { label: string; value: string; }
 
-export const itemSelectorFactory = <LIST_ITEM_DATA extends any>(options: IOptions<LIST_ITEM_DATA>) => (props: IPropEditorProps<string>) => {
+export const itemSelectorFactory = <LIST_PROPS extends string>(options: IOptions<LIST_PROPS>) => (props: IPropEditorProps<string>) => {
     const [items, setItems] = useState<ISelectOption[]>([]);
 
     const init = async () => {
@@ -42,7 +42,7 @@ export const itemSelectorFactory = <LIST_ITEM_DATA extends any>(options: IOption
 };
 
 
-export const itemsSelectorFactory = <LIST_ITEM_DATA extends any>(options: IOptions<LIST_ITEM_DATA>) => (props: IPropEditorProps<string[]>) => {
+export const itemsSelectorFactory = <LIST_PROPS extends string>(options: IOptions<LIST_PROPS>) => (props: IPropEditorProps<string[]>) => {
     const [items, setItems] = useState<ISelectOption[]>([]);
 
     const init = async () => {
