@@ -1,8 +1,12 @@
 import { editorFactory } from "./editor";
 import { createItemType, IItemType } from "./itemTypeBuilder";
+import { createEditorType } from "./itemTypeBuilder/editorField";
+import { createListType } from "./itemTypeBuilder/listField";
 import { requestHandlerFactory } from "./server";
 
 export const createItemTypeBuilder = <LOCALES extends string>(locales: readonly LOCALES[]) => ({
+    createListType,
+    createEditorType: createEditorType<LOCALES>(),
     createItemType: createItemType<LOCALES>(),
 });
 

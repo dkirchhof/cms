@@ -104,7 +104,7 @@ const createNonLocalizedField = (propConfig: IEditorField<any, false>, value: an
 };
 
 const createEditorFieldGroups = <EDITOR extends EditorFields>(itemTypeConfig: IItemTypeConfigForEditor<EDITOR>, item: IEditorItem<EDITOR> | undefined, locales: readonly string[]) => {
-    return Object.entries(itemTypeConfig.editor).map(entry => {
+    return Object.entries(itemTypeConfig.editorType.fields).map(entry => {
         const prop = entry[0];
         const propConfig = entry[1] as IEditorField<any, any>;
 

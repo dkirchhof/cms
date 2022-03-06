@@ -20,3 +20,13 @@ export type IEditorItem<T extends EditorFields<any> = any, LOCALES extends strin
         ? Record<LOCALES, U>
         : never;
 };
+
+export interface IEditorType<EDITOR extends EditorFields = any, LOCALES extends string = any> {
+    fields: EditorFields;
+    t: IEditorItem<EDITOR, LOCALES>;
+}
+
+export const createEditorType = <LOCALES extends string>() => <EDITOR extends EditorFields>(fields: EDITOR): IEditorType<EDITOR, LOCALES> => ({
+    fields,
+    t: null as any,
+});

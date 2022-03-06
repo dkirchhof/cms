@@ -58,7 +58,7 @@ const Loaded = <LIST_PROPS extends string>(props: { itemTypeConfig: IItemTypeCon
 
     const itemTypeSingularName = props.itemTypeConfig.name[0];
     const itemTypePluralName = props.itemTypeConfig.name[1];
-    const listProps = props.itemTypeConfig.list;
+    const listProps = props.itemTypeConfig.listType.listProps;
 
     return (
         <Container>
