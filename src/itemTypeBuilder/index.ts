@@ -9,7 +9,7 @@ export interface IItemTypeConfig<LIST_PROPS extends string = any, EDITOR extends
     editorType: IEditorType<EDITOR, LOCALES>;
 
     api: {
-        getList: (locale: LOCALES) => Promise<IListItem<LIST_PROPS>[]>;
+        getList: () => Promise<IListItem<LIST_PROPS>[]>;
 
         getItem: (id: string) => Promise<IEditorItem<EDITOR, LOCALES> | undefined>;
         createItem: (values: IEditorItem<EDITOR, LOCALES>) => Promise<string>;
