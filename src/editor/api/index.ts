@@ -3,8 +3,18 @@ import { EditorFields, IEditorItem } from "../../itemTypeBuilder/editorField";
 import { IListItem } from "../../itemTypeBuilder/listField";
 import { CreateItemBody, DeleteItemBody, GetListBody, RequestBody, UpdateItemBody, GetItemBody } from "../../types/requestData";
 
+const getResponseContent = async (response: Response) => {
+    const contentType = response.headers.get("Content-Type");
+
+    if (contentType?.startsWith("application/json")) {
+        return response.json();
+    }
+
+    return response.text();
+};
+
 const request = async <T>(body: RequestBody) => {
-    const result = await fetch("/api/cms", {
+    const response = await fetch("/api/cms", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -12,12 +22,12 @@ const request = async <T>(body: RequestBody) => {
         body: JSON.stringify(body),
     });
 
-    if (result.ok) {
-        return await result.json() as T;
-    } else {
-        const error = await result.text();
+    const responseBody = await getResponseContent(response);
 
-        throw new Error(error);
+    if (response.ok) {
+        return responseBody as T;
+    } else {
+        throw new Error(responseBody);
     }
 };
 

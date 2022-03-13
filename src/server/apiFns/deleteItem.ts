@@ -14,5 +14,5 @@ export const deleteItem = async (req: IRequest<DeleteItemBody>, res: IResponse, 
 
     await itemTypeConfig.api.deleteItem(req.body.id);
 
-    res.json({});
+    res.end();
 };

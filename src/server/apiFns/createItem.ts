@@ -14,5 +14,5 @@ export const createItem = async (req: IRequest<CreateItemBody<any>>, res: IRespo
 
     const id = await itemTypeConfig.api.createItem(req.body.values);
 
-    res.json(id);
+    res.send(id);
 };

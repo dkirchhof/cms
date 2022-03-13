@@ -14,5 +14,5 @@ export const updateItem = async (req: IRequest<UpdateItemBody<any>>, res: IRespo
 
     await itemTypeConfig.api.updateItem(req.body.id, req.body.values);
 
-    res.json({});
+    res.end();
 };

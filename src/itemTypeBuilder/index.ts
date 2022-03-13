@@ -17,7 +17,7 @@ export interface IItemTypeConfig<LIST_PROPS extends string = any, EDITOR extends
     api: {
         getList: () => Promise<IListItem<LIST_PROPS>[]>;
 
-        getItem: (id: string) => Promise<IEditorItem<EDITOR, LOCALES> | undefined>;
+        getItem: (id: string) => Promise<IEditorItem<EDITOR, LOCALES>>;
         createItem: (values: IEditorItem<EDITOR, LOCALES>) => Promise<string>;
         updateItem: (id: string, values: Partial2<IEditorItem<EDITOR, LOCALES>>) => Promise<void>;
         deleteItem: (id: string) => Promise<void>;
