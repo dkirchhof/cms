@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { match } from "ts-pattern";
 import { IItemTypeConfigForList } from "../../../itemTypeBuilder";
 import { IListItem } from "../../../itemTypeBuilder/listField";
+import { deleteItem, getList } from "../../api";
 import { Breadcrumb } from "../../components/breadcrumb";
 import { PrimaryButton } from "../../components/button";
 import { ErrorDisplay } from "../../components/errorDisplay";
@@ -64,7 +65,7 @@ const Loaded = (props: { itemTypeConfig: IItemTypeConfigForList<any>; }) => {
     const fetchItems = async (searchParams: URLSearchParams) => {
         const page = getIntParam(searchParams, "page", 1);
 
-        const result = await props.itemTypeConfig.api.getList(page, PAGE_SIZE);
+        const result = await getList(props.itemTypeConfig, page, PAGE_SIZE);
 
         setState({
             items: result.items,
@@ -93,7 +94,7 @@ const Loaded = (props: { itemTypeConfig: IItemTypeConfigForList<any>; }) => {
 
     const delItem = async (itemId: string) => {
         try {
-            await props.itemTypeConfig.api.deleteItem(itemId);
+            await deleteItem(props.itemTypeConfig, itemId);
             
             showNotification({ type: "success", message: ITEM_DELETED(props.itemTypeConfig.name[0]) });
             fetchItems(searchParams);

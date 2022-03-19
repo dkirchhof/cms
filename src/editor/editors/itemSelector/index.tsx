@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { getList } from "../../api";
 import { IPropEditorProps } from "../../types/propEditor";
 import Select, { MultiValue } from "react-select";
 import { IItemTypeConfigForList } from "../../../itemTypeBuilder";
@@ -13,7 +14,7 @@ export const itemSelectorFactory = <LIST_PROPS extends string>(options: IOptions
     const [items, setItems] = useState<ISelectOption[]>([]);
 
     const init = async () => {
-        const { items } = await options.itemTypeConfig.api.getList();
+        const { items } = await getList(options.itemTypeConfig);
 
         setItems(
             items.map(item => ({ label: options.itemTypeConfig.toString(item), value: item.id }))
@@ -45,7 +46,7 @@ export const itemsSelectorFactory = <LIST_PROPS extends string>(options: IOption
     const [items, setItems] = useState<ISelectOption[]>([]);
 
     const init = async () => {
-        const { items } = await options.itemTypeConfig.api.getList();
+        const { items } = await getList(options.itemTypeConfig);
 
         setItems(
             items.map(item => ({ label: options.itemTypeConfig.toString(item), value: item.id }))

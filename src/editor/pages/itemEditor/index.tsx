@@ -5,6 +5,7 @@ import { match } from "ts-pattern";
 import { IItemTypeConfigForEditor } from "../../../itemTypeBuilder";
 import { EditorFields, IEditorField, IEditorItem, PropValidator } from "../../../itemTypeBuilder/editorField";
 import { ItemContext } from "../../../shared/contexts/itemContext";
+import { createItem, updateItem } from "../../api";
 import { Breadcrumb } from "../../components/breadcrumb";
 import { PrimaryButton, SecondaryButton } from "../../components/button";
 import { ErrorDisplay } from "../../components/errorDisplay";
@@ -229,12 +230,12 @@ const Loaded = <EDITOR extends EditorFields>(props: { itemTypeConfig: IItemTypeC
             const values = getValues(editorFieldGroups);
 
             if (itemId === null) {
-                const id = await props.itemTypeConfig.api.createItem(values as any);
+                const id = await createItem(props.itemTypeConfig, values);
 
                 showNotification({ type: "success", message: ITEM_CREATED(props.itemTypeConfig.name[0]) });
                 navigate(`/content/${props.itemTypeConfig.name[1]}/${id}`, { replace: true });
             } else {
-                await props.itemTypeConfig.api.updateItem(itemId, values as any);
+                await updateItem(props.itemTypeConfig, itemId, values);
 
                 showNotification({ type: "success", message: ITEM_UPDATED(props.itemTypeConfig.name[0]) });
                 setCurrentToInitialValues();
