@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { IItemTypeConfigForEditor } from "../../../itemTypeBuilder";
 import { EditorFields, IEditorItem } from "../../../itemTypeBuilder/editorField";
 import { findItemConfigByName } from "../../../utils/findItemTypeConfig";
-import { getItem } from "../../api";
+import { createApi } from "../../api";
 
 type State<EDITOR extends EditorFields>
     = { state: "LOADING" } 
@@ -28,7 +28,7 @@ export const useLoadItem = <EDITOR extends EditorFields>(itemTypeConfigs: IItemT
             if(id === "new") {
                 setState({ state: "LOADED", itemTypeConfig, item: undefined });
             } else {
-               const item = await getItem(itemTypeConfig, id!);
+               const item = await createApi(itemTypeConfig).getItem(id!);
 
                setState({ state: "LOADED", itemTypeConfig, item });
             }

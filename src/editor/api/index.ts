@@ -1,7 +1,5 @@
-import { IItemType, IItemTypeConfigForEditor, IItemTypeConfigForList } from "../../itemTypeBuilder";
-import { EditorFields, IEditorItem } from "../../itemTypeBuilder/editorField";
-import { IListItem } from "../../itemTypeBuilder/listField";
-import { CreateItemBody, DeleteItemBody, GetListBody, RequestBody, UpdateItemBody, GetItemBody } from "../../types/requestData";
+import { IItemType } from "../../itemTypeBuilder";
+import { IRequestBody } from "../../types/requestData";
 
 const getResponseContent = async (response: Response) => {
     const contentType = response.headers.get("Content-Type");
@@ -13,7 +11,7 @@ const getResponseContent = async (response: Response) => {
     return response.text();
 };
 
-const request = async <T>(body: RequestBody) => {
+const request = async <T>(body: IRequestBody) => {
     const response = await fetch("/api/cms", {
         method: "POST",
         headers: {
@@ -31,54 +29,16 @@ const request = async <T>(body: RequestBody) => {
     }
 };
 
-export const getList = async <LIST_PROPS extends string>(itemTypeConfig: IItemTypeConfigForList<LIST_PROPS>, page?: number, pageSize?: number) => {
-    const body: GetListBody = {
-        method: "getList",
-        typeName: itemTypeConfig.name[0],
-        page,
-        pageSize,
+export const createApi = <ITEM_TYPE extends IItemType>(itemType: ITEM_TYPE) => {
+    const handler = {
+        get(_: any, fn: keyof IItemType["api"]) {
+            return function(...params: any[]) {
+                // console.log(itemType.name[0], fn, params);
+
+                return request({ fn, itemType: itemType.name[0], params });
+            };
+        },
     };
 
-    return request<{ items: IListItem<LIST_PROPS>[]; count: number; }>(body);
-};
-
-export const getItem = async <EDITOR extends EditorFields>(itemTypeConfig: IItemTypeConfigForEditor<EDITOR>, id: string) => {
-    const body: GetItemBody = {
-        method: "getItem",
-        typeName: itemTypeConfig.name[0],
-        id,
-    };
-
-    return request<IEditorItem<EDITOR>>(body);
-};
-
-export const createItem = async <EDITOR extends EditorFields>(itemTypeConfig: IItemTypeConfigForEditor<EDITOR>, values: IEditorItem<EDITOR>) => {
-    const body: CreateItemBody<EDITOR> = {
-        method: "createItem",
-        typeName: itemTypeConfig.name[0],
-        values,
-    };
-
-    return request<string>(body);
-};
-
-export const updateItem = async <EDITOR extends EditorFields>(itemTypeConfig: IItemTypeConfigForEditor<EDITOR>, id: string, values: IEditorItem<EDITOR>) => {
-    const body: UpdateItemBody<EDITOR> = {
-        method: "updateItem",
-        typeName: itemTypeConfig.name[0],
-        id,
-        values,
-    };
-
-    return request<void>(body);
-};
-
-export const deleteItem = async (itemTypeConfig: IItemType, id: string) => {
-    const body: DeleteItemBody = {
-        method: "deleteItem",
-        typeName: itemTypeConfig.name[0],
-        id,
-    };
-
-    return request<void>(body);
+    return new Proxy(itemType.api, handler) as ITEM_TYPE["api"];
 };

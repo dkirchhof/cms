@@ -1,28 +1,30 @@
 import { match } from "ts-pattern";
 import { IItemType } from "../itemTypeBuilder";
-import { RequestBody } from "../types/requestData";
-import { createItem } from "./apiFns/createItem";
-import { deleteItem } from "./apiFns/deleteItem";
-import { getItem } from "./apiFns/getItem";
-import { getList } from "./apiFns/getList";
-import { updateItem } from "./apiFns/updateItem";
+import { IRequestBody } from "../types/requestData";
+import { findItemConfigByName } from "../utils/findItemTypeConfig";
 import { HTTPError } from "./types/httpError";
+import { IRequest } from "./types/request";
+import { IResponse } from "./types/response";
 
-export const requestHandlerFactory = (itemTypeConfigs: IItemType[]) => async (req: any, res: any) => {
+export const requestHandlerFactory = (itemTypeConfigs: IItemType[]) => async (req: IRequest<IRequestBody>, res: IResponse) => {
     try {
         if (req.method !== "POST") {
             throw new HTTPError(405, "only post is allowed");
         }
 
-        const body: RequestBody = req.body;
+        const itemType = findItemConfigByName(itemTypeConfigs, req.body.itemType);
 
-        await match(body.method)
-            .with("getList", () => getList(req, res, itemTypeConfigs))
-            .with("getItem", () => getItem(req, res, itemTypeConfigs))
-            .with("createItem", () => createItem(req, res, itemTypeConfigs))
-            .with("updateItem", () => updateItem(req, res, itemTypeConfigs))
-            .with("deleteItem", () => deleteItem(req, res, itemTypeConfigs))
-            .exhaustive();
+        if (!itemType) {
+            throw new HTTPError(400, "couldn't find typeConfig");
+        }
+
+        const result = await (itemType.api[req.body.fn] as any)(...req.body.params);
+        
+        match(typeof result)
+            .with("object", () => res.json(result))
+            .with("string", () => res.send(result))
+            .otherwise(() => res.end());
+
     } catch (e) {
         if (e instanceof HTTPError) {
             res.status(e.code).send(e.message);
