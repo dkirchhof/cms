@@ -2,7 +2,7 @@ import update from "immer";
 import { Fragment, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { match } from "ts-pattern";
-import { IItemTypeConfigForEditor } from "../../../itemTypeBuilder";
+import { IItemTypeForEditor } from "../../../itemTypeBuilder";
 import { EditorFields, IEditorField, IEditorItem, PropValidator } from "../../../itemTypeBuilder/editorField";
 import { ItemContext } from "../../../shared/contexts/itemContext";
 import { createApi } from "../../api";
@@ -103,8 +103,8 @@ const createNonLocalizedField = (propConfig: IEditorField<any, false>, value: an
     return editorField;
 };
 
-const createEditorFieldGroups = <EDITOR extends EditorFields>(itemTypeConfig: IItemTypeConfigForEditor<EDITOR>, item: IEditorItem<EDITOR> | undefined, locales: readonly string[]) => {
-    return Object.entries(itemTypeConfig.editorType.fields).map(entry => {
+const createEditorFieldGroups = <EDITOR extends EditorFields>(itemType: IItemTypeForEditor<EDITOR>, item: IEditorItem<EDITOR> | undefined, locales: readonly string[]) => {
+    return Object.entries(itemType.editorType.fields).map(entry => {
         const prop = entry[0];
         const propConfig = entry[1] as IEditorField<any, any>;
 
@@ -169,12 +169,12 @@ const getValues = <T extends IEditorItem>(editorFieldGroups: EditorFieldGroups) 
     }, {} as T);
 };
 
-export const itemEditorFactory = (itemTypeConfigs: IItemTypeConfigForEditor<any>[], locales: readonly string[]) => () => {
-    const state = useLoadItem(itemTypeConfigs);
+export const itemEditorFactory = (itemTypes: IItemTypeForEditor<any>[], locales: readonly string[]) => () => {
+    const state = useLoadItem(itemTypes);
 
     return match(state)
         .with({ state: "LOADING" }, () => <Loading />)
-        .with({ state: "LOADED" }, ({ itemTypeConfig, item }) => <Loaded itemTypeConfig={itemTypeConfig} item={item} locales={locales} />)
+        .with({ state: "LOADED" }, ({ itemType, item }) => <Loaded itemType={itemType} item={item} locales={locales} />)
         .with({ state: "ERROR" }, ({ message }) => <Error message={message} />)
         .exhaustive();
 };
@@ -185,7 +185,7 @@ const Loading = () => {
     );
 };
 
-const Loaded = <EDITOR extends EditorFields>(props: { itemTypeConfig: IItemTypeConfigForEditor<EDITOR>; item?: IEditorItem<EDITOR>; locales: readonly string[]; }) => {
+const Loaded = <EDITOR extends EditorFields>(props: { itemType: IItemTypeForEditor<EDITOR>; item?: IEditorItem<EDITOR>; locales: readonly string[]; }) => {
     const navigate = useNavigate();
     const showNotification = useNotifications();
 
@@ -194,7 +194,7 @@ const Loaded = <EDITOR extends EditorFields>(props: { itemTypeConfig: IItemTypeC
 
     useEffect(() => {
         setItemId(props.item?.id || null);
-        setEditorFieldGroups(createEditorFieldGroups(props.itemTypeConfig, props.item, props.locales));
+        setEditorFieldGroups(createEditorFieldGroups(props.itemType, props.item, props.locales));
     }, [props.item]);
 
     const reset = () => {
@@ -230,14 +230,14 @@ const Loaded = <EDITOR extends EditorFields>(props: { itemTypeConfig: IItemTypeC
             const values = getValues(editorFieldGroups);
 
             if (itemId === null) {
-                const id = await createApi(props.itemTypeConfig).createItem(values as any);
+                const id = await createApi(props.itemType).createItem(values as any);
 
-                showNotification({ type: "success", message: ITEM_CREATED(props.itemTypeConfig.name[0]) });
-                navigate(`/content/${props.itemTypeConfig.name[1]}/${id}`, { replace: true });
+                showNotification({ type: "success", message: ITEM_CREATED(props.itemType.name[0]) });
+                navigate(`/content/${props.itemType.name[1]}/${id}`, { replace: true });
             } else {
-                await createApi(props.itemTypeConfig).updateItem(itemId, values as any);
+                await createApi(props.itemType).updateItem(itemId, values as any);
 
-                showNotification({ type: "success", message: ITEM_UPDATED(props.itemTypeConfig.name[0]) });
+                showNotification({ type: "success", message: ITEM_UPDATED(props.itemType.name[0]) });
                 setCurrentToInitialValues();
             }
         } catch (e: any) {
@@ -279,7 +279,7 @@ const Loaded = <EDITOR extends EditorFields>(props: { itemTypeConfig: IItemTypeC
         }
     };
 
-    const itemTypePluralName = props.itemTypeConfig.name[1];
+    const itemTypePluralName = props.itemType.name[1];
     const hasChanges = checkIfGroupsHaveChanges(editorFieldGroups);
     const hasErrors = checkIfGroupsHaveErrors(editorFieldGroups);
 

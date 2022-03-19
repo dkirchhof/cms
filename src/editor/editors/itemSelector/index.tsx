@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { IPropEditorProps } from "../../types/propEditor";
 import Select, { MultiValue } from "react-select";
-import { IItemTypeConfigForList } from "../../../itemTypeBuilder";
+import { IItemTypeForList } from "../../../itemTypeBuilder";
 import { createApi } from "../../api";
 
 interface IOptions<LIST_PROPS extends string> {
-    itemTypeConfig: IItemTypeConfigForList<LIST_PROPS>;
+    itemType: IItemTypeForList<LIST_PROPS>;
 }
 
 interface ISelectOption { label: string; value: string; }
@@ -14,10 +14,10 @@ export const itemSelectorFactory = <LIST_PROPS extends string>(options: IOptions
     const [items, setItems] = useState<ISelectOption[]>([]);
 
     const init = async () => {
-        const { items } = await createApi(options.itemTypeConfig).getList();
+        const { items } = await createApi(options.itemType).getList();
 
         setItems(
-            items.map(item => ({ label: options.itemTypeConfig.toString(item), value: item.id }))
+            items.map(item => ({ label: options.itemType.toString(item), value: item.id }))
         );
     };
 
@@ -46,10 +46,10 @@ export const itemsSelectorFactory = <LIST_PROPS extends string>(options: IOption
     const [items, setItems] = useState<ISelectOption[]>([]);
 
     const init = async () => {
-        const { items } = await createApi(options.itemTypeConfig).getList();
+        const { items } = await createApi(options.itemType).getList();
 
         setItems(
-            items.map(item => ({ label: options.itemTypeConfig.toString(item), value: item.id }))
+            items.map(item => ({ label: options.itemType.toString(item), value: item.id }))
         );
     };
 

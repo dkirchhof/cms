@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { IItemTypeConfigForEditor } from "../../../itemTypeBuilder";
+import { IItemTypeForEditor } from "../../../itemTypeBuilder";
 import { EditorFields, IEditorItem } from "../../../itemTypeBuilder/editorField";
-import { findItemConfigByName } from "../../../utils/findItemTypeConfig";
+import { findItemTypeByName } from "../../../utils/findItemType";
 import { createApi } from "../../api";
 
 type State<EDITOR extends EditorFields>
     = { state: "LOADING" } 
-    | { state: "LOADED"; itemTypeConfig: IItemTypeConfigForEditor<EDITOR>; item?: IEditorItem<EDITOR>; }
+    | { state: "LOADED"; itemType: IItemTypeForEditor<EDITOR>; item?: IEditorItem<EDITOR>; }
     | { state: "ERROR"; message: string; }
 
-export const useLoadItem = <EDITOR extends EditorFields>(itemTypeConfigs: IItemTypeConfigForEditor<EDITOR>[]) => {
+export const useLoadItem = <EDITOR extends EditorFields>(itemTypes: IItemTypeForEditor<EDITOR>[]) => {
     const { typeName, id } = useParams();
 
     const [state, setState] = useState<State<EDITOR>>({ state: "LOADING" });
@@ -19,18 +19,18 @@ export const useLoadItem = <EDITOR extends EditorFields>(itemTypeConfigs: IItemT
         try {
             setState({ state: "LOADING" });
 
-            const itemTypeConfig = findItemConfigByName(itemTypeConfigs, typeName!);
+            const itemType = findItemTypeByName(itemTypes, typeName!);
 
-            if (!itemTypeConfig) {
+            if (!itemType) {
                 throw new Error("couldn't find typeConfig");
             }
 
             if(id === "new") {
-                setState({ state: "LOADED", itemTypeConfig, item: undefined });
+                setState({ state: "LOADED", itemType, item: undefined });
             } else {
-               const item = await createApi(itemTypeConfig).getItem(id!);
+               const item = await createApi(itemType).getItem(id!);
 
-               setState({ state: "LOADED", itemTypeConfig, item });
+               setState({ state: "LOADED", itemType, item });
             }
         } catch (e: any) {
             setState({ state: "ERROR", message: e.message });

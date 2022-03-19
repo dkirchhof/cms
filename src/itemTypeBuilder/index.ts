@@ -24,8 +24,8 @@ export interface IItemType<LIST_PROPS extends string = any, EDITOR extends Edito
     };
 }
 
-export type IItemTypeConfigForList<LIST_PROPS extends string> = IItemType<LIST_PROPS, any, any>;
-export type IItemTypeConfigForEditor<EDITOR extends EditorFields<any>> = IItemType<any, EDITOR, any>;
+export type IItemTypeForList<LIST_PROPS extends string> = IItemType<LIST_PROPS, any, any>;
+export type IItemTypeForEditor<EDITOR extends EditorFields<any>> = IItemType<any, EDITOR, any>;
 
 export const createItemType = <LOCALES extends string>() => <LIST extends string = any, EDITOR extends EditorFields<any> = any>(
     config: IItemType<LIST, EDITOR, LOCALES>

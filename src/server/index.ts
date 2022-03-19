@@ -1,18 +1,18 @@
 import { match } from "ts-pattern";
 import { IItemType } from "../itemTypeBuilder";
 import { IRequestBody } from "../types/requestData";
-import { findItemConfigByName } from "../utils/findItemTypeConfig";
+import { findItemTypeByName } from "../utils/findItemType";
 import { HTTPError } from "./types/httpError";
 import { IRequest } from "./types/request";
 import { IResponse } from "./types/response";
 
-export const requestHandlerFactory = (itemTypeConfigs: IItemType[]) => async (req: IRequest<IRequestBody>, res: IResponse) => {
+export const requestHandlerFactory = (itemTypes: IItemType[]) => async (req: IRequest<IRequestBody>, res: IResponse) => {
     try {
         if (req.method !== "POST") {
             throw new HTTPError(405, "only post is allowed");
         }
 
-        const itemType = findItemConfigByName(itemTypeConfigs, req.body.itemType);
+        const itemType = findItemTypeByName(itemTypes, req.body.itemType);
 
         if (!itemType) {
             throw new HTTPError(400, "couldn't find typeConfig");

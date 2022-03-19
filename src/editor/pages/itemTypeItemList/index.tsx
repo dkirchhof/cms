@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { match } from "ts-pattern";
-import { IItemTypeConfigForList } from "../../../itemTypeBuilder";
+import { IItemTypeForList } from "../../../itemTypeBuilder";
 import { IListItem } from "../../../itemTypeBuilder/listField";
 import { createApi } from "../../api";
 import { Breadcrumb } from "../../components/breadcrumb";
@@ -12,7 +12,7 @@ import { CREATE_NEW_ITEM, ITEM_DELETED } from "../../messages";
 import { Header } from "../pageStyles";
 import { ListItem } from "./listItem";
 import { Container, Main, Pagination, Table } from "./styles";
-import { useLoadItemTypeConfig } from "./useLoadItemTypeConfig";
+import { useLoadItemType } from "./useLoadItemType";
 
 const PAGE_SIZE = 10;
 
@@ -33,12 +33,12 @@ interface IState {
     pageCount: number;
 }
 
-export const itemTypeItemListFactory = (itemTypeConfigs: IItemTypeConfigForList<any>[]) => () => {
-    const state = useLoadItemTypeConfig(itemTypeConfigs);
+export const itemTypeItemListFactory = (itemTypes: IItemTypeForList<any>[]) => () => {
+    const state = useLoadItemType(itemTypes);
 
     return match(state)
         .with({ state: "LOADING" }, () => <Loading />)
-        .with({ state: "LOADED" }, ({ itemTypeConfig }) => <Loaded itemTypeConfig={itemTypeConfig} />)
+        .with({ state: "LOADED" }, ({ itemType }) => <Loaded itemType={itemType} />)
         .with({ state: "ERROR" }, ({ message }) => <Error message={message} />)
         .exhaustive();
 };
@@ -55,7 +55,7 @@ const Error = (props: { message: string; }) => (
     </Container>
 );
 
-const Loaded = (props: { itemTypeConfig: IItemTypeConfigForList<any>; }) => {
+const Loaded = (props: { itemType: IItemTypeForList<any>; }) => {
     const [searchParams, setSearchParams] = useSearchParams();
     const navigate = useNavigate();
     const showNotification = useNotifications();
@@ -65,7 +65,7 @@ const Loaded = (props: { itemTypeConfig: IItemTypeConfigForList<any>; }) => {
     const fetchItems = async (searchParams: URLSearchParams) => {
         const page = getIntParam(searchParams, "page", 1);
 
-        const result = await createApi(props.itemTypeConfig).getList(page, PAGE_SIZE);
+        const result = await createApi(props.itemType).getList(page, PAGE_SIZE);
 
         setState({
             items: result.items,
@@ -94,9 +94,9 @@ const Loaded = (props: { itemTypeConfig: IItemTypeConfigForList<any>; }) => {
 
     const delItem = async (itemId: string) => {
         try {
-            await createApi(props.itemTypeConfig).deleteItem(itemId);
+            await createApi(props.itemType).deleteItem(itemId);
             
-            showNotification({ type: "success", message: ITEM_DELETED(props.itemTypeConfig.name[0]) });
+            showNotification({ type: "success", message: ITEM_DELETED(props.itemType.name[0]) });
             fetchItems(searchParams);
         } catch (e: any) {
             showNotification({ type: "error", message: e.message });
@@ -119,9 +119,9 @@ const Loaded = (props: { itemTypeConfig: IItemTypeConfigForList<any>; }) => {
         setSearchParams({ page: state.pageCount.toString() });
     };
 
-    const itemTypeSingularName = props.itemTypeConfig.name[0];
-    const itemTypePluralName = props.itemTypeConfig.name[1];
-    const listProps = props.itemTypeConfig.listType.listProps;
+    const itemTypeSingularName = props.itemType.name[0];
+    const itemTypePluralName = props.itemType.name[1];
+    const listProps = props.itemType.listType.listProps;
 
     const isFirstPage = state.page === 1;
     const isLastPage = state.page === state.pageCount;

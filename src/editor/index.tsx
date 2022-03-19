@@ -7,10 +7,10 @@ import { NotificationsProvider } from "./components/notifications";
 import { IItemType } from "../itemTypeBuilder";
 import { itemTypeItemListFactory } from "./pages/itemTypeItemList";
 
-export const editorFactory = (itemTypeConfigs: IItemType[], locales: readonly string[]) => {
-    const TypesList = typesListFactory(itemTypeConfigs);
-    const ItemTypeItemList = itemTypeItemListFactory(itemTypeConfigs);
-    const ItemEditor = itemEditorFactory(itemTypeConfigs, locales);
+export const editorFactory = (itemTypes: IItemType[], locales: readonly string[]) => {
+    const TypesList = typesListFactory(itemTypes);
+    const ItemTypeItemList = itemTypeItemListFactory(itemTypes);
+    const ItemEditor = itemEditorFactory(itemTypes, locales);
 
     return () => {
         return (
