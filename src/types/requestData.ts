@@ -11,6 +11,8 @@ export type RequestBody
 export type GetListBody = { 
     method: "getList";
     typeName: string;
+    page?: number;
+    pageSize?: number;
 };
 
 export type GetItemBody = {

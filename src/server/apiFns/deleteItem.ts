@@ -1,11 +1,11 @@
-import { IItemTypeConfig } from "../../itemTypeBuilder";
+import { IItemType } from "../../itemTypeBuilder";
 import { DeleteItemBody } from "../../types/requestData";
 import { findItemConfigByName } from "../../utils/findItemTypeConfig";
 import { HTTPError } from "../types/httpError";
 import { IRequest } from "../types/request";
 import { IResponse } from "../types/response";
 
-export const deleteItem = async (req: IRequest<DeleteItemBody>, res: IResponse, itemTypeConfigs: IItemTypeConfig[]) => {
+export const deleteItem = async (req: IRequest<DeleteItemBody>, res: IResponse, itemTypeConfigs: IItemType[]) => {
     const itemTypeConfig = findItemConfigByName(itemTypeConfigs, req.body.typeName);
 
     if (!itemTypeConfig) {

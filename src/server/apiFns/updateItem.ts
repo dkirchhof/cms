@@ -1,11 +1,11 @@
-import { IItemTypeConfig } from "../../itemTypeBuilder";
+import { IItemType } from "../../itemTypeBuilder";
 import { UpdateItemBody } from "../../types/requestData";
 import { findItemConfigByName } from "../../utils/findItemTypeConfig";
 import { HTTPError } from "../types/httpError";
 import { IRequest } from "../types/request";
 import { IResponse } from "../types/response";
 
-export const updateItem = async (req: IRequest<UpdateItemBody<any>>, res: IResponse, itemTypeConfigs: IItemTypeConfig[]) => {
+export const updateItem = async (req: IRequest<UpdateItemBody<any>>, res: IResponse, itemTypeConfigs: IItemType[]) => {
     const itemTypeConfig = findItemConfigByName(itemTypeConfigs, req.body.typeName);
 
     if (!itemTypeConfig) {

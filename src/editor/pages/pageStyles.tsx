@@ -25,6 +25,6 @@ export const Header = styled.header`
     }
 
     > button {
-        width: 128px;
+        min-width: 128px;
     }
 `;

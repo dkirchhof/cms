@@ -1,4 +1,4 @@
-import { IItemTypeConfig, IItemTypeConfigForEditor, IItemTypeConfigForList } from "../../itemTypeBuilder";
+import { IItemType, IItemTypeConfigForEditor, IItemTypeConfigForList } from "../../itemTypeBuilder";
 import { EditorFields, IEditorItem } from "../../itemTypeBuilder/editorField";
 import { IListItem } from "../../itemTypeBuilder/listField";
 import { CreateItemBody, DeleteItemBody, GetListBody, RequestBody, UpdateItemBody, GetItemBody } from "../../types/requestData";
@@ -31,13 +31,15 @@ const request = async <T>(body: RequestBody) => {
     }
 };
 
-export const getList = async <LIST_PROPS extends string>(itemTypeConfig: IItemTypeConfigForList<LIST_PROPS>) => {
+export const getList = async <LIST_PROPS extends string>(itemTypeConfig: IItemTypeConfigForList<LIST_PROPS>, page?: number, pageSize?: number) => {
     const body: GetListBody = {
         method: "getList",
         typeName: itemTypeConfig.name[0],
+        page,
+        pageSize,
     };
 
-    return request<IListItem<LIST_PROPS>[]>(body);
+    return request<{ items: IListItem<LIST_PROPS>[]; count: number; }>(body);
 };
 
 export const getItem = async <EDITOR extends EditorFields>(itemTypeConfig: IItemTypeConfigForEditor<EDITOR>, id: string) => {
@@ -71,7 +73,7 @@ export const updateItem = async <EDITOR extends EditorFields>(itemTypeConfig: II
     return request<void>(body);
 };
 
-export const deleteItem = async (itemTypeConfig: IItemTypeConfig, id: string) => {
+export const deleteItem = async (itemTypeConfig: IItemType, id: string) => {
     const body: DeleteItemBody = {
         method: "deleteItem",
         typeName: itemTypeConfig.name[0],

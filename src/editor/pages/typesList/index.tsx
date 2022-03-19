@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
-import { IItemTypeConfig } from "../../../itemTypeBuilder";
+import { IItemType } from "../../../itemTypeBuilder";
 import { Container, List } from "./styles";
 
-export const typesListFactory = (itemTypeConfigs: IItemTypeConfig[]) => () => {
+export const typesListFactory = (itemTypeConfigs: IItemType[]) => () => {
     return (
         <Container>
             <List>

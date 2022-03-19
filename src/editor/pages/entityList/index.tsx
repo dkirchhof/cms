@@ -1,64 +1,118 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { match } from "ts-pattern";
 import { IItemTypeConfigForList } from "../../../itemTypeBuilder";
 import { IListItem } from "../../../itemTypeBuilder/listField";
-import { deleteItem } from "../../api";
+import { findItemConfigByName } from "../../../utils/findItemTypeConfig";
+import { deleteItem, getList } from "../../api";
 import { Breadcrumb } from "../../components/breadcrumb";
-import { PrimaryButton } from "../../components/button";
+import { PrimaryButton, SecondaryButton } from "../../components/button";
 import { useContextMenu } from "../../components/contextMenu";
 import { ErrorDisplay } from "../../components/errorDisplay";
 import { useNotifications } from "../../components/notifications";
 import { CREATE_NEW_ITEM, CTX_MENU_DELETE, CTX_MENU_EDIT, ITEM_DELETED } from "../../messages";
 import { Header } from "../pageStyles";
-import { Container, Main, Table } from "./styles";
-import { useLoadEntities } from "./useLoadEntities";
+import { Container, Main, Pagination, Table } from "./styles";
+
+const PAGE_SIZE = 3;
+
+const getIntParam = (searchParams: URLSearchParams, name: string) => {
+    const param = searchParams.get(name);
+
+    if (param) {
+        return parseInt(param);
+    }
+
+    return null;
+};
+
+interface IState {
+    itemTypeConfig: IItemTypeConfigForList<any>;
+    items: IListItem<any>[];
+    itemsCount: number;
+    page: number;
+    pageCount: number;
+}
 
 export const entityListFactory = (itemTypeConfigs: IItemTypeConfigForList<any>[]) => () => {
-    const state = useLoadEntities(itemTypeConfigs);
-
-    return match(state)
-        .with({ state: "LOADING" }, () => <Loading />)
-        .with({ state: "LOADED" }, ({ itemTypeConfig, items }) => <Loaded itemTypeConfig={itemTypeConfig} items={items} />)
-        .with({ state: "ERROR" }, ({ message }) => <Error message={message} />)
-        .exhaustive();
-};
-
-const Loading = () => {
-    return (
-        <Container>Loading...</Container>
-    );
-};
-
-const Loaded = <LIST_PROPS extends string>(props: { itemTypeConfig: IItemTypeConfigForList<LIST_PROPS>; items: IListItem<LIST_PROPS>[]; }) => {
+    const { typeName } = useParams();
+    const [searchParams, setSearchParams] = useSearchParams();
     const navigate = useNavigate();
     const showNotification = useNotifications();
 
-    const [items, setItems] = useState(props.items);
-    
+    const [state, setState] = useState<IState | null>(null);
+
+    const fetchItems = async (typeName: string, searchParams: URLSearchParams) => {
+        const page = getIntParam(searchParams, "page") || 1;
+
+        const itemTypeConfig = findItemConfigByName(itemTypeConfigs, typeName);
+
+        if (!itemTypeConfig) {
+            throw new Error("Couldn't find TypeConfig.");
+        }
+
+        const result = await getList(itemTypeConfig, page, PAGE_SIZE);
+
+        setState({
+            itemTypeConfig,
+            items: result.items,
+            itemsCount: result.count,
+            page,
+            pageCount: Math.ceil(result.count / PAGE_SIZE),
+        });
+    };
+
+    useEffect(() => {
+        fetchItems(typeName!, searchParams);
+    }, [typeName, searchParams]);
+
+
+    if (!state) {
+        return <div>Loading...</div>;
+    }
+
     const createItem = () => {
         navigate("new");
     };
-    
+
     const editItem = (itemId: string) => {
         navigate(itemId);
     };
 
     const delItem = async (itemId: string) => {
-        try {
-            await deleteItem(props.itemTypeConfig, itemId);
+        // try {
+        //     await deleteItem(props.itemTypeConfig, itemId);
 
-            setItems(items.filter(item => item.id !== itemId));
+        //     setItems(items.filter(item => item.id !== itemId));
 
-            showNotification({ type: "success", message: ITEM_DELETED(props.itemTypeConfig.name[0]) });
-        } catch (e: any) {
-            showNotification({ type: "error", message: e.message });
-        }
+        //     showNotification({ type: "success", message: ITEM_DELETED(props.itemTypeConfig.name[0]) });
+        // } catch (e: any) {
+        //     showNotification({ type: "error", message: e.message });
+        // }
     };
 
-    const itemTypeSingularName = props.itemTypeConfig.name[0];
-    const itemTypePluralName = props.itemTypeConfig.name[1];
-    const listProps = props.itemTypeConfig.listType.listProps;
+    const onGotoFirstPageClick = () => {
+        setSearchParams({ page: "0" });
+    };
+
+    const onGotoPreviousPageClick = () => {
+        setSearchParams({ page: (state.page - 1).toString() });
+    };
+
+    const onGotoNextPageClick = () => {
+        setSearchParams({ page: (state.page + 1).toString() });
+    };
+
+    const onGotoLastPageClick = () => {
+        setSearchParams({ page: state.pageCount.toString() });
+    };
+
+    const itemTypeSingularName = state.itemTypeConfig.name[0];
+    const itemTypePluralName = state.itemTypeConfig.name[1];
+    const listProps = state.itemTypeConfig.listType.listProps;
+
+    const isFirstPage = state.page === 1;
+    const isLastPage = state.page === state.pageCount;
 
     return (
         <Container>
@@ -79,27 +133,47 @@ const Loaded = <LIST_PROPS extends string>(props: { itemTypeConfig: IItemTypeCon
                         </tr>
                     </thead>
                     <tbody>
-                        {items.map(item =>
-                            <Item 
+                        {state.items.map(item =>
+                            <Item
                                 key={item.id}
-                                listProps={listProps} 
-                                item={item} 
+                                listProps={listProps}
+                                item={item}
                                 editItem={editItem}
                                 delItem={delItem}
                             />
                         )}
                     </tbody>
                 </Table>
+
+                <Pagination>
+                    <button onClick={onGotoFirstPageClick} disabled={isFirstPage}>
+                        <svg viewBox="0 0 32 32">
+                            <path d="m14 16 6 5.5v-11zM10 10.5h2v11h-2z" />
+                        </svg>
+                    </button>
+                    <button onClick={onGotoPreviousPageClick} disabled={isFirstPage}>
+                        <svg viewBox="0 0 32 32">
+                            <path d="m12 16 6 5.5v-11z" />
+                        </svg>
+                    </button>
+
+                    <span>{state.page} / {state.pageCount}</span>
+
+                    <button onClick={onGotoNextPageClick} disabled={isLastPage}>
+                        <svg viewBox="0 0 32 32">
+                            <path d="m20 16-6 5.5v-11z" />
+                        </svg>
+                    </button>
+                    <button onClick={onGotoLastPageClick} disabled={isLastPage}>
+                        <svg viewBox="0 0 32 32">
+                            <path d="m18 16-6 5.5v-11zM20 10.5h2v11h-2z" />
+                        </svg>
+                    </button>
+                </Pagination>
             </Main>
         </Container>
     );
 };
-
-const Error = (props: { message: string; }) => (
-    <Container>
-        <ErrorDisplay message={props.message} />
-    </Container>
-);
 
 interface IItemProps<LIST_PROPS extends string> {
     listProps: readonly LIST_PROPS[];

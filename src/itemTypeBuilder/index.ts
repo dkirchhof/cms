@@ -7,7 +7,7 @@ export type Partial2<T> = {
         : T[P]
 }
 
-export interface IItemTypeConfig<LIST_PROPS extends string = any, EDITOR extends EditorFields<any> = any, LOCALES extends string = any> {
+export interface IItemType<LIST_PROPS extends string = any, EDITOR extends EditorFields<any> = any, LOCALES extends string = any> {
     name: [string, string];
     toString: (item: IListItem<LIST_PROPS>) => string;
 
@@ -15,7 +15,7 @@ export interface IItemTypeConfig<LIST_PROPS extends string = any, EDITOR extends
     editorType: IEditorType<EDITOR, LOCALES>;
 
     api: {
-        getList: () => Promise<IListItem<LIST_PROPS>[]>;
+        getList: (page?: number, pageSize?: number) => Promise<{ items: IListItem<LIST_PROPS>[]; count: number; }>;
 
         getItem: (id: string) => Promise<IEditorItem<EDITOR, LOCALES>>;
         createItem: (values: IEditorItem<EDITOR, LOCALES>) => Promise<string>;
@@ -24,15 +24,9 @@ export interface IItemTypeConfig<LIST_PROPS extends string = any, EDITOR extends
     };
 }
 
-export type IItemTypeConfigForList<LIST_PROPS extends string> = IItemTypeConfig<LIST_PROPS, any, any>;
-export type IItemTypeConfigForEditor<EDITOR extends EditorFields<any>> = IItemTypeConfig<any, EDITOR, any>;
-
-export interface IItemType<LIST_PROPS extends string = any, EDITOR extends EditorFields<any> = any, LOCALES extends string = any> {
-    config: IItemTypeConfig<LIST_PROPS, EDITOR, LOCALES>; 
-}
+export type IItemTypeConfigForList<LIST_PROPS extends string> = IItemType<LIST_PROPS, any, any>;
+export type IItemTypeConfigForEditor<EDITOR extends EditorFields<any>> = IItemType<any, EDITOR, any>;
 
 export const createItemType = <LOCALES extends string>() => <LIST extends string = any, EDITOR extends EditorFields<any> = any>(
-    config: IItemTypeConfig<LIST, EDITOR, LOCALES>
-): IItemType<LIST, EDITOR, LOCALES> => ({
-    config
-});
+    config: IItemType<LIST, EDITOR, LOCALES>
+): IItemType<LIST, EDITOR, LOCALES> => config;

@@ -14,10 +14,10 @@ export const itemSelectorFactory = <LIST_PROPS extends string>(options: IOptions
     const [items, setItems] = useState<ISelectOption[]>([]);
 
     const init = async () => {
-        const entities = await getList(options.itemTypeConfig);
+        const { items } = await getList(options.itemTypeConfig);
 
         setItems(
-            entities.map(entity => ({ label: options.itemTypeConfig.toString(entity), value: entity.id }))
+            items.map(item => ({ label: options.itemTypeConfig.toString(item), value: item.id }))
         );
     };
 
@@ -46,10 +46,10 @@ export const itemsSelectorFactory = <LIST_PROPS extends string>(options: IOption
     const [items, setItems] = useState<ISelectOption[]>([]);
 
     const init = async () => {
-        const entities = await getList(options.itemTypeConfig);
+        const { items } = await getList(options.itemTypeConfig);
 
         setItems(
-            entities.map(entity => ({ label: options.itemTypeConfig.toString(entity), value: entity.id }))
+            items.map(item => ({ label: options.itemTypeConfig.toString(item), value: item.id }))
         );
     };
 

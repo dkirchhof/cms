@@ -12,7 +12,7 @@ export const createItemTypeBuilder = <LOCALES extends string>(locales: readonly 
 
 export const createCMS = (locales: readonly string[]) => {
     return {
-        createEditor: (itemTypes: IItemType[]) => editorFactory(itemTypes.map(itemType => itemType.config), locales),
-        createAPI: (itemTypes: IItemType[]) => requestHandlerFactory(itemTypes.map(itemType => itemType.config)),
+        createEditor: (itemTypes: IItemType[]) => editorFactory(itemTypes, locales),
+        createAPI: (itemTypes: IItemType[]) => requestHandlerFactory(itemTypes),
     };
 };

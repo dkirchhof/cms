@@ -1,18 +1,18 @@
-import { IItemTypeConfig } from "../../itemTypeBuilder";
+import { IItemType } from "../../itemTypeBuilder";
 import { GetListBody } from "../../types/requestData";
 import { findItemConfigByName } from "../../utils/findItemTypeConfig";
 import { HTTPError } from "../types/httpError";
 import { IRequest } from "../types/request";
 import { IResponse } from "../types/response";
 
-export const getList = async (req: IRequest<GetListBody>, res: IResponse, itemTypeConfigs: IItemTypeConfig[]) => {
+export const getList = async (req: IRequest<GetListBody>, res: IResponse, itemTypeConfigs: IItemType[]) => {
     const itemTypeConfig = findItemConfigByName(itemTypeConfigs, req.body.typeName);
 
     if (!itemTypeConfig) {
         throw new HTTPError(400, "couldn't find typeConfig");
     }
 
-    const items = await itemTypeConfig.api.getList();
+    const items = await itemTypeConfig.api.getList(req.body.page, req.body.pageSize);
 
     res.json(items);
 };
