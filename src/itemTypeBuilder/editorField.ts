@@ -21,12 +21,22 @@ export type IEditorItem<T extends EditorFields<any> = any, LOCALES extends strin
         : never;
 };
 
+export type IPartialEditorItem<T extends EditorFields<any> = any, LOCALES extends string = any> = { id: string; } & {
+    [P in keyof T]?: T[P] extends IEditorField<infer U, false> 
+        ? U 
+        : T[P] extends IEditorField<infer U, true> 
+        ? Record<LOCALES, U | undefined>
+        : never;
+};
+
 export interface IEditorType<EDITOR extends EditorFields = any, LOCALES extends string = any> {
     fields: EditorFields;
     t: IEditorItem<EDITOR, LOCALES>;
+    tPartial: IPartialEditorItem<EDITOR, LOCALES>;
 }
 
 export const createEditorType = <LOCALES extends string>() => <EDITOR extends EditorFields>(fields: EDITOR): IEditorType<EDITOR, LOCALES> => ({
     fields,
     t: null as any,
+    tPartial: null as any,
 });

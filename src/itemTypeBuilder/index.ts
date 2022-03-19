@@ -1,11 +1,5 @@
-import { EditorFields, IEditorItem, IEditorType } from "./editorField";
+import { EditorFields, IEditorItem, IEditorType, IPartialEditorItem } from "./editorField";
 import { IListItem, IListType } from "./listField";
-
-export type Partial2<T> = {
-    [P in keyof T]?: T[P] extends object 
-        ? Partial<T[P]>
-        : T[P]
-}
 
 export interface IItemType<LIST_PROPS extends string = any, EDITOR extends EditorFields<any> = any, LOCALES extends string = any> {
     name: [string, string];
@@ -19,7 +13,7 @@ export interface IItemType<LIST_PROPS extends string = any, EDITOR extends Edito
 
         getItem: (id: string) => Promise<IEditorItem<EDITOR, LOCALES>>;
         createItem: (values: IEditorItem<EDITOR, LOCALES>) => Promise<string>;
-        updateItem: (id: string, values: Partial2<IEditorItem<EDITOR, LOCALES>>) => Promise<void>;
+        updateItem: (id: string, values: IPartialEditorItem<EDITOR, LOCALES>) => Promise<void>;
         deleteItem: (id: string) => Promise<void>;
     };
 }
