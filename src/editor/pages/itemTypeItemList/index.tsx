@@ -1,60 +1,73 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { match } from "ts-pattern";
 import { IItemTypeConfigForList } from "../../../itemTypeBuilder";
 import { IListItem } from "../../../itemTypeBuilder/listField";
-import { findItemConfigByName } from "../../../utils/findItemTypeConfig";
 import { deleteItem, getList } from "../../api";
 import { Breadcrumb } from "../../components/breadcrumb";
-import { PrimaryButton, SecondaryButton } from "../../components/button";
-import { useContextMenu } from "../../components/contextMenu";
+import { PrimaryButton } from "../../components/button";
 import { ErrorDisplay } from "../../components/errorDisplay";
 import { useNotifications } from "../../components/notifications";
-import { CREATE_NEW_ITEM, CTX_MENU_DELETE, CTX_MENU_EDIT, ITEM_DELETED } from "../../messages";
+import { CREATE_NEW_ITEM, ITEM_DELETED } from "../../messages";
 import { Header } from "../pageStyles";
+import { ListItem } from "./listItem";
 import { Container, Main, Pagination, Table } from "./styles";
+import { useLoadItemTypeConfig } from "./useLoadItemTypeConfig";
 
-const PAGE_SIZE = 3;
+const PAGE_SIZE = 10;
 
-const getIntParam = (searchParams: URLSearchParams, name: string) => {
+const getIntParam = (searchParams: URLSearchParams, name: string, defaultValue: number) => {
     const param = searchParams.get(name);
 
     if (param) {
         return parseInt(param);
     }
 
-    return null;
+    return defaultValue;
 };
 
 interface IState {
-    itemTypeConfig: IItemTypeConfigForList<any>;
     items: IListItem<any>[];
     itemsCount: number;
     page: number;
     pageCount: number;
 }
 
-export const entityListFactory = (itemTypeConfigs: IItemTypeConfigForList<any>[]) => () => {
-    const { typeName } = useParams();
+export const itemTypeItemListFactory = (itemTypeConfigs: IItemTypeConfigForList<any>[]) => () => {
+    const state = useLoadItemTypeConfig(itemTypeConfigs);
+
+    return match(state)
+        .with({ state: "LOADING" }, () => <Loading />)
+        .with({ state: "LOADED" }, ({ itemTypeConfig }) => <Loaded itemTypeConfig={itemTypeConfig} />)
+        .with({ state: "ERROR" }, ({ message }) => <Error message={message} />)
+        .exhaustive();
+};
+
+const Loading = () => {
+    return (
+        <Container>Loading...</Container>
+    );
+};
+
+const Error = (props: { message: string; }) => (
+    <Container>
+        <ErrorDisplay message={props.message} />
+    </Container>
+);
+
+const Loaded = (props: { itemTypeConfig: IItemTypeConfigForList<any>; }) => {
     const [searchParams, setSearchParams] = useSearchParams();
     const navigate = useNavigate();
     const showNotification = useNotifications();
 
-    const [state, setState] = useState<IState | null>(null);
+    const [state, setState] = useState<IState>({ items: [], page: 1, pageCount: 1, itemsCount: 0 });
 
-    const fetchItems = async (typeName: string, searchParams: URLSearchParams) => {
-        const page = getIntParam(searchParams, "page") || 1;
+    const fetchItems = async (searchParams: URLSearchParams) => {
+        const page = getIntParam(searchParams, "page", 1);
 
-        const itemTypeConfig = findItemConfigByName(itemTypeConfigs, typeName);
-
-        if (!itemTypeConfig) {
-            throw new Error("Couldn't find TypeConfig.");
-        }
-
-        const result = await getList(itemTypeConfig, page, PAGE_SIZE);
+        const result = await getList(props.itemTypeConfig, page, PAGE_SIZE);
 
         setState({
-            itemTypeConfig,
             items: result.items,
             itemsCount: result.count,
             page,
@@ -63,8 +76,8 @@ export const entityListFactory = (itemTypeConfigs: IItemTypeConfigForList<any>[]
     };
 
     useEffect(() => {
-        fetchItems(typeName!, searchParams);
-    }, [typeName, searchParams]);
+        fetchItems(searchParams);
+    }, [searchParams]);
 
 
     if (!state) {
@@ -80,15 +93,14 @@ export const entityListFactory = (itemTypeConfigs: IItemTypeConfigForList<any>[]
     };
 
     const delItem = async (itemId: string) => {
-        // try {
-        //     await deleteItem(props.itemTypeConfig, itemId);
-
-        //     setItems(items.filter(item => item.id !== itemId));
-
-        //     showNotification({ type: "success", message: ITEM_DELETED(props.itemTypeConfig.name[0]) });
-        // } catch (e: any) {
-        //     showNotification({ type: "error", message: e.message });
-        // }
+        try {
+            await deleteItem(props.itemTypeConfig, itemId);
+            
+            showNotification({ type: "success", message: ITEM_DELETED(props.itemTypeConfig.name[0]) });
+            fetchItems(searchParams);
+        } catch (e: any) {
+            showNotification({ type: "error", message: e.message });
+        }
     };
 
     const onGotoFirstPageClick = () => {
@@ -107,9 +119,9 @@ export const entityListFactory = (itemTypeConfigs: IItemTypeConfigForList<any>[]
         setSearchParams({ page: state.pageCount.toString() });
     };
 
-    const itemTypeSingularName = state.itemTypeConfig.name[0];
-    const itemTypePluralName = state.itemTypeConfig.name[1];
-    const listProps = state.itemTypeConfig.listType.listProps;
+    const itemTypeSingularName = props.itemTypeConfig.name[0];
+    const itemTypePluralName = props.itemTypeConfig.name[1];
+    const listProps = props.itemTypeConfig.listType.listProps;
 
     const isFirstPage = state.page === 1;
     const isLastPage = state.page === state.pageCount;
@@ -134,7 +146,7 @@ export const entityListFactory = (itemTypeConfigs: IItemTypeConfigForList<any>[]
                     </thead>
                     <tbody>
                         {state.items.map(item =>
-                            <Item
+                            <ListItem
                                 key={item.id}
                                 listProps={listProps}
                                 item={item}
@@ -172,30 +184,5 @@ export const entityListFactory = (itemTypeConfigs: IItemTypeConfigForList<any>[]
                 </Pagination>
             </Main>
         </Container>
-    );
-};
-
-interface IItemProps<LIST_PROPS extends string> {
-    listProps: readonly LIST_PROPS[];
-    item: IListItem<LIST_PROPS>;
-
-    editItem: (itemId: string) => void;
-    delItem: (itemId: string) => void;
-}
-
-const Item = <LIST_PROPS extends string>(props: IItemProps<LIST_PROPS>) => {
-    const { ContextMenu, openContextMenu } = useContextMenu([
-        [
-            { label: CTX_MENU_EDIT, action: () => props.editItem(props.item.id) },
-            { label: CTX_MENU_DELETE, action: () => props.delItem(props.item.id) },
-        ],
-    ]);
-
-    return (
-        <tr onClick={() => props.editItem(props.item.id)} onContextMenu={openContextMenu}>
-            {props.listProps.map(prop => <td key={prop.toString()}>{props.item[prop]}</td>)}
-
-            <ContextMenu />
-        </tr>
     );
 };
