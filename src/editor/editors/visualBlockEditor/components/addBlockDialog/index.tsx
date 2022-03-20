@@ -1,5 +1,6 @@
 import { IBlockConfig } from "../../../../../types/block";
 import { PrimaryButton, SecondaryButton } from "../../../../components/button";
+import { BUTTON_CANCEL } from "../../../../messages";
 import { useCMS } from "../../hooks/useCMS";
 import { useEscToClose } from "../../hooks/useEscToClose";
 import { Backdrop, Container, List } from "./styles";
@@ -23,7 +24,7 @@ export const AddBlockDialog = (props: IProps) => {
                     )}
                 </List>
 
-                <PrimaryButton onClick={props.close}>Abbrechen</PrimaryButton>
+                <PrimaryButton onClick={props.close}>{BUTTON_CANCEL}</PrimaryButton>
             </Container>
         </Backdrop>
     );

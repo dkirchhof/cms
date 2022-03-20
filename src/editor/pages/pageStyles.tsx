@@ -20,7 +20,7 @@ export const Header = styled.header`
     background: ${BACKGROUND};
     box-shadow: 0px 5px 10px rgb(0 0 0 / 10%);
 
-    > nav {
+    > *:nth-child(1) {
         flex: 1;
     }
 

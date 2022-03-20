@@ -6,6 +6,7 @@ export const Container = styled(PageContainer)`
     display: grid;
     grid-template-rows: auto 1fr;
     overflow: hidden;
+    position: relative;
 `;
 
 export const Main = styled.main`

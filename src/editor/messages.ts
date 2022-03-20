@@ -13,6 +13,8 @@ export const ITEM_CREATED = (typeNameSingular: string) => `The ${typeNameSingula
 export const ITEM_UPDATED = (typeNameSingular: string) => `The ${typeNameSingular} has been successfully updated.`;
 export const ITEM_DELETED = (typeNameSingular: string) => `The ${typeNameSingular} has been successfully deleted.`;
 
+export const OPEN_EDITOR = "Open editor";
+
 export const ADD_FIRST_BLOCK = "Add first block";
 
 export const CTX_MENU_EDIT = "Edit";

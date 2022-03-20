@@ -5,7 +5,6 @@ export type PropValidator<T> = (value: T) => string | null;
 export interface IEditorField<T, LOCALIZE extends boolean> {
     label?: string;
     localize: LOCALIZE;
-    fullscreen?: boolean;
     editor: PropEditor<T>;
     defaultValue: T;
     validators: PropValidator<T>[];
