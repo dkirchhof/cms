@@ -3,13 +3,13 @@ import { renderChildren } from "../utils/renderChildren";
 
 interface IProps {
     blockConfigs: BlockConfigs;
-    root: IBlock;
+    blocks: IBlock[];
 }
 
 export const VisualBlockRenderer = (props: IProps) => {
     return (
         <>
-            {renderChildren(props.blockConfigs, props.root.data.children!)}
+            {renderChildren(props.blockConfigs, props.blocks)}
         </>
     );
 };

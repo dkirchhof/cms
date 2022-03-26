@@ -4,7 +4,6 @@ import { useNavigate } from "react-router";
 import { match } from "ts-pattern";
 import { IItemTypeForEditor } from "../../../itemTypeBuilder";
 import { EditorFields, IEditorField, IEditorItem, PropValidator } from "../../../itemTypeBuilder/editorField";
-import { ItemContext } from "../../../shared/contexts/itemContext";
 import { createApi } from "../../api";
 import { Breadcrumb } from "../../components/breadcrumb";
 import { PrimaryButton, SecondaryButton } from "../../components/button";
@@ -284,42 +283,40 @@ const Loaded = <EDITOR extends EditorFields>(props: { itemType: IItemTypeForEdit
     const hasErrors = checkIfGroupsHaveErrors(editorFieldGroups);
 
     return (
-        <ItemContext.Provider value={{ type: "EDITOR_FIELDS", editorFields: {} }}>
-            <Container>
-                <Header>
-                    <Breadcrumb crumbs={[
-                        { urlSegment: "content", label: "content" },
-                        { urlSegment: itemTypePluralName, label: itemTypePluralName },
-                        { label: itemId || "new" },
-                    ]} />
+        <Container>
+            <Header>
+                <Breadcrumb crumbs={[
+                    { urlSegment: "content", label: "content" },
+                    { urlSegment: itemTypePluralName, label: itemTypePluralName },
+                    { label: itemId || "new" },
+                ]} />
 
-                    <SecondaryButton onClick={reset} disabled={!hasChanges}>{BUTTON_RESET}</SecondaryButton>
-                    <PrimaryButton onClick={save} disabled={!hasChanges || hasErrors}>{itemId === null ? BUTTON_SAVE : BUTTON_UPDATE}</PrimaryButton>
-                </Header>
+                <SecondaryButton onClick={reset} disabled={!hasChanges}>{BUTTON_RESET}</SecondaryButton>
+                <PrimaryButton onClick={save} disabled={!hasChanges || hasErrors}>{itemId === null ? BUTTON_SAVE : BUTTON_UPDATE}</PrimaryButton>
+            </Header>
 
-                <Main>
-                    {editorFieldGroups.map(group => (
-                        <Group key={group.prop}>
-                            <PropName>{group.prop}</PropName>
+            <Main>
+                {editorFieldGroups.map(group => (
+                    <Group key={group.prop}>
+                        <PropName>{group.prop}</PropName>
 
-                            {group.fields.map((field, i) => (
-                                <Fragment key={i}>
-                                    {field.locale && <Lang>{field.locale}</Lang>}
+                        {group.fields.map((field, i) => (
+                            <Fragment key={i}>
+                                {field.locale && <Lang>{field.locale}</Lang>}
 
-                                    <group.editor value={field.currentValue} onChange={changeField(group.prop, field.locale)} />
+                                <group.editor value={field.currentValue} onChange={changeField(group.prop, field.locale)} />
 
-                                    {field.changed && field.errors.length > 0 && (
-                                        <Errors>
-                                            {field.errors.map((error, i) => <li key={i}>{error}</li>)}
-                                        </Errors>
-                                    )}
-                                </Fragment>
-                            ))}
-                        </Group>
-                    ))}
-                </Main>
-            </Container>
-        </ItemContext.Provider>
+                                {field.changed && field.errors.length > 0 && (
+                                    <Errors>
+                                        {field.errors.map((error, i) => <li key={i}>{error}</li>)}
+                                    </Errors>
+                                )}
+                            </Fragment>
+                        ))}
+                    </Group>
+                ))}
+            </Main>
+        </Container>
     );
 };
 
