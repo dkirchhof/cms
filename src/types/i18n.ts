@@ -1,4 +1,4 @@
-export type Localized<T, LOCALES extends readonly string[]> = Record<LOCALES[number], T>;
+export type Localized<T, LOCALES extends string> = Record<LOCALES, T>;
 
 export interface ILocales<LOCALES extends string> {
     locales: readonly LOCALES[];
